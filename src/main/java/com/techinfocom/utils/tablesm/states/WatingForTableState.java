@@ -23,6 +23,7 @@ public class WatingForTableState<AI extends TableParser> extends StateBase<AI> i
     public void processString(String string) {
         //ignore any strings
     }
+    // TODO: 07.06.2016 вот тут надо ожидать таблицы №2
 
     @Override
     public void processingDocEvent(DocEvent docEvent) {

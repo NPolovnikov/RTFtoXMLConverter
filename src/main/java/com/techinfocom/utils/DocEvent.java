@@ -13,5 +13,6 @@ public enum DocEvent {
     CELL_END,
     ITALIC_BEGIN,
     ITALIC_END,
-    BOLD_BEGIN
+    BOLD_BEGIN,
+    PAR
 }

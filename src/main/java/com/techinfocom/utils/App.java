@@ -14,7 +14,7 @@ public class App
     {
         System.out.println( "start" );
 
-        File file = new File(App.class.getClassLoader().getResource("01cde_simplified.rtf").getFile());
+        File file = new File(App.class.getClassLoader().getResource("super_order_from_wordpad.rtf").getFile());
         System.out.println(file);
         InputStream is = new FileInputStream(file);
         IRtfSource iRtfSource = new RtfStreamSource(is);
