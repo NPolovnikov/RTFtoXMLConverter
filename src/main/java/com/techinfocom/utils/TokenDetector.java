@@ -2,7 +2,6 @@ package com.techinfocom.utils;
 
 import com.rtfparserkit.parser.IRtfListener;
 import com.rtfparserkit.rtf.Command;
-import com.techinfocom.utils.model.AgendaBuilder;
 import com.techinfocom.utils.tablesm.TableParser;
 import com.techinfocom.utils.tablesm.TableParserImpl;
 
@@ -18,15 +17,13 @@ public class TokenDetector implements IRtfListener {
 
     public TokenDetector() {
         groupState = new GroupState();
-        agendaBuilder = new AgendaBuilder();
-        tableParser = new TableParserImpl();
+        tableParser = TableParserImpl.createAutomaton();
         structureTracer = new StructureTracer(tableParser);
     }
 
     private final GroupState groupState;
     private Integer dstDepthBegin;
     private StructureTracer structureTracer;
-    private AgendaBuilder agendaBuilder;
     private TableParser tableParser;
     //private FormatTracer;
     //private TextTracer;

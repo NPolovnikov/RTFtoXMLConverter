@@ -10,11 +10,11 @@ import com.techinfocom.utils.tablesm.TableParser;
 /**
  * Created by volkov_kv on 07.06.2016.
  */
-public class WatingForTableState<AI extends TableParser> extends StateBase<AI> implements TableParser {
-    public static final Event TABLE_FOUND = new Event("TABLE_FOUND");
+public class TableFoundState<AI extends TableParser> extends StateBase<AI> implements TableParser {
+    public static final Event ROW_FOUND = new Event("ROW_FOUND");
     AgendaBuilder agendaBuilder;
 
-    public WatingForTableState(AI automation, EventSink eventSink, AgendaBuilder agendaBuilder) {
+    public TableFoundState(AI automation, EventSink eventSink, AgendaBuilder agendaBuilder) {
         super(automation, eventSink);
         this.agendaBuilder = agendaBuilder;
     }
@@ -27,12 +27,11 @@ public class WatingForTableState<AI extends TableParser> extends StateBase<AI> i
     @Override
     public void processingDocEvent(DocEvent docEvent) {
         switch (docEvent) {
-            case TABLE_BEGIN:
-                agendaBuilder.createAgenda();
-                System.err.println("Состояние WatingForTableState, поймано событие TABLE_BEGIN");
-                eventSink.castEvent(TABLE_FOUND);
+            case ROW_BEGIN:
+                //agendaBuilder.createAgenda();
+                System.err.println("Состояние TableFoundState, поймано событие ROW_BEGIN");
+                eventSink.castEvent(ROW_FOUND);
                 break;
         }
-
     }
 }
