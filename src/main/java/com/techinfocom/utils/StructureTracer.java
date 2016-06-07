@@ -3,26 +3,26 @@ package com.techinfocom.utils;
 import com.techinfocom.utils.model.AgendaBuilder;
 import com.techinfocom.utils.model.TableStructureEvent;
 import com.techinfocom.utils.model.agenda.AgendaItem;
+import com.techinfocom.utils.tablesm.TableParser;
 
 /**
  * Created by volkov_kv on 01.06.2016.
  */
 public class StructureTracer {
 
-    public StructureTracer(AgendaBuilder agendaBuilder) {
+    public StructureTracer(TableParser tableParser) {
         this.tableCount = 0;
         this.cellCount = 0;
         this.state = StructureElement.NOTHING;
-        this.agendaBuilder = agendaBuilder;
         searchState = SearchState.AGENDA_TABLE_NOT_FOUND;
+        this.tableParser = tableParser;
     }
 
     private int tableCount;
     private int cellCount;
     private StructureElement state;
-    private AgendaBuilder agendaBuilder;
-    private AgendaItem agendaItem;
     private SearchState searchState;
+    private TableParser tableParser;
 
     public void processCommand(RtfCommand rtfCommand) {
         switch (rtfCommand.getCommand()) {
@@ -31,13 +31,12 @@ public class StructureTracer {
                     case NOTHING:
                         if (tableCount == 1) {
                             System.err.println("Нашли таблицу №2, можно писать xml");
-                            agendaBuilder.processEvent(TableStructureEvent.TABLE_BEGIN);
+                            tableParser.processingDocEvent(DocEvent.TABLE_BEGIN);
                             searchState = SearchState.AGENDA_TABLE_FOUND;
-
                         }
                         tableCount++;
                         cellCount = 1;
-                        agendaBuilder.processEvent(TableStructureEvent.ROW_BEGIN);
+                        tableParser.processingDocEvent(DocEvent.ROW_BEGIN);
                         state = StructureElement.ROW;
                         System.err.println("обнаружили начало таблицы, первый ROW");
                         break;
@@ -46,7 +45,7 @@ public class StructureTracer {
                         break;
                     case ROWENDED:
                         System.err.println("нашлась следующая row");
-                        agendaBuilder.processEvent(TableStructureEvent.ROW_BEGIN);
+                        tableParser.processingDocEvent(DocEvent.ROW_BEGIN);
                         state = StructureElement.ROW;
                         cellCount = 1;
                         break;
@@ -54,14 +53,14 @@ public class StructureTracer {
                 break;
             case row:
                 System.err.println("Обнаружили конец row");
-                agendaBuilder.processEvent(TableStructureEvent.ROW_END);
+                tableParser.processingDocEvent(DocEvent.ROW_END);
                 state = StructureElement.ROWENDED;
                 cellCount = 0;
                 break;
             case cell:
                 System.err.println("Обнаружили конец ячейки");
                 cellCount++;
-                agendaBuilder.processEvent(TableStructureEvent.CELL_END);
+                tableParser.processingDocEvent(DocEvent.CELL_END);
                 break;
             default:
                 //case pard:
@@ -70,7 +69,7 @@ public class StructureTracer {
                         System.err.println("Похоже, таблица закончилась");
                         state = StructureElement.NOTHING;
                         searchState = SearchState.AGENDA_TABLE_NOT_FOUND;
-                        agendaBuilder.processEvent(TableStructureEvent.TABLE_END);
+                        tableParser.processingDocEvent(DocEvent.TABLE_END);
                 }
         }
 

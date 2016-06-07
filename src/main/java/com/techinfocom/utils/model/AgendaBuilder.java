@@ -32,7 +32,7 @@ public class AgendaBuilder {
     public void processString(String string){
         System.err.println("Билдеру дали строку=" + string + ". Контекст = " + groupState.printCurrentLevel());
         //копим, пока не кончится row.
-        cellString.add(new FormatedString(groupState.getCurrentLevel()))
+        //cellString.add(new FormatedString(groupState.getCurrentLevel()))
     }
 
     public void processCommand(RtfCommand rtfCommand){
@@ -51,6 +51,10 @@ public class AgendaBuilder {
             case ROW_BEGIN:
                 currentItem = objectFactory.createAgendaItem();
         }
+    }
+
+    public void createAgenda() {
+        agenda = objectFactory.createAgenda();
     }
 
     // TODO: 07.06.2016 удалить currentItem, если строка таблицы оказалась битой?
