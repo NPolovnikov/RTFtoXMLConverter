@@ -39,19 +39,6 @@ public class AgendaBuilder {
 
     }
 
-    /**
-     * Обрабатывает события парсинга структуры RTF для генерации структуры XML
-     * @param tableStructureEvent
-     */
-    public void processEvent(TableStructureEvent tableStructureEvent){
-        switch (tableStructureEvent){
-            case TABLE_BEGIN:
-                agenda = objectFactory.createAgenda();
-                break;
-            case ROW_BEGIN:
-                currentItem = objectFactory.createAgendaItem();
-        }
-    }
 
     public void createAgenda() {
         agenda = objectFactory.createAgenda();
