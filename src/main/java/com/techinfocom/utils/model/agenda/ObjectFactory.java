@@ -1,5 +1,5 @@
 
-package com.techinfocom.utils.agenda;
+package com.techinfocom.utils.model.agenda;
 
 import javax.xml.bind.annotation.XmlRegistry;
 
@@ -94,11 +94,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link com.techinfocom.utils.agenda.Speakers }
+     * Create an instance of {@link com.techinfocom.utils.model.agenda.Speakers }
      * 
      */
-    public com.techinfocom.utils.agenda.Speakers createSpeakers() {
-        return new com.techinfocom.utils.agenda.Speakers();
+    public com.techinfocom.utils.model.agenda.Speakers createSpeakers() {
+        return new com.techinfocom.utils.model.agenda.Speakers();
     }
 
     /**

@@ -1,5 +1,5 @@
 
-package com.techinfocom.utils.agenda;
+package com.techinfocom.utils.model.agenda;
 
 import java.util.ArrayList;
 import java.util.List;

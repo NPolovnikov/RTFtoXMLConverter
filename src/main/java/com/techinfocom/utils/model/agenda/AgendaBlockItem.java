@@ -1,5 +1,5 @@
 
-package com.techinfocom.utils.agenda;
+package com.techinfocom.utils.model.agenda;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

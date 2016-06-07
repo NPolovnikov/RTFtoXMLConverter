@@ -2,7 +2,7 @@ package com.techinfocom.utils;
 
 import com.rtfparserkit.parser.IRtfListener;
 import com.rtfparserkit.rtf.Command;
-import com.techinfocom.utils.agenda.Agenda;
+import com.techinfocom.utils.model.agenda.Agenda;
 
 import java.util.Arrays;
 import java.util.List;

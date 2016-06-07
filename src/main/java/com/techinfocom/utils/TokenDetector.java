@@ -2,7 +2,7 @@ package com.techinfocom.utils;
 
 import com.rtfparserkit.parser.IRtfListener;
 import com.rtfparserkit.rtf.Command;
-import com.rtfparserkit.rtf.CommandType;
+import com.techinfocom.utils.model.AgendaBuilder;
 
 import static com.rtfparserkit.rtf.Command.*;
 
@@ -16,12 +16,14 @@ public class TokenDetector implements IRtfListener {
 
     public TokenDetector() {
         groupState = new GroupState();
-        structureTracer = new StructureTracer();
+        structureTracer = new StructureTracer(agendaBuilder);
+        agendaBuilder = new AgendaBuilder();
     }
 
     private final GroupState groupState;
     private Integer dstDepthBegin;
     private StructureTracer structureTracer;
+    private AgendaBuilder agendaBuilder;
     //private FormatTracer;
     //private TextTracer;
 
@@ -63,8 +65,12 @@ public class TokenDetector implements IRtfListener {
 
     @Override
     public void processString(String string) {
-        System.err.println("processString=" + string);
-        System.err.println("at context=" + groupState.printCurrentLevel());
+        if (dstDepthBegin == null) {
+            System.err.println("processString=" + string);
+            System.err.println("at textFormat=" + groupState.printCurrentLevel());
+            System.err.println("at structure. tableCnt=" + structureTracer.getTableCount() +
+                    "cellCnt = " + structureTracer.getCellCount());
+        }
     }
 
     @Override
