@@ -25,15 +25,6 @@ public class WaitForRowEndState<AI extends TableParser> extends StateBase<AI> im
         //ignore any stringsq
     }
 
-//    @Override
-//    public void processingDocEvent(DocEvent docEvent) {
-//        switch (docEvent) {
-//            case PAR:
-//                System.err.println("Состояние WaitCell1State, поймано событие PAR");
-//                eventSink.castEvent(IN_CELL);
-//                break;
-//        }
-//    }
 
 
     @Override
@@ -41,6 +32,7 @@ public class WaitForRowEndState<AI extends TableParser> extends StateBase<AI> im
         switch (rtfCommand.getCommand()){
             case row:
                 System.err.println("В состоянии WaitForRowEnd поймали row");
+                agendaBuilder.mergeItem();
                 eventSink.castEvent(ROW_END);
                 break;
         }

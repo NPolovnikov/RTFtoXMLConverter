@@ -12,6 +12,7 @@ import static com.rtfparserkit.rtf.Command.*;
  * Created by volkov_kv on 08.06.2016.
  */
 public class TextFormat {
+    // все виды подчеркнутого текста
     Command[] allUnderlinesA = {ul
             , ulc
             , uld
@@ -99,8 +100,6 @@ public class TextFormat {
                 System.err.println("Стили текста нашли");
                 break;
         }
-
-        // TODO: 08.06.2016 сбросить флаг при \i=0
 
     }
 

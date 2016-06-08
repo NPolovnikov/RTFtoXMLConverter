@@ -14,7 +14,6 @@ import java.util.List;
  */
 public class AgendaBuilder {
 
-    private AgendaItem preparedAgendaItem;
     private AgendaItem currentItem;
 
     public AgendaBuilder() {
@@ -23,25 +22,34 @@ public class AgendaBuilder {
 
     private ObjectFactory objectFactory;
     private Agenda agenda;
-    private GroupState groupState;
 
 
-    public void processString(String string){
-        System.err.println("Билдеру дали строку=" + string + ". Контекст = " + groupState.printCurrentLevel());
-        //копим, пока не кончится row.
-        //cellString.add(new FormatedString(groupState.getCurrentLevel()))
-    }
-
-    public void processCommand(RtfCommand rtfCommand){
-
+    public void processString(String string) {
+        System.err.println("Билдеру дали строку=" + string);
     }
 
 
     public void createAgenda() {
-        agenda = objectFactory.createAgenda();
+        if (agenda == null) {
+            agenda = objectFactory.createAgenda();
+        } else {
+            throw new RuntimeException("agenda already exists"); // TODO: 08.06.2016 заменить исключение
+        }
     }
 
-    // TODO: 07.06.2016 удалить currentItem, если строка таблицы оказалась битой?
+    public void newAgendaItem() {
+        currentItem = objectFactory.createAgendaItem();
+    }
+
+    public AgendaItem getCurrentItem() {
+        return currentItem;
+    }
+
+    public void mergeItem(){
+        agenda.getItemOrBlock().add(currentItem);
+    }
+
+// TODO: 07.06.2016 удалить currentItem, если строка таблицы оказалась битой?
 
 }
 

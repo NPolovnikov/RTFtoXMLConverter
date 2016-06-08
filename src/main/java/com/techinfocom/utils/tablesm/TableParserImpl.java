@@ -1,12 +1,9 @@
 package com.techinfocom.utils.tablesm;
 
-import com.techinfocom.utils.DocEvent;
 import com.techinfocom.utils.RtfCommand;
 import com.techinfocom.utils.TextFormat;
 import com.techinfocom.utils.model.AgendaBuilder;
 import com.techinfocom.utils.statemachine.AutomationBase;
-import com.techinfocom.utils.statemachine.Event;
-import com.techinfocom.utils.statemachine.EventSink;
 import com.techinfocom.utils.tablesm.states.*;
 
 /**
@@ -23,7 +20,7 @@ public class TableParserImpl extends AutomationBase<TableParser> implements Tabl
         TableParser cell2 = new Cell2State<>(this, this, agendaBuilder);
         TableParser cell3 = new Cell3State<>(this, this, agendaBuilder);
         TableParser waitForRowEnd = new WaitForRowEndState<>(this, this, agendaBuilder);
-        TableParser waitForTableContinue = new WatingForTableContinueState<>(this, this, agendaBuilder);
+        TableParser waitForTableContinue = new WatingForNewRowState<>(this, this, agendaBuilder);
         TableParser parsingDone = new ParsingDoneState<>(this, this, agendaBuilder);
 
 
@@ -34,8 +31,8 @@ public class TableParserImpl extends AutomationBase<TableParser> implements Tabl
         addEdge(cell2, Cell2State.NEXT_CELL, cell3);
         addEdge(cell3, Cell3State.NEXT_CELL, waitForRowEnd);
         addEdge(waitForRowEnd, WaitForRowEndState.ROW_END, waitForTableContinue);
-        addEdge(waitForTableContinue, WatingForTableContinueState.NEXT_ROW, cell1);
-        addEdge(waitForTableContinue, WatingForTableContinueState.TABLE_END, parsingDone);
+        addEdge(waitForTableContinue, WatingForNewRowState.NEXT_ROW, cell1);
+        addEdge(waitForTableContinue, WatingForNewRowState.TABLE_END, parsingDone);
 
         //Начальное состояние
         state = waitingForTable;

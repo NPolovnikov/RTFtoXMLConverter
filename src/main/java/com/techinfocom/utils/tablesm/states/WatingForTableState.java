@@ -52,12 +52,7 @@ public class WatingForTableState<AI extends TableParser> extends StateBase<AI> i
                 switch (rtfCommand.getCommand()) {
                     case trowd:
                         tableCount++;
-                        if (tableCount >= AGENDA_TABLE_NUMBER) {
-                            state = SearchState.WAITING_FOR_TABLE;
-                            eventSink.castEvent(TABLE_FOUND);
-                        } else {
-                            state = SearchState.IN_TABLE;
-                        }
+                        state = SearchState.IN_TABLE;
                         break;
                 }
                 break;
@@ -78,6 +73,13 @@ public class WatingForTableState<AI extends TableParser> extends StateBase<AI> i
                         break;
                 }
                 break;
+        }
+
+        if (tableCount >= AGENDA_TABLE_NUMBER) {
+            //нашли нужную таблицу.
+            agendaBuilder.createAgenda();
+            agendaBuilder.newAgendaItem();
+            eventSink.castEvent(TABLE_FOUND);
         }
     }
 
