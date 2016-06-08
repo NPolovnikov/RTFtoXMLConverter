@@ -10,8 +10,8 @@ public interface TableParser {
 
     void processString(String string);
 
-    //void processCommand(RtfCommand rtfCommand);
+    void processCommand(RtfCommand rtfCommand);
 
-    void processingDocEvent(DocEvent docEvent);
+    //void processingDocEvent(DocEvent docEvent);
 
 }

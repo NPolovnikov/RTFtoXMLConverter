@@ -1,6 +1,7 @@
 package com.techinfocom.utils.tablesm.states;
 
 import com.techinfocom.utils.DocEvent;
+import com.techinfocom.utils.RtfCommand;
 import com.techinfocom.utils.model.AgendaBuilder;
 import com.techinfocom.utils.statemachine.Event;
 import com.techinfocom.utils.statemachine.EventSink;
@@ -12,7 +13,6 @@ import com.techinfocom.utils.tablesm.TableParser;
  */
 public class Cell3State<AI extends TableParser> extends StateBase<AI> implements TableParser {
     public static final Event NEXT_CELL = new Event("NEXT_CELL");
-    public static final Event ROW_END = new Event("ROW_END");
     AgendaBuilder agendaBuilder;
 
     public Cell3State(AI automation, EventSink eventSink, AgendaBuilder agendaBuilder) {
@@ -25,18 +25,29 @@ public class Cell3State<AI extends TableParser> extends StateBase<AI> implements
         //ignore any stringsq
     }
 
+//    @Override
+//    public void processingDocEvent(DocEvent docEvent) {
+//        switch (docEvent) {
+//            case CELL_END:
+//                //agendaBuilder.createAgenda();
+//                System.err.println("Состояние Cell1State, поймано событие CELL_END");
+//                eventSink.castEvent(NEXT_CELL);
+//                break;
+//            case ROW_END:
+//                System.err.println("Состояние Cell1State, поймано событие ROW_END");
+//                eventSink.castEvent(ROW_END);
+//                break;
+//        }
+//    }
+
     @Override
-    public void processingDocEvent(DocEvent docEvent) {
-        switch (docEvent) {
-            case CELL_END:
-                //agendaBuilder.createAgenda();
-                System.err.println("Состояние Cell1State, поймано событие CELL_END");
+    public void processCommand(RtfCommand rtfCommand) {
+        switch (rtfCommand.getCommand()) {
+            case cell:
+                System.err.println("Состояние Cell3State, поймано событие cell.");
                 eventSink.castEvent(NEXT_CELL);
-                break;
-            case ROW_END:
-                System.err.println("Состояние Cell1State, поймано событие ROW_END");
-                eventSink.castEvent(ROW_END);
                 break;
         }
     }
+
 }

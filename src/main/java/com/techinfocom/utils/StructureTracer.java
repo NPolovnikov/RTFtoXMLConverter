@@ -29,12 +29,12 @@ public class StructureTracer {
                     case NOTHING:
                         if (tableCount == 1) {
                             System.err.println("Нашли таблицу №2, можно писать xml");
-                            tableParser.processingDocEvent(DocEvent.TABLE_BEGIN);
+//                            tableParser.processingDocEvent(DocEvent.TABLE_BEGIN);
                             searchState = SearchState.AGENDA_TABLE_FOUND;
                         }
                         tableCount++;
                         cellCount = 1;
-                        tableParser.processingDocEvent(DocEvent.ROW_BEGIN);
+//                        tableParser.processingDocEvent(DocEvent.ROW_BEGIN);
                         state = StructureElement.ROW;
                         System.err.println("обнаружили начало таблицы, первый ROW");
                         break;
@@ -43,7 +43,7 @@ public class StructureTracer {
                         break;
                     case ROWENDED:
                         System.err.println("нашлась следующая row");
-                        tableParser.processingDocEvent(DocEvent.ROW_BEGIN);
+//                        tableParser.processingDocEvent(DocEvent.ROW_BEGIN);
                         state = StructureElement.ROW;
                         cellCount = 1;
                         break;
@@ -51,14 +51,14 @@ public class StructureTracer {
                 break;
             case row:
                 System.err.println("Обнаружили конец row");
-                tableParser.processingDocEvent(DocEvent.ROW_END);
+//                tableParser.processingDocEvent(DocEvent.ROW_END);
                 state = StructureElement.ROWENDED;
                 cellCount = 0;
                 break;
             case cell:
                 System.err.println("Обнаружили конец ячейки");
                 cellCount++;
-                tableParser.processingDocEvent(DocEvent.CELL_END);
+//                tableParser.processingDocEvent(DocEvent.CELL_END);
                 break;
             default:
                 //case pard:
@@ -67,7 +67,7 @@ public class StructureTracer {
                         System.err.println("Похоже, таблица закончилась");
                         state = StructureElement.NOTHING;
                         searchState = SearchState.AGENDA_TABLE_NOT_FOUND;
-                        tableParser.processingDocEvent(DocEvent.TABLE_END);
+//                        tableParser.processingDocEvent(DocEvent.TABLE_END);
                 }
         }
 

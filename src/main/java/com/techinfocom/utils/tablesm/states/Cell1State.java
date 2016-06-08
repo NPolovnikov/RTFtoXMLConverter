@@ -1,6 +1,7 @@
 package com.techinfocom.utils.tablesm.states;
 
 import com.techinfocom.utils.DocEvent;
+import com.techinfocom.utils.RtfCommand;
 import com.techinfocom.utils.model.AgendaBuilder;
 import com.techinfocom.utils.statemachine.Event;
 import com.techinfocom.utils.statemachine.EventSink;
@@ -24,12 +25,22 @@ public class Cell1State<AI extends TableParser> extends StateBase<AI> implements
         //ignore any stringsq
     }
 
+//    @Override
+//    public void processingDocEvent(DocEvent docEvent) {
+//        switch (docEvent) {
+//            case CELL_END:
+//                //agendaBuilder.createAgenda();
+//                System.err.println("Состояние Cell1State, поймано событие CELL_END");
+//                eventSink.castEvent(NEXT_CELL);
+//                break;
+//        }
+//    }
+
     @Override
-    public void processingDocEvent(DocEvent docEvent) {
-        switch (docEvent) {
-            case CELL_END:
-                //agendaBuilder.createAgenda();
-                System.err.println("Состояние Cell1State, поймано событие CELL_END");
+    public void processCommand(RtfCommand rtfCommand) {
+        switch (rtfCommand.getCommand()) {
+            case cell:
+                System.err.println("Состояние Cell1State, поймано событие cell");
                 eventSink.castEvent(NEXT_CELL);
                 break;
         }

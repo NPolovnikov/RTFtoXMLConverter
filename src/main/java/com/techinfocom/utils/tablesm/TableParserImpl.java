@@ -1,6 +1,7 @@
 package com.techinfocom.utils.tablesm;
 
 import com.techinfocom.utils.DocEvent;
+import com.techinfocom.utils.RtfCommand;
 import com.techinfocom.utils.model.AgendaBuilder;
 import com.techinfocom.utils.statemachine.AutomationBase;
 import com.techinfocom.utils.statemachine.Event;
@@ -17,24 +18,29 @@ public class TableParserImpl extends AutomationBase<TableParser> implements Tabl
 
         //создание объектов-состояний
         TableParser waitingForTable = new WatingForTableState<>(this, this, agendaBuilder);
-        TableParser tableFound = new TableFoundState<>(this, this, agendaBuilder);
-        TableParser cell1 = new Cell1State<>(this, this, agendaBuilder);
-        TableParser cell2 = new Cell2State<>(this, this, agendaBuilder);
-        TableParser cell3 = new Cell3State<>(this, this, agendaBuilder);
         TableParser waitForCell1 = new WaitCell1State<>(this, this, agendaBuilder);
+        TableParser cell1 = new Cell1State<>(this, this, agendaBuilder);
         TableParser waitForCell2 = new WaitCell2State<>(this, this, agendaBuilder);
+        TableParser cell2 = new Cell2State<>(this, this, agendaBuilder);
         TableParser waitForCell3 = new WaitCell3State<>(this, this, agendaBuilder);
+        TableParser cell3 = new Cell3State<>(this, this, agendaBuilder);
+        TableParser waitForRowEnd = new WaitForRowEndState<>(this, this, agendaBuilder);
+        TableParser waitForTableContinue = new WatingForTableContinueState<>(this, this, agendaBuilder);
+        TableParser parsingDone = new ParsingDoneState<>(this, this, agendaBuilder);
+
+
 
         //Создание переходов
-        addEdge(waitingForTable, WatingForTableState.TABLE_FOUND, tableFound);
-        addEdge(tableFound, TableFoundState.ROW_FOUND, waitForCell1);
+        addEdge(waitingForTable, WatingForTableState.TABLE_FOUND, waitForCell1);
         addEdge(waitForCell1, WaitCell1State.IN_CELL, cell1);
         addEdge(cell1, Cell1State.NEXT_CELL, waitForCell2);
         addEdge(waitForCell2, WaitCell2State.IN_CELL, cell2);
         addEdge(cell2, Cell2State.NEXT_CELL, waitForCell3);
         addEdge(waitForCell3, WaitCell3State.IN_CELL, cell3);
-        addEdge(cell3, Cell3State.ROW_END, tableFound);
-//        addEdge(tableFound, TableFoundState.TABLE_END, parsingDone);
+        addEdge(cell3, Cell3State.NEXT_CELL, waitForRowEnd);
+        addEdge(waitForRowEnd, WaitForRowEndState.ROW_END, waitForTableContinue);
+        addEdge(waitForTableContinue, WatingForTableContinueState.NEXT_ROW, waitForCell1);
+        addEdge(waitForTableContinue, WatingForTableContinueState.TABLE_END, parsingDone);
 
         //Начальное состояние
         state = waitingForTable;
@@ -51,8 +57,14 @@ public class TableParserImpl extends AutomationBase<TableParser> implements Tabl
         state.processString(string);
     }
 
+//    @Override
+//    public void processingDocEvent(DocEvent event) {
+//        state.processingDocEvent(event);
+//    }
+
     @Override
-    public void processingDocEvent(DocEvent event) {
-        state.processingDocEvent(event);
+    public void processCommand(RtfCommand rtfCommand) {
+        state.processCommand(rtfCommand);
     }
 }
+

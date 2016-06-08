@@ -18,12 +18,12 @@ public class TokenDetector implements IRtfListener {
     public TokenDetector() {
         groupState = new GroupState();
         tableParser = TableParserImpl.createAutomaton();
-        structureTracer = new StructureTracer(tableParser);
+        //structureTracer = new StructureTracer(tableParser);
     }
 
     private final GroupState groupState;
     private Integer dstDepthBegin;
-    private StructureTracer structureTracer;
+    //private StructureTracer structureTracer;
     private TableParser tableParser;
     //private FormatTracer;
     //private TextTracer;
@@ -69,8 +69,8 @@ public class TokenDetector implements IRtfListener {
         if (dstDepthBegin == null) {
             System.err.println("processString=" + string);
             System.err.println("at textFormat=" + groupState.printCurrentLevel());
-            System.err.println("at structure. tableCnt=" + structureTracer.getTableCount() +
-                    "cellCnt = " + structureTracer.getCellCount());
+//            System.err.println("at structure. tableCnt=" + structureTracer.getTableCount() +
+//                    "cellCnt = " + structureTracer.getCellCount());
             tableParser.processString(string);
         }
     }
@@ -99,7 +99,8 @@ public class TokenDetector implements IRtfListener {
                 }
                 break;
             default:
-                structureTracer.processCommand(rtfCommand);
+//                structureTracer.processCommand(rtfCommand);
+                tableParser.processCommand(rtfCommand);
                 break;
         }
     }

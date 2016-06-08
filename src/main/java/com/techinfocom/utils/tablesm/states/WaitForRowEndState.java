@@ -1,6 +1,5 @@
 package com.techinfocom.utils.tablesm.states;
 
-import com.techinfocom.utils.DocEvent;
 import com.techinfocom.utils.RtfCommand;
 import com.techinfocom.utils.model.AgendaBuilder;
 import com.techinfocom.utils.statemachine.Event;
@@ -11,11 +10,11 @@ import com.techinfocom.utils.tablesm.TableParser;
 /**
  * Created by volkov_kv on 07.06.2016.
  */
-public class Cell2State<AI extends TableParser> extends StateBase<AI> implements TableParser {
-    public static final Event NEXT_CELL = new Event("NEXT_CELL");
+public class WaitForRowEndState<AI extends TableParser> extends StateBase<AI> implements TableParser {
+    public static final Event ROW_END = new Event("ROW_END");
     AgendaBuilder agendaBuilder;
 
-    public Cell2State(AI automation, EventSink eventSink, AgendaBuilder agendaBuilder) {
+    public WaitForRowEndState(AI automation, EventSink eventSink, AgendaBuilder agendaBuilder) {
         super(automation, eventSink);
         this.agendaBuilder = agendaBuilder;
     }
@@ -28,22 +27,21 @@ public class Cell2State<AI extends TableParser> extends StateBase<AI> implements
 //    @Override
 //    public void processingDocEvent(DocEvent docEvent) {
 //        switch (docEvent) {
-//            case CELL_END:
-//                //agendaBuilder.createAgenda();
-//                System.err.println("Состояние Cell1State, поймано событие CELL_END");
-//                eventSink.castEvent(NEXT_CELL);
+//            case PAR:
+//                System.err.println("Состояние WaitCell1State, поймано событие PAR");
+//                eventSink.castEvent(IN_CELL);
 //                break;
 //        }
 //    }
 
+
     @Override
     public void processCommand(RtfCommand rtfCommand) {
-        switch (rtfCommand.getCommand()) {
-            case cell:
-                System.err.println("Состояние Cell2State, поймано событие cell");
-                eventSink.castEvent(NEXT_CELL);
+        switch (rtfCommand.getCommand()){
+            case row:
+                System.err.println("В состоянии WaitForRowEnd поймали row");
+                eventSink.castEvent(ROW_END);
                 break;
         }
     }
-
 }

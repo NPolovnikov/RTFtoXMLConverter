@@ -1,6 +1,7 @@
 package com.techinfocom.utils.tablesm.states;
 
 import com.techinfocom.utils.DocEvent;
+import com.techinfocom.utils.RtfCommand;
 import com.techinfocom.utils.model.AgendaBuilder;
 import com.techinfocom.utils.statemachine.Event;
 import com.techinfocom.utils.statemachine.EventSink;
@@ -24,13 +25,24 @@ public class WaitCell2State<AI extends TableParser> extends StateBase<AI> implem
         //ignore any stringsq
     }
 
+//    @Override
+//    public void processingDocEvent(DocEvent docEvent) {
+//        switch (docEvent) {
+//            case PAR:
+//                System.err.println("Состояние WaitCell2State, поймано событие PAR");
+//                eventSink.castEvent(IN_CELL);
+//                break;
+//        }
+//    }
+
     @Override
-    public void processingDocEvent(DocEvent docEvent) {
-        switch (docEvent) {
-            case PAR:
-                System.err.println("Состояние WaitCell2State, поймано событие PAR");
+    public void processCommand(RtfCommand rtfCommand) {
+        switch (rtfCommand.getCommand()){
+            case intbl:
+                System.err.println("В состоянии WFcell2 поймали intbl");
                 eventSink.castEvent(IN_CELL);
                 break;
         }
     }
+
 }
