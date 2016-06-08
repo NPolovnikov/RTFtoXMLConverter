@@ -1,6 +1,5 @@
 package com.techinfocom.utils.model;
 
-import com.techinfocom.utils.FormatedString;
 import com.techinfocom.utils.GroupState;
 import com.techinfocom.utils.RtfCommand;
 import com.techinfocom.utils.model.agenda.Agenda;
@@ -17,11 +16,9 @@ public class AgendaBuilder {
 
     private AgendaItem preparedAgendaItem;
     private AgendaItem currentItem;
-    private List<FormatedString> cellString;
 
     public AgendaBuilder() {
         objectFactory = new ObjectFactory();
-        cellString = new ArrayList<>();
     }
 
     private ObjectFactory objectFactory;

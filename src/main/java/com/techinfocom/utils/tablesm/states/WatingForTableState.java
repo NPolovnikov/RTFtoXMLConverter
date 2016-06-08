@@ -2,6 +2,7 @@ package com.techinfocom.utils.tablesm.states;
 
 import com.techinfocom.utils.DocEvent;
 import com.techinfocom.utils.RtfCommand;
+import com.techinfocom.utils.TextFormat;
 import com.techinfocom.utils.model.AgendaBuilder;
 import com.techinfocom.utils.statemachine.Event;
 import com.techinfocom.utils.statemachine.EventSink;
@@ -27,7 +28,7 @@ public class WatingForTableState<AI extends TableParser> extends StateBase<AI> i
     }
 
     @Override
-    public void processString(String string) {
+    public void processString(String string, TextFormat textFormat) {
         //ignore any strings
     }
 

@@ -18,15 +18,11 @@ public class TokenDetector implements IRtfListener {
     public TokenDetector() {
         groupState = new GroupState();
         tableParser = TableParserImpl.createAutomaton();
-        //structureTracer = new StructureTracer(tableParser);
     }
 
     private final GroupState groupState;
     private Integer dstDepthBegin;
-    //private StructureTracer structureTracer;
-    private TableParser tableParser;
-    //private FormatTracer;
-    //private TextTracer;
+    private final TableParser tableParser;
 
     @Override
     public void processDocumentStart() {
@@ -68,10 +64,8 @@ public class TokenDetector implements IRtfListener {
     public void processString(String string) {
         if (dstDepthBegin == null) {
             System.err.println("processString=" + string);
-            System.err.println("at textFormat=" + groupState.printCurrentLevel());
-//            System.err.println("at structure. tableCnt=" + structureTracer.getTableCount() +
-//                    "cellCnt = " + structureTracer.getCellCount());
-            tableParser.processString(string);
+            System.err.println("at " + groupState.printCurrentLevel());
+            tableParser.processString(string, groupState.getCurrent());
         }
     }
 
@@ -91,15 +85,8 @@ public class TokenDetector implements IRtfListener {
                     dstDepthBegin = groupState.getDepth();
                 }
                 break;
-            case Toggle:
-                if (hasParameter) {
-                    groupState.removeFromCurrentLevel(command.getCommandName());
-                } else {
-                    groupState.addToCurentLevel(new RtfCommand(command, parameter, hasParameter, optional));
-                }
-                break;
             default:
-//                structureTracer.processCommand(rtfCommand);
+                groupState.processCommand(rtfCommand);
                 tableParser.processCommand(rtfCommand);
                 break;
         }
