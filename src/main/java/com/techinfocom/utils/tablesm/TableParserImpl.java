@@ -55,8 +55,8 @@ public class TableParserImpl extends AutomationBase<TableParser> implements Tabl
 //    }
 
     @Override
-    public void processCommand(RtfCommand rtfCommand) {
-        state.processCommand(rtfCommand);
+    public void processCommand(RtfCommand rtfCommand, TextFormat textFormat) {
+        state.processCommand(rtfCommand, textFormat);
     }
 }
 

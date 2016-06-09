@@ -9,9 +9,6 @@ import static com.rtfparserkit.rtf.Command.*;
 
 /**
  * Created by volkov_kv on 26.05.2016.
- * На выходе должно получиться: docBegin, TableBegin
- * Надо сделать некую низкоуровневую фигню, чтобы объединять разрозненные команды в одну, и детекрировать нужные нам события.
- * Но куда эти события пихать? - текущее состояние парсера. докПарсинг, таблеПарсинг, РоуПарсинг
  */
 public class TokenDetector implements IRtfListener {
 
@@ -78,17 +75,44 @@ public class TokenDetector implements IRtfListener {
             System.err.println("режим сбора DST. пока игнор");
             return;
         }
-        switch (command.getCommandType()) {
-            case Destination:
-                if (command != rtf) {
-                    System.err.println("вошли в режим сбора DST");
-                    dstDepthBegin = groupState.getDepth();
-                }
+
+        String strSym = symToString(rtfCommand);
+        if (strSym != null) {
+            //нашли символ
+            processString(strSym);
+        } else {
+            //нашли команду
+            switch (command.getCommandType()) {
+                case Destination:
+                    if (command != rtf) {
+                        System.err.println("вошли в режим сбора DST");
+                        dstDepthBegin = groupState.getDepth();
+                    }
+                    break;
+                default:
+                    groupState.processCommand(rtfCommand);
+                    tableParser.processCommand(rtfCommand, groupState.getCurrent());
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Преобразует символы, передающиеся командами в текст.
+     *
+     * @return
+     */
+    private String symToString(RtfCommand rtfCommand) {
+        String res = null;
+        switch (rtfCommand.getCommand()) {
+            //Required line break (no paragraph break).
+            case line:
+                res = " ";
                 break;
-            default:
-                groupState.processCommand(rtfCommand);
-                tableParser.processCommand(rtfCommand);
+            case nonbreakingspace:
+                res = " ";
                 break;
         }
+        return res;
     }
 }

@@ -11,7 +11,7 @@ public interface TableParser {
 
     void processString(String string, TextFormat textFormat);
 
-    void processCommand(RtfCommand rtfCommand);
+    void processCommand(RtfCommand rtfCommand, TextFormat textFormat);
 
     //void processingDocEvent(DocEvent docEvent);
 

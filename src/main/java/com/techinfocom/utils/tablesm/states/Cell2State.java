@@ -22,27 +22,34 @@ import static com.rtfparserkit.rtf.Command.intbl;
 public class Cell2State<AI extends TableParser> extends StateBase<AI> implements TableParser {
     public static final Event NEXT_CELL = new Event("NEXT_CELL");
     AgendaBuilder agendaBuilder;
+    String collected;
 
 
     public Cell2State(AI automation, EventSink eventSink, AgendaBuilder agendaBuilder) {
         super(automation, eventSink);
         this.agendaBuilder = agendaBuilder;
+        collected = "";
     }
 
     @Override
     public void processString(String string, TextFormat textFormat) {
         if (textFormat.getParagraphFormat().stream().anyMatch(c -> c.getCommand() == intbl)) {
-            String current = agendaBuilder.getCurrentItem().getInfo();
-            agendaBuilder.getCurrentItem().setInfo((current == null ? "" : current) + string);
+            collected += string;
         }
     }
 
 
     @Override
-    public void processCommand(RtfCommand rtfCommand) {
+    public void processCommand(RtfCommand rtfCommand, TextFormat textFormat) {
         switch (rtfCommand.getCommand()) {
+            case par:
+                processString("\r\n", textFormat);
+                break;
             case cell:
                 System.err.println("Состояние Cell2State, поймано событие cell");
+                String conformed = agendaBuilder.conformString(collected);
+                agendaBuilder.getCurrentItem().setInfo(conformed);
+                collected = "";
                 eventSink.castEvent(NEXT_CELL);
                 break;
         }

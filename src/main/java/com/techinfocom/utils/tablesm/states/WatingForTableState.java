@@ -32,21 +32,9 @@ public class WatingForTableState<AI extends TableParser> extends StateBase<AI> i
         //ignore any strings
     }
 
-//    @Override
-//    public void processingDocEvent(DocEvent docEvent) {
-//        switch (docEvent) {
-//            case TABLE_BEGIN:
-//                agendaBuilder.createAgenda();
-//                System.err.println("Состояние WatingForTableState, поймано событие TABLE_BEGIN");
-//                eventSink.castEvent(TABLE_FOUND);
-//                break;
-//        }
-//
-//    }
-
 
     @Override
-    public void processCommand(RtfCommand rtfCommand) {
+    public void processCommand(RtfCommand rtfCommand, TextFormat textFormat) {
         switch (state) {
             case WAITING_FOR_TABLE:
                 switch (rtfCommand.getCommand()) {

@@ -28,7 +28,7 @@ public class WatingForNewRowState<AI extends TableParser> extends StateBase<AI> 
     }
 
     @Override
-    public void processCommand(RtfCommand rtfCommand) {
+    public void processCommand(RtfCommand rtfCommand, TextFormat textFormat) {
         switch (rtfCommand.getCommand()){
             case trowd:
                 System.err.println("Состояние WFTContinue.Поймали trowd");

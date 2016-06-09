@@ -7,7 +7,10 @@ import com.techinfocom.utils.model.agenda.AgendaItem;
 import com.techinfocom.utils.model.agenda.ObjectFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Created by volkov_kv on 07.06.2016.
@@ -45,8 +48,26 @@ public class AgendaBuilder {
         return currentItem;
     }
 
-    public void mergeItem(){
+    public void mergeItem() {
         agenda.getItemOrBlock().add(currentItem);
+    }
+
+
+    /**
+     * преобразует двойные пробелы, абзацы
+     *
+     * @param srcStr
+     * @return
+     */
+    public String conformString(String srcStr) {
+        String conformed = srcStr.replaceAll("  ", " ");
+        List<String> pars = Arrays.asList(conformed.split("\\r\\n"));
+        //раскладывает на абзацы, удаляет начальные конечные пробелы, удаляет пустые абзацы, складывает обратно через перевод каретки.
+        conformed = pars.stream()
+                .map(String::trim)
+                .filter(p->!p.isEmpty())
+                .collect(Collectors.joining("\r\n"));
+        return conformed;
     }
 
 // TODO: 07.06.2016 удалить currentItem, если строка таблицы оказалась битой?
