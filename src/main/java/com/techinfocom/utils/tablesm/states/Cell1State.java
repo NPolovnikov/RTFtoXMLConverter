@@ -51,6 +51,5 @@ public class Cell1State<AI extends TableParser> extends StateBase<AI> implements
                 eventSink.castEvent(NEXT_CELL);
                 break;
         }
-
     }
 }

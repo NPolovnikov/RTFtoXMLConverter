@@ -25,11 +25,14 @@ public abstract class AutomationBase<AI> implements EventSink {
     }
 
     public void castEvent(Event event) {
+        String report = state.getClass().getCanonicalName() + "-->";
         try {
             state = edges.get(state).get(event);
+            report += state.getClass().getCanonicalName();
         } catch (NullPointerException e) {
             throw new IllegalStateException("Edge is not defined");
         }
+        System.err.println(report);
     }
 
 }
