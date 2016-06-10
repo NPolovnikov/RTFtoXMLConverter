@@ -31,7 +31,7 @@ public class TextFormat {
             , ululdbwave
             , ulw
             , ulwave};
-    List<RtfCommand> paragraphFormat = new ArrayList<>();
+    List<RtfCommand> paragraphFormat = new ArrayList<>(); //todo Выделить это сочетание в отдельный класс и сделать textFormatBuilder
     List<RtfCommand> fontFormat = new ArrayList<>();
 
     public void processCommand(RtfCommand rtfCommand) {

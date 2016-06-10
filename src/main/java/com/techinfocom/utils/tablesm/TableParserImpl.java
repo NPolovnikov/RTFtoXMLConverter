@@ -49,11 +49,6 @@ public class TableParserImpl extends AutomationBase<TableParser> implements Tabl
         state.processString(string, textFormat);
     }
 
-//    @Override
-//    public void processingDocEvent(DocEvent event) {
-//        state.processingDocEvent(event);
-//    }
-
     @Override
     public void processCommand(RtfCommand rtfCommand, TextFormat textFormat) {
         state.processCommand(rtfCommand, textFormat);
