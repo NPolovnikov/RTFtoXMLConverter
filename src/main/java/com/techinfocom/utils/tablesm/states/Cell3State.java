@@ -86,40 +86,43 @@ public class Cell3State<AI extends TableParser> extends StateBase<AI> implements
             formatedCharsList.add(formatedChars);
         }
 
-        Character candidate = null;
+        Character charBuffer = null;
         List<FormatedChars> acceptedCharsList = new ArrayList<>();
-        FormatedChars candidateAcceptedChars = null;
+        FormatedChars bufferTarget = null;
         for (FormatedChars fc : formatedCharsList) {
             FormatedChars acceptedChars = new FormatedChars();
             acceptedChars.textFormat = fc.textFormat;
             acceptedChars.chars = new ArrayList<>();
             for (Character c : fc.chars) {
-                if (candidate == null) {
+                if (charBuffer == null) {
                     if (!c.equals(' ')) { //вначале всего текста следует игнорировать только пробелы
-                        candidate = c;
-                        candidateAcceptedChars = acceptedChars;
+                        charBuffer = c;
+                        bufferTarget = acceptedChars;
                     }
                 } else {
-                    if (candidate.equals('\n') && c.equals(' ')) { //пробел вначале абзаца
-                        //candidate-остается, прибел игнорируем
+                    //пробел вначале абзаца
+                    if (charBuffer.equals('\n') && c.equals(' ')) {
+                        //charBuffer-остается, текущий символ игнорируем
                     } else
-                    if ((candidate.equals('\n') && c.equals('\n')) ||
-                            (candidate.equals(' ') && c.equals('\n')) ||
-                            (candidate.equals(' ') && c.equals(' ')) ||
-                            (candidate.equals('\n') && c.equals('\n'))) {
-                        candidate = c;//игнорируем символ, он не нужен
-                        candidateAcceptedChars = acceptedChars;
+                    //последовательности при которых игнорируется один символов
+                    if ((charBuffer.equals('\n') && c.equals('\n')) ||
+                            (charBuffer.equals(' ') && c.equals('\n')) ||
+                            (charBuffer.equals(' ') && c.equals(' ')) ||
+                            (charBuffer.equals('\n') && c.equals('\n'))) {
+                        charBuffer = c;//игнорируем символ, он не нужен
+                        bufferTarget = acceptedChars;
                     } else {
-                        candidateAcceptedChars.chars.add(candidate);
-                        candidate = c;
-                        candidateAcceptedChars = acceptedChars;
+                        bufferTarget.chars.add(charBuffer);
+                        charBuffer = c;
+                        bufferTarget = acceptedChars;
                     }
                 }
             }
             acceptedCharsList.add(acceptedChars);
         }
-        if(candidate != null){
-            acceptedCharsList.get(acceptedCharsList.size()-1).chars.add(candidate); //отстающий символ разместим.
+        if(charBuffer != null){
+            bufferTarget.chars.add(charBuffer); //отстающий символ разместим.
+            //acceptedCharsList.get(acceptedCharsList.size()-1).chars.add(charBuffer);
         }
 
         //соберем обратно в строки.
