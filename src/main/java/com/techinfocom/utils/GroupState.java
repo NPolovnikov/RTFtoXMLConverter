@@ -13,7 +13,11 @@ public class GroupState {
     }
 
     public void addLevel() {
-        stack.push(new TextFormat());
+        if (!stack.empty()) {
+            stack.push(new TextFormat(stack.peek())); //текущий формат войдет в формат верхнего уровня
+        } else {
+            stack.push(new TextFormat());
+        }
     }
 
     public void removeLevel() {
@@ -29,16 +33,14 @@ public class GroupState {
     }
 
     public TextFormat getCurrent() {
-        TextFormat currentTextFormat = new TextFormat();
-        for (TextFormat tf : stack) {
-            currentTextFormat.getFontFormat().addAll(tf.getFontFormat());
-            currentTextFormat.getParagraphFormat().addAll(tf.paragraphFormat);
-        }
-        return currentTextFormat;
+        return stack.peek();
     }
 
     public String printCurrentLevel() {
-        TextFormat currentTextFormat = getCurrent();
-        return currentTextFormat.toString();
+        if (stack.isEmpty()){
+            return new TextFormat().toString();
+        } else {
+            return getCurrent().toString();
+        }
     }
 }

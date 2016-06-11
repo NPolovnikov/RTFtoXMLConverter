@@ -12,8 +12,25 @@ import static com.rtfparserkit.rtf.Command.*;
  * Created by volkov_kv on 08.06.2016.
  */
 public class TextFormat {
+
+
+    public TextFormat() {
+        paragraphFormat = new ArrayList<>();
+        fontFormat = new ArrayList<>();
+    }
+
+    public TextFormat(TextFormat textFormat) {
+        paragraphFormat = new ArrayList<>();
+        fontFormat = new ArrayList<>();
+        paragraphFormat.addAll(textFormat.getParagraphFormat());
+        fontFormat.addAll(textFormat.getFontFormat());
+    }
+
+    private final List<RtfCommand> paragraphFormat;
+    private final List<RtfCommand> fontFormat;
+
     // все виды подчеркнутого текста
-    Command[] allUnderlinesA = {ul
+    private Command[] allUnderlinesA = {ul
             , ulc
             , uld
             , uldash
@@ -31,8 +48,6 @@ public class TextFormat {
             , ululdbwave
             , ulw
             , ulwave};
-    List<RtfCommand> paragraphFormat = new ArrayList<>(); //todo Выделить это сочетание в отдельный класс и сделать textFormatBuilder
-    List<RtfCommand> fontFormat = new ArrayList<>();
 
     public void processCommand(RtfCommand rtfCommand) {
         switch (rtfCommand.getCommand()) {
