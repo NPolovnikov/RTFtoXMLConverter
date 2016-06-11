@@ -2,6 +2,7 @@ package com.techinfocom.utils.tablesm.states;
 
 import com.rtfparserkit.rtf.Command;
 import com.techinfocom.utils.DocEvent;
+import com.techinfocom.utils.FormatedChar;
 import com.techinfocom.utils.RtfCommand;
 import com.techinfocom.utils.TextFormat;
 import com.techinfocom.utils.model.AgendaBuilder;
@@ -22,19 +23,19 @@ import static com.rtfparserkit.rtf.Command.intbl;
 public class Cell2State<AI extends TableParser> extends StateBase<AI> implements TableParser {
     public static final Event NEXT_CELL = new Event("NEXT_CELL");
     AgendaBuilder agendaBuilder;
-    String collected;
+    StringBuilder collected;
 
 
     public Cell2State(AI automation, EventSink eventSink, AgendaBuilder agendaBuilder) {
         super(automation, eventSink);
         this.agendaBuilder = agendaBuilder;
-        collected = "";
+        collected = new StringBuilder();
     }
 
     @Override
-    public void processString(String string, TextFormat textFormat) {
-        if (textFormat.getParagraphFormat().stream().anyMatch(c -> c.getCommand() == intbl)) {
-            collected += string;
+    public void processChar(FormatedChar fc) {
+        if (fc.getTextFormat().paragraphContain(intbl)) {
+            collected.append(fc.getC());
         }
     }
 
@@ -43,13 +44,13 @@ public class Cell2State<AI extends TableParser> extends StateBase<AI> implements
     public void processCommand(RtfCommand rtfCommand, TextFormat textFormat) {
         switch (rtfCommand.getCommand()) {
             case par:
-                processString("\r\n", textFormat);
+                processChar(new FormatedChar('\n', textFormat));
                 break;
             case cell:
                 System.err.println("Состояние Cell2State, поймано событие cell");
-                String conformed = agendaBuilder.conformString(collected);
+                String conformed = agendaBuilder.conformString(collected.toString());
                 agendaBuilder.getCurrentItem().setInfo(conformed);
-                collected = "";
+                collected = new StringBuilder();
                 eventSink.castEvent(NEXT_CELL);
                 break;
         }

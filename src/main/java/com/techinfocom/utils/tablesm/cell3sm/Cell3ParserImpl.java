@@ -1,5 +1,6 @@
 package com.techinfocom.utils.tablesm.cell3sm;
 
+import com.techinfocom.utils.FormatedChar;
 import com.techinfocom.utils.RtfCommand;
 import com.techinfocom.utils.TextFormat;
 import com.techinfocom.utils.model.AgendaBuilder;
@@ -24,11 +25,11 @@ public class Cell3ParserImpl extends AutomationBase<Cell3Parser> implements Cell
         addEdge(text, Text.PAR_FOUND, waitForSpeakers);
         addEdge(waitForSpeakers, WaitForSpeakers.NO_SPEAKERS, text);
         addEdge(waitForSpeakers, WaitForSpeakers.SPEAKERS_FOUND, speakType);
-        addEdge(speakType, SpeakType.PLAIN_TEXT, post);
-        addEdge(post, Post.BOLD, name);
+        addEdge(speakType, SpeakType.POST_FOUND, post);
+        addEdge(post, Post.NAME_FOUND, name);
         addEdge(name, Name.PLAIN_TEXT, post);
-        addEdge(name, Name.PAR, waitForNextSpeakers);
-        addEdge(waitForNextSpeakers, WaitForNextSpeakers.UL, speakType);
+        addEdge(name, Name.END_OF_SPEAKER_GROUP, waitForNextSpeakers);
+        addEdge(waitForNextSpeakers, WaitForNextSpeakers.NEW_SPEAKER_GROUP_FOUND, speakType);
         addEdge(name, Name.CELL_END, text);
 
         //Начальное состояние
@@ -41,18 +42,22 @@ public class Cell3ParserImpl extends AutomationBase<Cell3Parser> implements Cell
     }
 
     @Override
-    public void processString(String string, TextFormat textFormat) {
-        state.processString(string, textFormat);
+    public void processChar(FormatedChar fc) {
+        state.processChar(fc);
+    }
+
+//    @Override
+//    public void processCommand(RtfCommand rtfCommand, TextFormat textFormat) {
+//        state.processCommand(rtfCommand, textFormat);
+//    }
+
+    @Override
+    public void analyseFormat(FormatedChar fc) {
+        state.analyseFormat(fc);
     }
 
     @Override
-    public void processCommand(RtfCommand rtfCommand, TextFormat textFormat) {
-        state.processCommand(rtfCommand, textFormat);
-    }
+    public void endOfCell() {
 
-    @Override
-    public void analyseFormat(String string, TextFormat textFormat) {
-        state.analyseFormat(string, textFormat);
     }
-
 }

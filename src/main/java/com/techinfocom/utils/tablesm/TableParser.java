@@ -1,6 +1,7 @@
 package com.techinfocom.utils.tablesm;
 
 import com.techinfocom.utils.DocEvent;
+import com.techinfocom.utils.FormatedChar;
 import com.techinfocom.utils.RtfCommand;
 import com.techinfocom.utils.TextFormat;
 
@@ -9,7 +10,7 @@ import com.techinfocom.utils.TextFormat;
  */
 public interface TableParser {
 
-    void processString(String string, TextFormat textFormat);
+    void processChar(FormatedChar fc);
 
     void processCommand(RtfCommand rtfCommand, TextFormat textFormat);
 

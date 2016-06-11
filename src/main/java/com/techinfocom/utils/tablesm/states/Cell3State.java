@@ -1,8 +1,7 @@
 package com.techinfocom.utils.tablesm.states;
 
-import com.techinfocom.utils.FormattedText;
-import com.techinfocom.utils.RtfCommand;
-import com.techinfocom.utils.TextFormat;
+import com.rtfparserkit.rtf.Command;
+import com.techinfocom.utils.*;
 import com.techinfocom.utils.model.AgendaBuilder;
 import com.techinfocom.utils.statemachine.Event;
 import com.techinfocom.utils.statemachine.EventSink;
@@ -26,6 +25,7 @@ public class Cell3State<AI extends TableParser> extends StateBase<AI> implements
     private Cell3Parser cell3Parser;
     private EventSink cell3ParserEeventSink;
     private List<FormattedText> consumed;
+    private ParTrimmer parTrimmer;
 
     public Cell3State(AI automation, EventSink eventSink, AgendaBuilder agendaBuilder) {
         super(automation, eventSink);
@@ -37,27 +37,38 @@ public class Cell3State<AI extends TableParser> extends StateBase<AI> implements
         cell3Parser = Cell3ParserImpl.createAutomation(this.agendaBuilder);
         cell3ParserEeventSink = (EventSink) cell3Parser;
         consumed = new ArrayList<>();
+        parTrimmer = new ParTrimmer();
     }
 
     @Override
-    public void processString(String string, TextFormat textFormat) {
-        if (!textFormat.getParagraphFormat().stream().anyMatch(c -> c.getCommand() == intbl)) {
+    public void processChar(FormatedChar fc) {
+        if (!fc.getTextFormat().paragraphContain(intbl)) {
             return; //наличие обязательно
         }
-        consumed.add(new FormattedText(string, textFormat));
+        FormatedChar trimmedChar = parTrimmer.trim(fc);
+        if (trimmedChar != null) {
+            cell3Parser.analyseFormat(trimmedChar);
+            cell3Parser.processChar(trimmedChar);
+
+        }
     }
 
     @Override
     public void processCommand(RtfCommand rtfCommand, TextFormat textFormat) {
         switch (rtfCommand.getCommand()) {
             case par:
-                processString("\n", textFormat);
+                processChar(new FormatedChar('\n', textFormat));
                 break;
             case cell:
                 System.err.println("Состояние Cell3State, поймано событие cell.");
-                List<FormattedText> trimmedConsumed = trimFormatedTextList(consumed);
-                System.out.println(trimmedConsumed);
-                parseConsumed();
+
+                FormatedChar trimmedChar = parTrimmer.finish();
+                if (trimmedChar != null) {
+                    cell3Parser.analyseFormat(trimmedChar);
+                    cell3Parser.processChar(trimmedChar);
+                }
+                cell3Parser.endOfCell();
+
                 init();//переинициализируем для следующего применения.
                 eventSink.castEvent(NEXT_CELL);
                 break;
@@ -104,52 +115,51 @@ public class Cell3State<AI extends TableParser> extends StateBase<AI> implements
                     if (charBuffer.equals('\n') && c.equals(' ')) {
                         //charBuffer-остается, текущий символ игнорируем
                     } else
-                    //последовательности при которых игнорируется один символов
-                    if ((charBuffer.equals('\n') && c.equals('\n')) ||
-                            (charBuffer.equals(' ') && c.equals('\n')) ||
-                            (charBuffer.equals(' ') && c.equals(' ')) ||
-                            (charBuffer.equals('\n') && c.equals('\n'))) {
-                        charBuffer = c;//игнорируем символ, он не нужен
-                        bufferTarget = acceptedChars;
-                    } else {
-                        bufferTarget.chars.add(charBuffer);
-                        charBuffer = c;
-                        bufferTarget = acceptedChars;
-                    }
+                        //последовательности при которых игнорируется один символов
+                        if ((charBuffer.equals('\n') && c.equals('\n')) ||
+                                (charBuffer.equals(' ') && c.equals('\n')) ||
+                                (charBuffer.equals(' ') && c.equals(' ')) ||
+                                (charBuffer.equals('\n') && c.equals('\n'))) {
+                            charBuffer = c;//игнорируем символ, он не нужен
+                            bufferTarget = acceptedChars;
+                        } else {
+                            bufferTarget.chars.add(charBuffer);
+                            charBuffer = c;
+                            bufferTarget = acceptedChars;
+                        }
                 }
             }
             acceptedCharsList.add(acceptedChars);
         }
-        if(charBuffer != null){
+        if (charBuffer != null && !charBuffer.equals('\n')) {
             bufferTarget.chars.add(charBuffer); //отстающий символ разместим.
             //acceptedCharsList.get(acceptedCharsList.size()-1).chars.add(charBuffer);
         }
 
         //соберем обратно в строки.
         List<FormattedText> trimedList = new ArrayList<>();
-        for (FormatedChars fcs : acceptedCharsList){
-            if(fcs.chars.size()>0){
+        for (FormatedChars fcs : acceptedCharsList) {
+            if (fcs.chars.size() > 0) {
                 StringBuilder sb = new StringBuilder(fcs.chars.size());
                 fcs.chars.stream().forEach(sb::append);
-                FormattedText ft = new FormattedText(sb.toString().replace("\n","\r\n"), fcs.textFormat);
+                FormattedText ft = new FormattedText(sb.toString(), fcs.textFormat);
                 trimedList.add(ft);
             }
         }
         return trimedList;
     }
 
-    protected void parseConsumed() {
+    protected void parseCell3Text(List<FormattedText> formattedTextList) {
         //поскольку формат текста отслеживается отдельным хендлером, следут сначала проанализировать
         //формат и принять решение о характере обработки текста, потом только обработать.
         // то есть смена состояния автомата должна предшествовать обработке текста.
-        //cell3Parser.analyseFormat(string, textFormat);
-        //cell3Parser.processString(string, textFormat);
-        //cell3Parser.processCommand(rtfCommand, textFormat);
-    }
-
-    private enum TrimState {
-        PAR_START,
-
+        for (FormattedText ft : formattedTextList) {
+            for (char c : ft.getString().toCharArray()) {
+                //cell3Parser.analyseFormat(c, ft.getFormat());
+                //cell3Parser.processChar(c, ft.getFormat());
+            }
+            //cell3Parser.processCommand(new RtfCommand(Command.cell, 0, false, false), new TextFormat()); //todo бред, а
+        }
     }
 
 

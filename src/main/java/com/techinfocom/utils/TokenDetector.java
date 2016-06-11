@@ -62,7 +62,10 @@ public class TokenDetector implements IRtfListener {
         if (dstDepthBegin == null) {
             System.err.println("processString=" + string);
             System.err.println("at " + groupState.printCurrentLevel());
-            tableParser.processString(string, groupState.getCurrent());
+            for(char c : string.toCharArray()){
+                tableParser.processChar(new FormatedChar(c, groupState.getCurrent()));
+            }
+
         }
     }
 

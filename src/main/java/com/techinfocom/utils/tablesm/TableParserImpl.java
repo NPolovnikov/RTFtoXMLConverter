@@ -1,5 +1,6 @@
 package com.techinfocom.utils.tablesm;
 
+import com.techinfocom.utils.FormatedChar;
 import com.techinfocom.utils.RtfCommand;
 import com.techinfocom.utils.TextFormat;
 import com.techinfocom.utils.model.AgendaBuilder;
@@ -45,8 +46,8 @@ public class TableParserImpl extends AutomationBase<TableParser> implements Tabl
 
     // Делегирование методов интерфейса
     @Override
-    public void processString(String string, TextFormat textFormat) {
-        state.processString(string, textFormat);
+    public void processChar(FormatedChar fc) {
+        state.processChar(fc);
     }
 
     @Override

@@ -118,6 +118,14 @@ public class TextFormat {
 
     }
 
+    public boolean paragraphContain(Command command){
+        return paragraphFormat.stream().anyMatch(c -> c.getCommand() == command);
+    }
+
+    public boolean fontContain(Command command){
+        return fontFormat.stream().anyMatch(c -> c.getCommand() == command);
+    }
+
     public List<RtfCommand> getParagraphFormat() {
         return paragraphFormat;
     }

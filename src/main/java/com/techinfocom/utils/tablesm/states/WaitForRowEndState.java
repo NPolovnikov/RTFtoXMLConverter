@@ -1,5 +1,6 @@
 package com.techinfocom.utils.tablesm.states;
 
+import com.techinfocom.utils.FormatedChar;
 import com.techinfocom.utils.RtfCommand;
 import com.techinfocom.utils.TextFormat;
 import com.techinfocom.utils.model.AgendaBuilder;
@@ -21,7 +22,7 @@ public class WaitForRowEndState<AI extends TableParser> extends StateBase<AI> im
     }
 
     @Override
-    public void processString(String string, TextFormat textFormat) {
+    public void processChar(FormatedChar fc) {
         //ignore any stringsq
     }
 

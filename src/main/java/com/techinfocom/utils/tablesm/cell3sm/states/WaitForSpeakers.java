@@ -1,5 +1,6 @@
 package com.techinfocom.utils.tablesm.cell3sm.states;
 
+import com.techinfocom.utils.FormatedChar;
 import com.techinfocom.utils.RtfCommand;
 import com.techinfocom.utils.TextFormat;
 import com.techinfocom.utils.model.AgendaBuilder;
@@ -25,26 +26,25 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
     }
 
     @Override
-    public void processString(String string, TextFormat textFormat) {
+    public void processChar(FormatedChar fc) {
 
     }
 
-    @Override
-    public void processCommand(RtfCommand rtfCommand, TextFormat textFormat) {
-        switch (rtfCommand.getCommand()){
-            case cell:
-                agendaBuilder.mergeCurrentGroup();
-                break;
-        }
+//    @Override
+//    public void processCommand(RtfCommand rtfCommand, TextFormat textFormat) {
+//        switch (rtfCommand.getCommand()) {
+//            case cell:
+//                agendaBuilder.mergeCurrentGroup();
+//                break;
+//        }
+//
+//    }
 
-    }
-
     @Override
-    public void analyseFormat(String string, TextFormat textFormat) {
-        //если поймали подчеркнутый, НЕ НАКЛОННЫЙ текст, и первый символ не пробел, то это тип доклада, и началось описание докладчиков.
-        if (textFormat.getFontFormat().stream().anyMatch(c -> c.getCommand() == ul) &&
-                textFormat.getFontFormat().stream().noneMatch(c->c.getCommand() == i) &&
-                !string.startsWith(" ")) {
+    public void analyseFormat(FormatedChar fc) {
+        //если поймали подчеркнутый, НЕ НАКЛОННЫЙ текст, то это тип доклада, и началось описание докладчиков.
+        if (fc.getTextFormat().paragraphContain(ul) &&
+                !fc.getTextFormat().paragraphContain(i)) {
             //создадим новую группу докладчиков и инициализируем тип доклада
             agendaBuilder.newCurrentGroup();
             agendaBuilder.getCurrentGroup().setGroupName("");
@@ -52,8 +52,19 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
             eventSink.castEvent(SPEAKERS_FOUND);
         } else {
             //не подчеркнутый текст, это продолжение text
+            //восстановим перевод строки, принятый за сигнал
+            String text = agendaBuilder.getCurrentItem().getText();
+            if (text == null) {
+                text = "";
+            }
+            agendaBuilder.getCurrentItem().setText(text + "\r\n");
+
             eventSink.castEvent(NO_SPEAKERS);
         }
     }
 
+    @Override
+    public void endOfCell() {
+
+    }
 }
