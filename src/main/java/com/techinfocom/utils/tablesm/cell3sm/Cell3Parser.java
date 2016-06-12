@@ -15,5 +15,5 @@ public interface Cell3Parser {
 
     void analyseFormat(FormatedChar fc);
 
-    void endOfCell();
+    void exit();
 }

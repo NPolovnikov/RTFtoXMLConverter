@@ -4,6 +4,8 @@ import com.rtfparserkit.parser.IRtfListener;
 import com.rtfparserkit.rtf.Command;
 import com.techinfocom.utils.tablesm.TableParser;
 import com.techinfocom.utils.tablesm.TableParserImpl;
+import org.slf4j.*;
+import org.slf4j.Logger;
 
 import java.util.Arrays;
 
@@ -13,6 +15,7 @@ import static com.rtfparserkit.rtf.Command.*;
  * Created by volkov_kv on 26.05.2016.
  */
 public class TokenDetector implements IRtfListener {
+    private static final Logger LOGGER = com.techinfocom.utils.Logger.LOGGER;
 
     public TokenDetector() {
         groupState = new GroupState();
@@ -25,12 +28,12 @@ public class TokenDetector implements IRtfListener {
 
     @Override
     public void processDocumentStart() {
-        System.err.println("message:DocBegin");
+        LOGGER.debug("message:DocBegin");
     }
 
     @Override
     public void processDocumentEnd() {
-        System.err.println("message:DocEnd");
+        LOGGER.debug("message:DocEnd");
     }
 
     @Override
@@ -44,7 +47,7 @@ public class TokenDetector implements IRtfListener {
         //"Эмуляция состояния
         //Если мы в режиме сбора DST,то проверим не пора ли выйти из него
         if (dstDepthBegin != null && groupState.getDepth() < dstDepthBegin) {
-            System.err.println("Выйдем из состояния сбора DST группы");
+            //System.err.println("Выйдем из состояния сбора DST группы");
             dstDepthBegin = null;
         }
     }
@@ -62,9 +65,8 @@ public class TokenDetector implements IRtfListener {
     @Override
     public void processString(String string) {
         if (dstDepthBegin == null) {
-            System.err.println("processString=" + string);
-            System.err.println("at " + groupState.printCurrentLevel());
-            for(char c : string.toCharArray()){
+            LOGGER.debug("processString={} at groupState={}", string, groupState.printCurrentLevel());
+            for (char c : string.toCharArray()) {
                 tableParser.processChar(new FormatedChar(c, groupState.getCurrent()));
             }
 
@@ -73,11 +75,11 @@ public class TokenDetector implements IRtfListener {
 
     @Override
     public void processCommand(Command command, int parameter, boolean hasParameter, boolean optional) {
-        Command[] tblCommands = {trowd, row, cell, lastrow, pard, plain,intbl, par };
+        Command[] tblCommands = {trowd, row, cell, lastrow, pard, plain, intbl, par};
         if (dstDepthBegin == null) {
             //System.err.println("processCommand. command=" + command.getCommandName() + "-" + command.getCommandType() + "; parameter=" + parameter + "; hasParameter=" + hasParameter + "; optional=" + optional);
-            if (Arrays.asList(tblCommands).contains(command)){
-                System.err.println("processCommand. command=" + command.getCommandName() + "-" + command.getCommandType() + "; parameter=" + parameter + "; hasParameter=" + hasParameter + "; optional=" + optional);
+            if (Arrays.asList(tblCommands).contains(command)) {
+                LOGGER.debug("processCommand. command=" + command.getCommandName() + "-" + command.getCommandType() + "; parameter=" + parameter + "; hasParameter=" + hasParameter + "; optional=" + optional);
             }
         }
         RtfCommand rtfCommand = new RtfCommand(command, parameter, hasParameter, optional);
@@ -96,7 +98,7 @@ public class TokenDetector implements IRtfListener {
             switch (command.getCommandType()) {
                 case Destination:
                     if (command != rtf) {
-                        System.err.println("вошли в режим сбора DST");
+                        //System.err.println("вошли в режим сбора DST");
                         dstDepthBegin = groupState.getDepth();
                     }
                     break;

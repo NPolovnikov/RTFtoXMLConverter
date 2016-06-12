@@ -19,4 +19,5 @@ public abstract class StateBase<AI> {
     protected void castEvent(Event event){
         eventSink.castEvent(event);
     }
+
 }

@@ -9,6 +9,7 @@ import com.techinfocom.utils.statemachine.Event;
 import com.techinfocom.utils.statemachine.EventSink;
 import com.techinfocom.utils.statemachine.StateBase;
 import com.techinfocom.utils.tablesm.cell3sm.Cell3Parser;
+import org.slf4j.Logger;
 
 import static com.rtfparserkit.rtf.Command.*;
 
@@ -16,6 +17,8 @@ import static com.rtfparserkit.rtf.Command.*;
  * Created by volkov_kv on 09.06.2016.
  */
 public class Text<AI extends Cell3Parser> extends StateBase<AI> implements Cell3Parser {
+    private static final String STATE_NAME = Text.class.getSimpleName().toUpperCase();
+    private static final Logger LOGGER = com.techinfocom.utils.Logger.LOGGER;
     public static final Event PAR_FOUND = new Event("PAR_FOUND");
 
     private final AgendaBuilder agendaBuilder;
@@ -28,6 +31,7 @@ public class Text<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     @Override
     public void processChar(FormatedChar fc) {
         if (fc.getC() == '\n') {
+            LOGGER.debug("state={}. Обнаружен \\n.", STATE_NAME);
             eventSink.castEvent(PAR_FOUND);
         } else {
             String text = agendaBuilder.getCurrentItem().getText();
@@ -57,7 +61,7 @@ public class Text<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     }
 
     @Override
-    public void endOfCell() {
+    public void exit() {
 
     }
 }

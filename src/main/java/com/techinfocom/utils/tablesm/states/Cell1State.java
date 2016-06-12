@@ -8,6 +8,7 @@ import com.techinfocom.utils.statemachine.Event;
 import com.techinfocom.utils.statemachine.EventSink;
 import com.techinfocom.utils.statemachine.StateBase;
 import com.techinfocom.utils.tablesm.TableParser;
+import com.techinfocom.utils.tablesm.cell3sm.states.Name;
 
 import static com.rtfparserkit.rtf.Command.*;
 
@@ -15,6 +16,7 @@ import static com.rtfparserkit.rtf.Command.*;
  * Created by volkov_kv on 07.06.2016.
  */
 public class Cell1State<AI extends TableParser> extends StateBase<AI> implements TableParser {
+    private static final String STATE_NAME = Cell1State.class.getSimpleName().toUpperCase();
     public static final Event CELL_END = new Event("CELL_END");
     public static final Event TABLE_END = new Event("TABLE_END");
     AgendaBuilder agendaBuilder;

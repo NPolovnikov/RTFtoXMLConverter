@@ -8,6 +8,7 @@ import com.techinfocom.utils.statemachine.Event;
 import com.techinfocom.utils.statemachine.EventSink;
 import com.techinfocom.utils.statemachine.StateBase;
 import com.techinfocom.utils.tablesm.cell3sm.Cell3Parser;
+import org.slf4j.Logger;
 
 import static com.rtfparserkit.rtf.Command.*;
 
@@ -15,6 +16,8 @@ import static com.rtfparserkit.rtf.Command.*;
  * Created by volkov_kv on 09.06.2016.
  */
 public class Post<AI extends Cell3Parser> extends StateBase<AI> implements Cell3Parser {
+    private static final String STATE_NAME = Post.class.getSimpleName().toUpperCase();
+    private static final Logger LOGGER = com.techinfocom.utils.Logger.LOGGER;
     public static final Event NAME_FOUND = new Event("NAME_FOUND");
 
     private final AgendaBuilder agendaBuilder;
@@ -39,12 +42,13 @@ public class Post<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     public void analyseFormat(FormatedChar fc) {
         //жирный текст- ФИО докладчика
         if (fc.getTextFormat().fontContain(b)) {
+            LOGGER.debug("state={}. Обнаружен жирный текст.", STATE_NAME);
             eventSink.castEvent(NAME_FOUND);
         }
     }
 
     @Override
-    public void endOfCell() {
+    public void exit() {
 
     }
 }

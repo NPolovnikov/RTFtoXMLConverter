@@ -1,5 +1,7 @@
 package com.techinfocom.utils.statemachine;
 
+import org.slf4j.Logger;
+
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -11,6 +13,7 @@ import java.util.Map;
  * AutomatonBase реализует интерфейс уведомления о событии
  */
 public abstract class AutomationBase<AI> implements EventSink {
+    private static final Logger LOGGER = com.techinfocom.utils.Logger.LOGGER;
     protected AI state;
     private final Map<AI, Map<Event, AI>> edges =
             new HashMap<AI, Map<Event, AI>>();
@@ -25,14 +28,14 @@ public abstract class AutomationBase<AI> implements EventSink {
     }
 
     public void castEvent(Event event) {
-        String report = state.getClass().getCanonicalName() + "-->";
+        String report = state.getClass().getSimpleName().toUpperCase() + "-->";
         try {
             state = edges.get(state).get(event);
-            report += state.getClass().getCanonicalName();
+            report += state.getClass().getSimpleName().toUpperCase();
         } catch (NullPointerException e) {
             throw new IllegalStateException("Edge is not defined");
         }
-        System.err.println(report);
+        LOGGER.debug(report);
     }
 
 }

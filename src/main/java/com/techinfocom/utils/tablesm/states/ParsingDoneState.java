@@ -13,7 +13,7 @@ import com.techinfocom.utils.tablesm.TableParser;
  * Created by volkov_kv on 07.06.2016.
  */
 public class ParsingDoneState<AI extends TableParser> extends StateBase<AI> implements TableParser {
-
+    private static final String STATE_NAME = ParsingDoneState.class.getSimpleName().toUpperCase();
 
     AgendaBuilder agendaBuilder;
     private int tableCount = 0;

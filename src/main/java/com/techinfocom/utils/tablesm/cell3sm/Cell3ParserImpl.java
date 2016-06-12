@@ -1,16 +1,16 @@
 package com.techinfocom.utils.tablesm.cell3sm;
 
 import com.techinfocom.utils.FormatedChar;
-import com.techinfocom.utils.RtfCommand;
-import com.techinfocom.utils.TextFormat;
 import com.techinfocom.utils.model.AgendaBuilder;
 import com.techinfocom.utils.statemachine.AutomationBase;
 import com.techinfocom.utils.tablesm.cell3sm.states.*;
+import org.slf4j.Logger;
 
 /**
  * Created by volkov_kv on 09.06.2016.
  */
 public class Cell3ParserImpl extends AutomationBase<Cell3Parser> implements Cell3Parser {
+    private static final Logger LOGGER = com.techinfocom.utils.Logger.LOGGER;
 
     public Cell3ParserImpl(AgendaBuilder agendaBuilder) {
         //создание объектов-состояний
@@ -26,11 +26,13 @@ public class Cell3ParserImpl extends AutomationBase<Cell3Parser> implements Cell
         addEdge(waitForSpeakers, WaitForSpeakers.NO_SPEAKERS, text);
         addEdge(waitForSpeakers, WaitForSpeakers.SPEAKERS_FOUND, speakType);
         addEdge(speakType, SpeakType.POST_FOUND, post);
+        addEdge(speakType, SpeakType.EXIT, text);
         addEdge(post, Post.NAME_FOUND, name);
-        addEdge(name, Name.PLAIN_TEXT, post);
+        addEdge(name, Name.POST_FOUND, post);
         addEdge(name, Name.END_OF_SPEAKER_GROUP, waitForNextSpeakers);
         addEdge(waitForNextSpeakers, WaitForNextSpeakers.NEW_SPEAKER_GROUP_FOUND, speakType);
-        addEdge(name, Name.CELL_END, text);
+        addEdge(waitForNextSpeakers, WaitForNextSpeakers.EXIT, text);
+        addEdge(name, Name.EXIT, text);
 
         //Начальное состояние
         state = text;
@@ -57,7 +59,7 @@ public class Cell3ParserImpl extends AutomationBase<Cell3Parser> implements Cell
     }
 
     @Override
-    public void endOfCell() {
-
+    public void exit() {
+        state.exit();
     }
 }

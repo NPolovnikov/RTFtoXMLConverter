@@ -15,6 +15,7 @@ import static com.rtfparserkit.rtf.Command.intbl;
  * Created by volkov_kv on 07.06.2016.
  */
 public class Cell2State<AI extends TableParser> extends StateBase<AI> implements TableParser {
+    private static final String STATE_NAME = Cell2State.class.getSimpleName().toUpperCase();
     public static final Event CELL_END = new Event("CELL_END");
     AgendaBuilder agendaBuilder;
     StringBuilder collected;

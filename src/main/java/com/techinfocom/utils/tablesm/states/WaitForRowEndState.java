@@ -13,6 +13,7 @@ import com.techinfocom.utils.tablesm.TableParser;
  * Created by volkov_kv on 07.06.2016.
  */
 public class WaitForRowEndState<AI extends TableParser> extends StateBase<AI> implements TableParser {
+    private static final String STATE_NAME = WaitForRowEndState.class.getSimpleName().toUpperCase();
     public static final Event ROW_END = new Event("ROW_END");
     AgendaBuilder agendaBuilder;
 

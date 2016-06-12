@@ -109,10 +109,10 @@ public class TextFormat {
              * Foreground color (default is 0). N specifies the color as an index of the color table.
              */
             case cf:
-                System.err.println("Цвет текста нашли");
+                //System.err.println("Цвет текста нашли");
                 break;
             case cs:
-                System.err.println("Стили текста нашли");
+                //System.err.println("Стили текста нашли");
                 break;
         }
 

@@ -1,7 +1,6 @@
 package com.techinfocom.utils.tablesm.states;
 
 import com.rtfparserkit.rtf.Command;
-import com.techinfocom.utils.DocEvent;
 import com.techinfocom.utils.FormatedChar;
 import com.techinfocom.utils.RtfCommand;
 import com.techinfocom.utils.TextFormat;
@@ -15,6 +14,7 @@ import com.techinfocom.utils.tablesm.TableParser;
  * Created by volkov_kv on 07.06.2016.
  */
 public class WatingForTableState<AI extends TableParser> extends StateBase<AI> implements TableParser {
+    private static final String STATE_NAME = WatingForTableState.class.getSimpleName().toUpperCase();
 
     public static final Event TABLE_FOUND = new Event("TABLE_FOUND");
     private static final int AGENDA_TABLE_NUMBER = 2; //номер таблицы где лежит расписание
@@ -31,7 +31,7 @@ public class WatingForTableState<AI extends TableParser> extends StateBase<AI> i
 
     @Override
     public void processChar(FormatedChar fc) {
-        if(!fc.getTextFormat().paragraphContain(Command.intbl)){ //любой символ без признака того. что он находится в таблице
+        if (!fc.getTextFormat().paragraphContain(Command.intbl)) { //любой символ без признака того. что он находится в таблице
             state = SearchState.WAITING_FOR_TABLE;
         }
     }

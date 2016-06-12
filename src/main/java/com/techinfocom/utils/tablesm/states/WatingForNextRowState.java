@@ -14,6 +14,7 @@ import com.techinfocom.utils.tablesm.TableParser;
  * Created by volkov_kv on 07.06.2016.
  */
 public class WatingForNextRowState<AI extends TableParser> extends StateBase<AI> implements TableParser {
+    private static final String STATE_NAME = WatingForNextRowState.class.getSimpleName().toUpperCase();
     public static final Event NEXT_ROW = new Event("NEXT_ROW");
     public static final Event TABLE_END = new Event("TABLE_END");
     AgendaBuilder agendaBuilder;

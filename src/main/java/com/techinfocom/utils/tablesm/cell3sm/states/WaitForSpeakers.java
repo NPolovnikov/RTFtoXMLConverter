@@ -8,6 +8,7 @@ import com.techinfocom.utils.statemachine.Event;
 import com.techinfocom.utils.statemachine.EventSink;
 import com.techinfocom.utils.statemachine.StateBase;
 import com.techinfocom.utils.tablesm.cell3sm.Cell3Parser;
+import org.slf4j.Logger;
 
 import static com.rtfparserkit.rtf.Command.*;
 
@@ -15,6 +16,8 @@ import static com.rtfparserkit.rtf.Command.*;
  * Created by volkov_kv on 09.06.2016.
  */
 public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> implements Cell3Parser {
+    private static final String STATE_NAME = Name.class.getSimpleName().toUpperCase();
+    private static final Logger LOGGER = com.techinfocom.utils.Logger.LOGGER;
     public final static Event NO_SPEAKERS = new Event("NO_SPEAKERS");
     public final static Event SPEAKERS_FOUND = new Event("SPEAKERS_FOUND");
 
@@ -43,9 +46,10 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
     @Override
     public void analyseFormat(FormatedChar fc) {
         //если поймали подчеркнутый, НЕ НАКЛОННЫЙ текст, то это тип доклада, и началось описание докладчиков.
-        if (fc.getTextFormat().paragraphContain(ul) &&
-                !fc.getTextFormat().paragraphContain(i)) {
+        if (fc.getTextFormat().fontContain(ul) &&
+                !fc.getTextFormat().fontContain(i)) {
             //создадим новую группу докладчиков и инициализируем тип доклада
+            LOGGER.debug("state={}. Обнаружен подчеркнутый, ненаклонный текст. Созданы CurrentGroup", STATE_NAME);
             agendaBuilder.newCurrentGroup();
             agendaBuilder.getCurrentGroup().setGroupName("");
 
@@ -53,6 +57,7 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
         } else {
             //не подчеркнутый текст, это продолжение text
             //восстановим перевод строки, принятый за сигнал
+            LOGGER.debug("state={}. подчеркнутого текста не найдено.", STATE_NAME);
             String text = agendaBuilder.getCurrentItem().getText();
             if (text == null) {
                 text = "";
@@ -64,7 +69,7 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
     }
 
     @Override
-    public void endOfCell() {
+    public void exit() {
 
     }
 }

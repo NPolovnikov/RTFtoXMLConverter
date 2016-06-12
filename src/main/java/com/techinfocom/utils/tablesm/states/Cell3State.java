@@ -19,6 +19,7 @@ import static com.rtfparserkit.rtf.Command.*;
  * Created by volkov_kv on 07.06.2016.
  */
 public class Cell3State<AI extends TableParser> extends StateBase<AI> implements TableParser {
+    private static final String STATE_NAME = Cell3State.class.getSimpleName().toUpperCase();
     public static final Event CELL_END = new Event("CELL_END");
     private final AgendaBuilder agendaBuilder;
     private Cell3Parser cell3Parser;
@@ -66,7 +67,7 @@ public class Cell3State<AI extends TableParser> extends StateBase<AI> implements
                     cell3Parser.analyseFormat(trimmedChar);
                     cell3Parser.processChar(trimmedChar);
                 }
-                cell3Parser.endOfCell();
+                cell3Parser.exit();
 
                 init();//переинициализируем для следующего применения.
                 eventSink.castEvent(CELL_END);

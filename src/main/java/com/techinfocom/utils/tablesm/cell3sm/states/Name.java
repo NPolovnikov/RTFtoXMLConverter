@@ -6,15 +6,17 @@ import com.techinfocom.utils.statemachine.Event;
 import com.techinfocom.utils.statemachine.EventSink;
 import com.techinfocom.utils.statemachine.StateBase;
 import com.techinfocom.utils.tablesm.cell3sm.Cell3Parser;
+import org.slf4j.Logger;
 
 /**
  * Created by volkov_kv on 09.06.2016.
  */
 public class Name<AI extends Cell3Parser> extends StateBase<AI> implements Cell3Parser {
-
-    public static final Event PLAIN_TEXT = new Event("POST_FOUND");
+    private static final String STATE_NAME = Name.class.getSimpleName().toUpperCase();
+    private static final Logger LOGGER = com.techinfocom.utils.Logger.LOGGER;
+    public static final Event POST_FOUND = new Event("POST_FOUND");
     public static final Event END_OF_SPEAKER_GROUP = new Event("END_OF_SPEAKER_GROUP");
-    public static final Event CELL_END = new Event("CELL_END");
+    public static final Event EXIT = new Event("EXIT");
 
     private final AgendaBuilder agendaBuilder;
 
@@ -29,6 +31,7 @@ public class Name<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
             agendaBuilder.mergeCurrentSpeaker();
             agendaBuilder.mergeCurrentGroup();
             eventSink.castEvent(END_OF_SPEAKER_GROUP);
+            LOGGER.debug("state={}. Обнаружен \\n. Объединены CurrentSpeaker, CurrentGroup", STATE_NAME);
         } else {
             String currentName = agendaBuilder.getCurrentSpeaker().getName();
             agendaBuilder.getCurrentSpeaker().setName(currentName + String.valueOf(fc.getC()));
@@ -55,13 +58,18 @@ public class Name<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     public void analyseFormat(FormatedChar fc) {
         //неформатированый- новый докладчик в текущем докладе
         if (fc.getTextFormat().getFontFormat().isEmpty()) {
+            LOGGER.debug("state={}. Обнаружен неформатированный текст. Объединены CurrentSpeaker, создан новый CurrentSpeaker", STATE_NAME);
             agendaBuilder.mergeCurrentSpeaker();
             agendaBuilder.newCurrentSpeaker();
+            eventSink.castEvent(POST_FOUND);
         }
     }
 
     @Override
-    public void endOfCell() {
-
+    public void exit() {
+        LOGGER.debug("state={}. Получен сигнал о завершении ячейки. Объединены CurrentSpeaker, CurrentGroup", STATE_NAME);
+        agendaBuilder.mergeCurrentSpeaker();
+        agendaBuilder.mergeCurrentGroup();
+        eventSink.castEvent(EXIT);
     }
 }
