@@ -35,7 +35,7 @@ public class ParTrimmer {
 
     public FormatedChar finish() {
         FormatedChar accepted = null;
-        if (buffer.getC() != '\n') { //последний в тексте перевод катретки не возвращаем
+        if (buffer != null && buffer.getC() != '\n') { //последний в тексте перевод катретки не возвращаем
             accepted = buffer;
         }
         buffer = null;

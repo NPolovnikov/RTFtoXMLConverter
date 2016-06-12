@@ -1,5 +1,6 @@
 package com.techinfocom.utils.tablesm.states;
 
+import com.rtfparserkit.rtf.Command;
 import com.techinfocom.utils.DocEvent;
 import com.techinfocom.utils.FormatedChar;
 import com.techinfocom.utils.RtfCommand;
@@ -30,7 +31,9 @@ public class WatingForTableState<AI extends TableParser> extends StateBase<AI> i
 
     @Override
     public void processChar(FormatedChar fc) {
-        //ignore any strings
+        if(!fc.getTextFormat().paragraphContain(Command.intbl)){ //любой символ без признака того. что он находится в таблице
+            state = SearchState.WAITING_FOR_TABLE;
+        }
     }
 
 
@@ -41,24 +44,14 @@ public class WatingForTableState<AI extends TableParser> extends StateBase<AI> i
                 switch (rtfCommand.getCommand()) {
                     case trowd:
                         tableCount++;
-                        state = SearchState.IN_TABLE;
-                        break;
-                }
-                break;
-            case IN_TABLE:
-                switch (rtfCommand.getCommand()) {
-                    case row: //row закончилась
                         state = SearchState.WAITING_FOR_TABLE_END;
                         break;
                 }
                 break;
             case WAITING_FOR_TABLE_END:
                 switch (rtfCommand.getCommand()) {
-                    case par: //таблица закончилась, если начинается новый параграф, после окончания row
-                        state = SearchState.WAITING_FOR_TABLE;
-                        break;
-                    case trowd:
-                        state = SearchState.IN_TABLE;
+                    case par:
+                        processChar(new FormatedChar('\n', textFormat));
                         break;
                 }
                 break;
@@ -74,7 +67,6 @@ public class WatingForTableState<AI extends TableParser> extends StateBase<AI> i
 
     private enum SearchState {
         WAITING_FOR_TABLE,
-        IN_TABLE,
         WAITING_FOR_TABLE_END;
     }
 }

@@ -21,19 +21,21 @@ public class TableParserImpl extends AutomationBase<TableParser> implements Tabl
         TableParser cell2 = new Cell2State<>(this, this, agendaBuilder);
         TableParser cell3 = new Cell3State<>(this, this, agendaBuilder);
         TableParser waitForRowEnd = new WaitForRowEndState<>(this, this, agendaBuilder);
-        TableParser waitForTableContinue = new WatingForNewRowState<>(this, this, agendaBuilder);
+        TableParser watingForNextRow = new WatingForNextRowState<>(this, this, agendaBuilder);
         TableParser parsingDone = new ParsingDoneState<>(this, this, agendaBuilder);
 
 
 
         //Создание переходов
         addEdge(waitingForTable, WatingForTableState.TABLE_FOUND, cell1);
-        addEdge(cell1, Cell1State.NEXT_CELL, cell2);
-        addEdge(cell2, Cell2State.NEXT_CELL, cell3);
-        addEdge(cell3, Cell3State.NEXT_CELL, waitForRowEnd);
-        addEdge(waitForRowEnd, WaitForRowEndState.ROW_END, waitForTableContinue);
-        addEdge(waitForTableContinue, WatingForNewRowState.NEXT_ROW, cell1);
-        addEdge(waitForTableContinue, WatingForNewRowState.TABLE_END, parsingDone);
+        addEdge(cell1, Cell1State.CELL_END, cell2);
+        addEdge(cell2, Cell2State.CELL_END, cell3);
+        addEdge(cell3, Cell3State.CELL_END, waitForRowEnd);
+        addEdge(waitForRowEnd, WaitForRowEndState.ROW_END, cell1);
+        addEdge(cell1, Cell1State.TABLE_END, parsingDone);
+
+        //addEdge(watingForNextRow, WatingForNextRowState.NEXT_ROW, cell1);
+        //addEdge(watingForNextRow, WatingForNextRowState.TABLE_END, parsingDone);
 
         //Начальное состояние
         state = waitingForTable;

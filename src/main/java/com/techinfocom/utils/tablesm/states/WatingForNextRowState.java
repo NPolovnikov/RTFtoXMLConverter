@@ -13,12 +13,12 @@ import com.techinfocom.utils.tablesm.TableParser;
 /**
  * Created by volkov_kv on 07.06.2016.
  */
-public class WatingForNewRowState<AI extends TableParser> extends StateBase<AI> implements TableParser {
+public class WatingForNextRowState<AI extends TableParser> extends StateBase<AI> implements TableParser {
     public static final Event NEXT_ROW = new Event("NEXT_ROW");
     public static final Event TABLE_END = new Event("TABLE_END");
     AgendaBuilder agendaBuilder;
 
-    public WatingForNewRowState(AI automation, EventSink eventSink, AgendaBuilder agendaBuilder) {
+    public WatingForNextRowState(AI automation, EventSink eventSink, AgendaBuilder agendaBuilder) {
         super(automation, eventSink);
         this.agendaBuilder = agendaBuilder;
     }
@@ -32,12 +32,12 @@ public class WatingForNewRowState<AI extends TableParser> extends StateBase<AI> 
     public void processCommand(RtfCommand rtfCommand, TextFormat textFormat) {
         switch (rtfCommand.getCommand()){
             case trowd:
-                System.err.println("Состояние WFTContinue.Поймали trowd");
+                System.err.println("Состояние WFNextRow.Поймали trowd");
                 agendaBuilder.newAgendaItem();
                 eventSink.castEvent(NEXT_ROW);
                 break;
             case par:
-                System.err.println("Состояние WFTContinue.Поймали par");
+                System.err.println("Состояние WFNextRow.Поймали par");
                 eventSink.castEvent(TABLE_END);
                 break;
         }

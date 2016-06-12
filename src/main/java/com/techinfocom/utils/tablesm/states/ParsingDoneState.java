@@ -30,6 +30,6 @@ public class ParsingDoneState<AI extends TableParser> extends StateBase<AI> impl
 
     @Override
     public void processCommand(RtfCommand rtfCommand, TextFormat textFormat) {
-        System.err.println("");
+        System.err.print("");
     }
 }

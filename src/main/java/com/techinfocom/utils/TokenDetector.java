@@ -5,6 +5,8 @@ import com.rtfparserkit.rtf.Command;
 import com.techinfocom.utils.tablesm.TableParser;
 import com.techinfocom.utils.tablesm.TableParserImpl;
 
+import java.util.Arrays;
+
 import static com.rtfparserkit.rtf.Command.*;
 
 /**
@@ -71,11 +73,17 @@ public class TokenDetector implements IRtfListener {
 
     @Override
     public void processCommand(Command command, int parameter, boolean hasParameter, boolean optional) {
-        System.err.println("processCommand. command=" + command.getCommandName() + "-" + command.getCommandType() + "; parameter=" + parameter + "; hasParameter=" + hasParameter + "; optional=" + optional);
+        Command[] tblCommands = {trowd, row, cell, lastrow, pard, plain,intbl, par };
+        if (dstDepthBegin == null) {
+            //System.err.println("processCommand. command=" + command.getCommandName() + "-" + command.getCommandType() + "; parameter=" + parameter + "; hasParameter=" + hasParameter + "; optional=" + optional);
+            if (Arrays.asList(tblCommands).contains(command)){
+                System.err.println("processCommand. command=" + command.getCommandName() + "-" + command.getCommandType() + "; parameter=" + parameter + "; hasParameter=" + hasParameter + "; optional=" + optional);
+            }
+        }
         RtfCommand rtfCommand = new RtfCommand(command, parameter, hasParameter, optional);
 
         if (dstDepthBegin != null) {
-            System.err.println("режим сбора DST. пока игнор");
+            //System.err.println("режим сбора DST. пока игнор");
             return;
         }
 

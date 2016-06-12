@@ -1,6 +1,5 @@
 package com.techinfocom.utils.tablesm.states;
 
-import com.rtfparserkit.rtf.Command;
 import com.techinfocom.utils.*;
 import com.techinfocom.utils.model.AgendaBuilder;
 import com.techinfocom.utils.statemachine.Event;
@@ -20,7 +19,7 @@ import static com.rtfparserkit.rtf.Command.*;
  * Created by volkov_kv on 07.06.2016.
  */
 public class Cell3State<AI extends TableParser> extends StateBase<AI> implements TableParser {
-    public static final Event NEXT_CELL = new Event("NEXT_CELL");
+    public static final Event CELL_END = new Event("CELL_END");
     private final AgendaBuilder agendaBuilder;
     private Cell3Parser cell3Parser;
     private EventSink cell3ParserEeventSink;
@@ -70,7 +69,7 @@ public class Cell3State<AI extends TableParser> extends StateBase<AI> implements
                 cell3Parser.endOfCell();
 
                 init();//переинициализируем для следующего применения.
-                eventSink.castEvent(NEXT_CELL);
+                eventSink.castEvent(CELL_END);
                 break;
             default:
                 break;
