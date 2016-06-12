@@ -68,13 +68,16 @@ public class AgendaBuilder {
      * @return
      */
     public String conformString(String srcStr) {
-        String conformed = srcStr.replaceAll("  ", " ");
-        List<String> pars = Arrays.asList(conformed.split("\\r\\n"));
-        //раскладывает на абзацы, удаляет начальные конечные пробелы, удаляет пустые абзацы, складывает обратно через перевод каретки.
-        conformed = pars.stream()
-                .map(String::trim)
-                .filter(p -> !p.isEmpty())
-                .collect(Collectors.joining("\r\n"));
+        String conformed = null;
+        if (srcStr != null) {
+            conformed = srcStr.replaceAll("  ", " ");
+            List<String> pars = Arrays.asList(conformed.split("\\r\\n"));
+            //раскладывает на абзацы, удаляет начальные конечные пробелы, удаляет пустые абзацы, складывает обратно через перевод каретки.
+            conformed = pars.stream()
+                    .map(String::trim)
+                    .filter(p -> !p.isEmpty())
+                    .collect(Collectors.joining("\r\n"));
+        }
         return conformed;
     }
 
@@ -97,6 +100,7 @@ public class AgendaBuilder {
             currentItem.setSpeakerGroups(objectFactory.createSpeakers());
         }
         currentItem.getSpeakerGroups().getGroup().add(currentGroup);
+        trim(currentGroup);
         currentGroup = null;//чтобы null poiter сгенерировался, если криво начнем контекст отслеживать.
     }
 
@@ -119,14 +123,26 @@ public class AgendaBuilder {
         if (currentGroup.getSpeakers() == null) {
             currentGroup.setSpeakers(objectFactory.createGroupSpeakers());
         }
+        trim(currentSpeaker);
         currentGroup.getSpeakers().getSpeaker().add(currentSpeaker);
         currentSpeaker = null;//чтобы null poiter сгенерировался, если криво начнем контекст отслеживать.
     }
 
+    private void trim(Group.Speakers.Speaker speaker) {
+        speaker.setName(conformString(speaker.getName()));
+        speaker.setPost(conformString(speaker.getPost()));
+    }
 
     public ObjectFactory getObjectFactory() {
         return objectFactory;
     }
+
+
+    private void trim(Group group) {
+        group.setGroupName(conformString(group.getGroupName()));
+    }
+
+
 
     // TODO: 07.06.2016 удалить currentItem, если строка таблицы оказалась битой?
 
