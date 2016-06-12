@@ -81,6 +81,7 @@ public class AgendaBuilder {
     public Group newCurrentGroup() {
         if (currentGroup == null) {
             currentGroup = objectFactory.createGroup();
+            currentGroup.setGroupName("");
         } else {
             throw new RuntimeException("CurrentGroup already exists");
         }
@@ -102,6 +103,8 @@ public class AgendaBuilder {
     public Group.Speakers.Speaker newCurrentSpeaker() {
         if (currentSpeaker == null) {
             currentSpeaker = objectFactory.createGroupSpeakersSpeaker();
+            currentSpeaker.setName("");
+            currentSpeaker.setPost("");
         } else {
             throw new RuntimeException("CurrentSpeaker already exists");
         }

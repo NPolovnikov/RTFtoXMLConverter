@@ -42,7 +42,7 @@ public class Post<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     public void analyseFormat(FormatedChar fc) {
         //жирный текст- ФИО докладчика
         if (fc.getTextFormat().fontContain(b)) {
-            LOGGER.debug("state={}. Обнаружен жирный текст.", STATE_NAME);
+            LOGGER.debug("state={}. Обнаружен жирный текст '{}'.", STATE_NAME, fc.getC());
             eventSink.castEvent(NAME_FOUND);
         }
     }

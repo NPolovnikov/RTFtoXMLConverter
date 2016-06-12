@@ -33,7 +33,11 @@ public class GroupState {
     }
 
     public TextFormat getCurrent() {
-        return stack.peek();
+        TextFormat textFormat = new TextFormat();
+        TextFormat current = stack.peek();
+        textFormat.getFontFormat().addAll(current.getFontFormat());
+        textFormat.getParagraphFormat().addAll(current.getParagraphFormat());
+        return textFormat;
     }
 
     public String printCurrentLevel() {
