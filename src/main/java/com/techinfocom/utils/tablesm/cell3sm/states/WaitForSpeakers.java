@@ -1,8 +1,6 @@
 package com.techinfocom.utils.tablesm.cell3sm.states;
 
 import com.techinfocom.utils.FormatedChar;
-import com.techinfocom.utils.RtfCommand;
-import com.techinfocom.utils.TextFormat;
 import com.techinfocom.utils.model.AgendaBuilder;
 import com.techinfocom.utils.statemachine.Event;
 import com.techinfocom.utils.statemachine.EventSink;
@@ -10,7 +8,6 @@ import com.techinfocom.utils.statemachine.StateBase;
 import com.techinfocom.utils.tablesm.cell3sm.Cell3Parser;
 import org.slf4j.Logger;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.rtfparserkit.rtf.Command.*;
@@ -41,7 +38,7 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
 //    public void processCommand(RtfCommand rtfCommand, TextFormat textFormat) {
 //        switch (rtfCommand.getCommand()) {
 //            case cell:
-//                agendaBuilder.mergeCurrentGroup();
+//                agendaBuilder.mergeGroup();
 //                break;
 //        }
 //
@@ -56,7 +53,7 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
                 p.matcher(String.valueOf(fc.getC())).matches()) {
             //создадим новую группу докладчиков и инициализируем тип доклада
             LOGGER.debug("state={}. Обнаружен подчеркнутый, ненаклонный текст ''. Это тип доклада. Созданы CurrentGroup", STATE_NAME, fc.getC());
-            agendaBuilder.newCurrentGroup();
+            agendaBuilder.newGroup();
             //поищем номер документа.
             agendaBuilder.docNumberExtractAndSave();
             eventSink.castEvent(SPEAKERS_FOUND);
@@ -64,11 +61,11 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
             //не подчеркнутый текст, это продолжение text
             //восстановим перевод строки, принятый за сигнал
             LOGGER.debug("state={}. подчеркнутого текста не найдено. Продолжаем собирать text", STATE_NAME);
-            String text = agendaBuilder.getCurrentItem().getText();
+            String text = agendaBuilder.getAgendaItem().getText();
             if (text == null) {
                 text = "";
             }
-            agendaBuilder.getCurrentItem().setText(text + "\r\n");//восстановим пропущенный сигнальный перевод строки
+            agendaBuilder.getAgendaItem().setText(text + "\r\n");//восстановим пропущенный сигнальный перевод строки
 
             eventSink.castEvent(NO_SPEAKERS);
         }

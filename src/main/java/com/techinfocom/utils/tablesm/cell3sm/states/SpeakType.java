@@ -30,11 +30,11 @@ public class SpeakType<AI extends Cell3Parser> extends StateBase<AI> implements 
             //castEvent(ERROR); //todo не можем встретить перевод строки в этом состоянии. Тип доклада- однострочный.
         } else {
             //допишем тип доклада
-            String currentGroupName = agendaBuilder.getCurrentGroup().getGroupName();
+            String currentGroupName = agendaBuilder.getGroup().getGroupName();
             if (currentGroupName == null) {
                 currentGroupName = "";
             }
-            agendaBuilder.getCurrentGroup().setGroupName(currentGroupName + String.valueOf(fc.getC()));
+            agendaBuilder.getGroup().setGroupName(currentGroupName + String.valueOf(fc.getC()));
         }
     }
 
@@ -48,7 +48,7 @@ public class SpeakType<AI extends Cell3Parser> extends StateBase<AI> implements 
         //текст без форматирования- началась должность.
         if (fc.getTextFormat().getFontFormat().isEmpty()) {
             LOGGER.debug("state={}. Обнаружен текст '{}' без форматирования. Созданы CurrentSpeaker", STATE_NAME, fc.getC());
-            agendaBuilder.newCurrentSpeaker();
+            agendaBuilder.newSpeaker();
             castEvent(POST_FOUND);
         }
     }
@@ -56,7 +56,7 @@ public class SpeakType<AI extends Cell3Parser> extends StateBase<AI> implements 
     @Override
     public void exit() {
         LOGGER.debug("state={}. Получен сигнал о завершении ячейки. Объединены CurrentGroup", STATE_NAME);
-        agendaBuilder.mergeCurrentGroup();
+        agendaBuilder.mergeGroup();
         eventSink.castEvent(EXIT);
     }
 }

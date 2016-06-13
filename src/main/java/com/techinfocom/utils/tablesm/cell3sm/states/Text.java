@@ -1,20 +1,12 @@
 package com.techinfocom.utils.tablesm.cell3sm.states;
 
-import com.rtfparserkit.rtf.Command;
 import com.techinfocom.utils.FormatedChar;
-import com.techinfocom.utils.RtfCommand;
-import com.techinfocom.utils.TextFormat;
 import com.techinfocom.utils.model.AgendaBuilder;
 import com.techinfocom.utils.statemachine.Event;
 import com.techinfocom.utils.statemachine.EventSink;
 import com.techinfocom.utils.statemachine.StateBase;
 import com.techinfocom.utils.tablesm.cell3sm.Cell3Parser;
 import org.slf4j.Logger;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static com.rtfparserkit.rtf.Command.*;
 
 /**
  * Created by volkov_kv on 09.06.2016.
@@ -37,11 +29,11 @@ public class Text<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
             LOGGER.debug("state={}. Обнаружен \\n. Ожидаем тип доклада", STATE_NAME);
             eventSink.castEvent(PAR_FOUND);
         } else {
-            String text = agendaBuilder.getCurrentItem().getText();
+            String text = agendaBuilder.getAgendaItem().getText();
             if (text == null) {
                 text = "";
             }
-            agendaBuilder.getCurrentItem().setText(text + String.valueOf(fc.getC()));
+            agendaBuilder.getAgendaItem().setText(text + String.valueOf(fc.getC()));
         }
     }
 
@@ -52,7 +44,7 @@ public class Text<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
 //                eventSink.castEvent(PAR_FOUND);
 //                break;
 //            case cell:
-//                agendaBuilder.mergeCurrentGroup();
+//                agendaBuilder.mergeGroup();
 //                break;
 //        }
 //

@@ -52,7 +52,7 @@ public class AgendaBuilder {
         return currentItem;
     }
 
-    public Group newCurrentGroup() {
+    public Group newGroup() {
         if (currentGroup == null) {
             currentGroup = objectFactory.createGroup();
         } else {
@@ -61,7 +61,7 @@ public class AgendaBuilder {
         return currentGroup;
     }
 
-    public Group.Speakers.Speaker newCurrentSpeaker() {
+    public Group.Speakers.Speaker newSpeaker() {
         if (currentSpeaker == null) {
             currentSpeaker = objectFactory.createGroupSpeakersSpeaker();
         } else {
@@ -71,14 +71,14 @@ public class AgendaBuilder {
     }
 
 
-    public void mergeItem() {
+    public void mergeAgendaItem() {
         if (currentItem != null) {
             agenda.getItemOrBlock().add(currentItem);
             currentItem = null;
         } else throw new RuntimeException("can't merge null currentItem");
     }
 
-    public void mergeCurrentGroup() {
+    public void mergeGroup() {
         if (currentGroup != null) {
             if (currentItem.getSpeakerGroups() == null) {
                 currentItem.setSpeakerGroups(objectFactory.createSpeakers());
@@ -91,7 +91,7 @@ public class AgendaBuilder {
         }
     }
 
-    public void mergeCurrentSpeaker() {
+    public void mergeSpeaker() {
         if (currentSpeaker != null) {
             if (currentGroup.getSpeakers() == null) {
                 currentGroup.setSpeakers(objectFactory.createGroupSpeakers());
@@ -102,15 +102,19 @@ public class AgendaBuilder {
         } else throw new RuntimeException("can't merge null currentSpeaker");
     }
 
-    public AgendaItem getCurrentItem() {
+    public void dropAgendaItem() {
+        currentItem = null;
+    }
+
+    public AgendaItem getAgendaItem() {
         return currentItem;
     }
 
-    public Group getCurrentGroup() {
+    public Group getGroup() {
         return currentGroup;
     }
 
-    public Group.Speakers.Speaker getCurrentSpeaker() {
+    public Group.Speakers.Speaker getSpeaker() {
         return currentSpeaker;
     }
 

@@ -1,8 +1,6 @@
 package com.techinfocom.utils.tablesm.cell3sm.states;
 
 import com.techinfocom.utils.FormatedChar;
-import com.techinfocom.utils.RtfCommand;
-import com.techinfocom.utils.TextFormat;
 import com.techinfocom.utils.model.AgendaBuilder;
 import com.techinfocom.utils.statemachine.Event;
 import com.techinfocom.utils.statemachine.EventSink;
@@ -30,11 +28,11 @@ public class Post<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
 
     @Override
     public void processChar(FormatedChar fc) {
-        String currentPost = agendaBuilder.getCurrentSpeaker().getPost();
+        String currentPost = agendaBuilder.getSpeaker().getPost();
         if(currentPost == null){
             currentPost = "";
         }
-        agendaBuilder.getCurrentSpeaker().setPost(currentPost + String.valueOf(fc.getC()).replace("\n", "\r\n"));
+        agendaBuilder.getSpeaker().setPost(currentPost + String.valueOf(fc.getC()).replace("\n", "\r\n"));
     }
 
 //    @Override
@@ -54,8 +52,8 @@ public class Post<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     @Override
     public void exit() {
         LOGGER.debug("state={}. Получен сигнал о завершении ячейки. Объединены CurrentSpeaker, CurrentGroup", STATE_NAME);
-        agendaBuilder.mergeCurrentSpeaker();
-        agendaBuilder.mergeCurrentGroup();
+        agendaBuilder.mergeSpeaker();
+        agendaBuilder.mergeGroup();
         eventSink.castEvent(EXIT);
     }
 }

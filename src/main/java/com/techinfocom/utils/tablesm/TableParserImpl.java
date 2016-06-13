@@ -32,6 +32,10 @@ public class TableParserImpl extends AutomationBase<TableParser> implements Tabl
         addEdge(cell3, Cell3State.CELL_END, waitForRowEnd);
         addEdge(waitForRowEnd, WaitForRowEndState.ROW_END, cell1);
         addEdge(cell1, Cell1State.TABLE_END, parsingDone);
+        addEdge(cell1, Cell1State.ROW_END, cell1);
+        addEdge(cell2, Cell2State.ROW_END, cell1);
+        addEdge(cell3, Cell3State.ROW_END, cell1);
+        addEdge(waitForRowEnd, WaitForRowEndState.CELL_END, cell1);
 
         //addEdge(watingForNextRow, WatingForNextRowState.NEXT_ROW, cell1);
         //addEdge(watingForNextRow, WatingForNextRowState.TABLE_END, parsingDone);

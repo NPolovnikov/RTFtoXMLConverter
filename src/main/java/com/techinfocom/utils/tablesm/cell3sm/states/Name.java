@@ -28,16 +28,16 @@ public class Name<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     @Override
     public void processChar(FormatedChar fc) {
         if (fc.getC() == '\n') {
-            agendaBuilder.mergeCurrentSpeaker();
-            agendaBuilder.mergeCurrentGroup();
+            agendaBuilder.mergeSpeaker();
+            agendaBuilder.mergeGroup();
             eventSink.castEvent(END_OF_SPEAKER_GROUP);
             LOGGER.debug("state={}. Обнаружен \\n. Объединены CurrentSpeaker, CurrentGroup", STATE_NAME);
         } else {
-            String currentName = agendaBuilder.getCurrentSpeaker().getName();
+            String currentName = agendaBuilder.getSpeaker().getName();
             if (currentName == null) {
                 currentName = "";
             }
-            agendaBuilder.getCurrentSpeaker().setName(currentName + String.valueOf(fc.getC()));
+            agendaBuilder.getSpeaker().setName(currentName + String.valueOf(fc.getC()));
         }
     }
 
@@ -45,13 +45,13 @@ public class Name<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
 //    public void processCommand(RtfCommand rtfCommand, TextFormat textFormat) {
 //        switch (rtfCommand.getCommand()){
 //            case par:
-//                agendaBuilder.mergeCurrentSpeaker();
-//                agendaBuilder.mergeCurrentGroup();
+//                agendaBuilder.mergeSpeaker();
+//                agendaBuilder.mergeGroup();
 //                eventSink.castEvent(END_OF_SPEAKER_GROUP);
 //                break;
 //            case cell:
-//                agendaBuilder.mergeCurrentSpeaker();
-//                agendaBuilder.mergeCurrentGroup();
+//                agendaBuilder.mergeSpeaker();
+//                agendaBuilder.mergeGroup();
 //                eventSink.castEvent(CELL_END);
 //                break;
 //        }
@@ -62,8 +62,8 @@ public class Name<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
         //неформатированый- новый докладчик в текущем докладе
         if (fc.getTextFormat().getFontFormat().isEmpty()) {
             LOGGER.debug("state={}. Обнаружен неформатированный текст '{}'. Это должность очередного докладчика. Объединены CurrentSpeaker, создан новый CurrentSpeaker", STATE_NAME, fc.getC());
-            agendaBuilder.mergeCurrentSpeaker();
-            agendaBuilder.newCurrentSpeaker();
+            agendaBuilder.mergeSpeaker();
+            agendaBuilder.newSpeaker();
             eventSink.castEvent(POST_FOUND);
         }
     }
@@ -71,8 +71,8 @@ public class Name<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     @Override
     public void exit() {
         LOGGER.debug("state={}. Получен сигнал о завершении ячейки. Объединены CurrentSpeaker, CurrentGroup", STATE_NAME);
-        agendaBuilder.mergeCurrentSpeaker();
-        agendaBuilder.mergeCurrentGroup();
+        agendaBuilder.mergeSpeaker();
+        agendaBuilder.mergeGroup();
         eventSink.castEvent(EXIT);
     }
 }
