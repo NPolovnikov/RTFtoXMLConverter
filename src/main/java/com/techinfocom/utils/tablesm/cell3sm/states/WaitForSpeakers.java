@@ -49,14 +49,16 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
 
     @Override
     public void analyseFormat(FormatedChar fc) {
+        Pattern p = Pattern.compile("[a-zA-Zа-яА-ЯёЁ]");//только буква
         //если поймали подчеркнутый, НЕ НАКЛОННЫЙ текст, то это тип доклада, и началось описание докладчиков.
         if (fc.getTextFormat().fontContain(ul) &&
-                !fc.getTextFormat().fontContain(i)) {
+                !fc.getTextFormat().fontContain(i) &&
+                p.matcher(String.valueOf(fc.getC())).matches()) {
             //создадим новую группу докладчиков и инициализируем тип доклада
             LOGGER.debug("state={}. Обнаружен подчеркнутый, ненаклонный текст ''. Это тип доклада. Созданы CurrentGroup", STATE_NAME, fc.getC());
-            agendaBuilder.newCurrentGroup().setGroupName("");
+            agendaBuilder.newCurrentGroup();
             //поищем номер документа.
-            agendaBuilder.getCurrentItem().setRn(extractDocNumber(agendaBuilder.getCurrentItem().getText()));
+            agendaBuilder.docNumberExtractAndSave();
             eventSink.castEvent(SPEAKERS_FOUND);
         } else {
             //не подчеркнутый текст, это продолжение text
@@ -76,33 +78,9 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
     public void exit() {
         LOGGER.error("необрабатываемый ошибочный EXIT");
         //поищем номер документа.
-        agendaBuilder.getCurrentItem().setRn(extractDocNumber(agendaBuilder.getCurrentItem().getText()));
+        agendaBuilder.docNumberExtractAndSave();
         eventSink.castEvent(EXIT);
     }
 
-    /**
-     * извлекает номер документа, согласно описанию:
-     * Для поиска регистрационного номера документа выделяется в тексте первого абзаца ячейки таблицы выделяется
-     * строка, начинающаяся символом №, за которым идет один иле несколько пробелов, потом одна или несколько
-     * десятичных цифр (не более 10), потом символ «-» (минус), потом одна или две цифры, потом один или несколько
-     * пробелов. В случае, если в первом абзаце пункта порядка работы встретилось несколько подстрок, удовлетворяющих
-     * описанному шаблону, регистрационный номер выделяется из первой встреченной подстроки. В качестве
-     * регистрационного номера выделяется подстрока, начинающаяся с цифры и заканчивающаяся последней
-     * цифрой в найденном шаблоне;
-     *
-     * @param text
-     * @return
-     */
-    private String extractDocNumber(String text) {
-        String docNumber = null;
-        if (text != null) {
-            Pattern p = Pattern.compile("^.*№ ?(\\d{1,10}-\\d{1,2}) +.*$",Pattern.MULTILINE);
-            Matcher m = p.matcher(text);
-            if (m.find()) {
-                docNumber = m.group(1);
-            }
-        }
-        return docNumber;
-    }
 
 }

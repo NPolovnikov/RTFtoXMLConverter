@@ -31,7 +31,7 @@ public class SpeakType<AI extends Cell3Parser> extends StateBase<AI> implements 
         } else {
             //допишем тип доклада
             String currentGroupName = agendaBuilder.getCurrentGroup().getGroupName();
-            if(currentGroupName == null){
+            if (currentGroupName == null) {
                 currentGroupName = "";
             }
             agendaBuilder.getCurrentGroup().setGroupName(currentGroupName + String.valueOf(fc.getC()));

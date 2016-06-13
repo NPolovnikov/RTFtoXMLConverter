@@ -10,6 +10,8 @@ import com.techinfocom.utils.model.agenda.ObjectFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -148,6 +150,30 @@ public class AgendaBuilder {
 
 
     // TODO: 07.06.2016 удалить currentItem, если строка таблицы оказалась битой?
+
+    /**
+     * извлекает номер документа, согласно описанию:
+     * Для поиска регистрационного номера документа выделяется в тексте первого абзаца ячейки таблицы выделяется
+     * строка, начинающаяся символом №, за которым идет один иле несколько пробелов, потом одна или несколько
+     * десятичных цифр (не более 10), потом символ «-» (минус), потом одна или две цифры, потом один или несколько
+     * пробелов. В случае, если в первом абзаце пункта порядка работы встретилось несколько подстрок, удовлетворяющих
+     * описанному шаблону, регистрационный номер выделяется из первой встреченной подстроки. В качестве
+     * регистрационного номера выделяется подстрока, начинающаяся с цифры и заканчивающаяся последней
+     * цифрой в найденном шаблоне;
+     *
+     * @return
+     */
+    public void docNumberExtractAndSave() {
+        String text = currentItem.getText(); // TODO: 13.06.2016  до первого переовода строки выделить
+        if (text != null) {
+            Pattern p = Pattern.compile("^.*№ ?(\\d{1,10}-\\d{1,2}) +.*$", Pattern.MULTILINE);
+            Matcher m = p.matcher(text);
+            if (m.find()) {
+                String docNumber = m.group(1);
+                currentItem.setRn(docNumber);
+            }
+        }
+    }
 
 }
 

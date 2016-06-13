@@ -16,7 +16,7 @@ public class RtfAgendaConverterTest {
 
     @Test
     public void testConvert() throws Exception {
-        File file = new File(RtfAgendaConverterTest.class.getClassLoader().getResource("super_order.rtf").getFile());
+        File file = new File(RtfAgendaConverterTest.class.getClassLoader().getResource("super_order_fixed.rtf").getFile());
         System.out.println(file);
         InputStream is = new FileInputStream(file);
 

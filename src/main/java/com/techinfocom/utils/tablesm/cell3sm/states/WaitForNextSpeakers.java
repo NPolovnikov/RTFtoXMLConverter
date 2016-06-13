@@ -11,6 +11,9 @@ import com.techinfocom.utils.statemachine.StateBase;
 import com.techinfocom.utils.tablesm.cell3sm.Cell3Parser;
 import org.slf4j.Logger;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static com.rtfparserkit.rtf.Command.*;
 
 /**
@@ -44,9 +47,11 @@ public class WaitForNextSpeakers<AI extends Cell3Parser> extends StateBase<AI> i
 
     @Override
     public void analyseFormat(FormatedChar fc) {
+        Pattern p = Pattern.compile("[a-zA-Zа-яА-ЯёЁ]");//только буква
         //подчеркнутый, не наклонный. Еще группа докладчиков
         if (fc.getTextFormat().fontContain(ul) &&
-                !fc.getTextFormat().fontContain(i)) {
+                !fc.getTextFormat().fontContain(i) &&
+                p.matcher(String.valueOf(fc.getC())).matches()) {
             LOGGER.debug("state={}. Обнаружен подчеркнутый, ненаклонный текст ''. Это тип очередного доклада. Созданы CurrentGroup", STATE_NAME, fc.getC());
             agendaBuilder.newCurrentGroup();
             eventSink.castEvent(NEW_SPEAKER_GROUP_FOUND);
