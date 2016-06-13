@@ -11,6 +11,9 @@ import com.techinfocom.utils.statemachine.StateBase;
 import com.techinfocom.utils.tablesm.cell3sm.Cell3Parser;
 import org.slf4j.Logger;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static com.rtfparserkit.rtf.Command.*;
 
 /**
@@ -31,7 +34,7 @@ public class Text<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     @Override
     public void processChar(FormatedChar fc) {
         if (fc.getC() == '\n') {
-            LOGGER.debug("state={}. Обнаружен \\n.", STATE_NAME);
+            LOGGER.debug("state={}. Обнаружен \\n. Ожидаем тип доклада", STATE_NAME);
             eventSink.castEvent(PAR_FOUND);
         } else {
             String text = agendaBuilder.getCurrentItem().getText();
@@ -64,4 +67,5 @@ public class Text<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     public void exit() {
 
     }
+
 }
