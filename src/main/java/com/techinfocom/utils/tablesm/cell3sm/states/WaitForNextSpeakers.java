@@ -55,9 +55,7 @@ public class WaitForNextSpeakers<AI extends Cell3Parser> extends StateBase<AI> i
 
     @Override
     public void exit() {
-        LOGGER.debug("state={}. Получен сигнал о завершении ячейки. Объединены CurrentSpeaker, CurrentGroup", STATE_NAME);
-        agendaBuilder.mergeCurrentSpeaker();
-        agendaBuilder.mergeCurrentGroup();
+        LOGGER.debug("state={}. Получен сигнал о завершении ячейки.", STATE_NAME);
         eventSink.castEvent(EXIT);
     }
 }

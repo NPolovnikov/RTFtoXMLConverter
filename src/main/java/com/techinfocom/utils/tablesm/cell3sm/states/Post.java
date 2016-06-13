@@ -19,6 +19,7 @@ public class Post<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     private static final String STATE_NAME = Post.class.getSimpleName().toUpperCase();
     private static final Logger LOGGER = com.techinfocom.utils.Logger.LOGGER;
     public static final Event NAME_FOUND = new Event("NAME_FOUND");
+    public static final Event EXIT = new Event("EXIT");
 
     private final AgendaBuilder agendaBuilder;
 
@@ -52,6 +53,9 @@ public class Post<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
 
     @Override
     public void exit() {
-
+        LOGGER.debug("state={}. Получен сигнал о завершении ячейки. Объединены CurrentSpeaker, CurrentGroup", STATE_NAME);
+        agendaBuilder.mergeCurrentSpeaker();
+        agendaBuilder.mergeCurrentGroup();
+        eventSink.castEvent(EXIT);
     }
 }

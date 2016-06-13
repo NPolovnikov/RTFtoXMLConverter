@@ -23,6 +23,7 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
     private static final Logger LOGGER = com.techinfocom.utils.Logger.LOGGER;
     public final static Event NO_SPEAKERS = new Event("NO_SPEAKERS");
     public final static Event SPEAKERS_FOUND = new Event("SPEAKERS_FOUND");
+    public static final Event EXIT = new Event("EXIT");
 
     private final AgendaBuilder agendaBuilder;
 
@@ -74,6 +75,9 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
     @Override
     public void exit() {
         LOGGER.error("необрабатываемый ошибочный EXIT");
+        //поищем номер документа.
+        agendaBuilder.getCurrentItem().setRn(extractDocNumber(agendaBuilder.getCurrentItem().getText()));
+        eventSink.castEvent(EXIT);
     }
 
     /**

@@ -50,10 +50,6 @@ public class AgendaBuilder {
         return currentItem;
     }
 
-    public AgendaItem getCurrentItem() {
-        return currentItem;
-    }
-
     public Group newCurrentGroup() {
         if (currentGroup == null) {
             currentGroup = objectFactory.createGroup();
@@ -62,7 +58,6 @@ public class AgendaBuilder {
         }
         return currentGroup;
     }
-
 
     public Group.Speakers.Speaker newCurrentSpeaker() {
         if (currentSpeaker == null) {
@@ -73,35 +68,48 @@ public class AgendaBuilder {
         return currentSpeaker;
     }
 
+
     public void mergeItem() {
-        agenda.getItemOrBlock().add(currentItem);
-        currentItem = null;
+        if (currentItem != null) {
+            agenda.getItemOrBlock().add(currentItem);
+            currentItem = null;
+        } else throw new RuntimeException("can't merge null currentItem");
+    }
+
+    public void mergeCurrentGroup() {
+        if (currentGroup != null) {
+            if (currentItem.getSpeakerGroups() == null) {
+                currentItem.setSpeakerGroups(objectFactory.createSpeakers());
+            }
+            currentItem.getSpeakerGroups().getGroup().add(currentGroup);
+            trim(currentGroup);
+            currentGroup = null;//чтобы null poiter сгенерировался, если криво начнем контекст отслеживать.
+        } else {
+            throw new RuntimeException("can't merge null currentGroup");
+        }
+    }
+
+    public void mergeCurrentSpeaker() {
+        if (currentSpeaker != null) {
+            if (currentGroup.getSpeakers() == null) {
+                currentGroup.setSpeakers(objectFactory.createGroupSpeakers());
+            }
+            trim(currentSpeaker);
+            currentGroup.getSpeakers().getSpeaker().add(currentSpeaker);
+            currentSpeaker = null;//чтобы null poiter сгенерировался, если криво начнем контекст отслеживать.
+        } else throw new RuntimeException("can't merge null currentSpeaker");
+    }
+
+    public AgendaItem getCurrentItem() {
+        return currentItem;
     }
 
     public Group getCurrentGroup() {
         return currentGroup;
     }
 
-    public void mergeCurrentGroup() {
-        if (currentItem.getSpeakerGroups() == null) {
-            currentItem.setSpeakerGroups(objectFactory.createSpeakers());
-        }
-        currentItem.getSpeakerGroups().getGroup().add(currentGroup);
-        trim(currentGroup);
-        currentGroup = null;//чтобы null poiter сгенерировался, если криво начнем контекст отслеживать.
-    }
-
     public Group.Speakers.Speaker getCurrentSpeaker() {
         return currentSpeaker;
-    }
-
-    public void mergeCurrentSpeaker() {
-        if (currentGroup.getSpeakers() == null) {
-            currentGroup.setSpeakers(objectFactory.createGroupSpeakers());
-        }
-        trim(currentSpeaker);
-        currentGroup.getSpeakers().getSpeaker().add(currentSpeaker);
-        currentSpeaker = null;//чтобы null poiter сгенерировался, если криво начнем контекст отслеживать.
     }
 
     public ObjectFactory getObjectFactory() {
@@ -137,7 +145,6 @@ public class AgendaBuilder {
     private void trim(Group group) {
         group.setGroupName(conformString(group.getGroupName()));
     }
-
 
 
     // TODO: 07.06.2016 удалить currentItem, если строка таблицы оказалась битой?
