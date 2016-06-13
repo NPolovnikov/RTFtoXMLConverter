@@ -12,8 +12,7 @@ import com.techinfocom.utils.tablesm.states.*;
  */
 public class TableParserImpl extends AutomationBase<TableParser> implements TableParser {
 
-    public TableParserImpl() {
-        AgendaBuilder agendaBuilder = new AgendaBuilder();
+    public TableParserImpl(AgendaBuilder agendaBuilder) {
 
         //создание объектов-состояний
         TableParser waitingForTable = new WatingForTableState<>(this, this, agendaBuilder);
@@ -21,7 +20,7 @@ public class TableParserImpl extends AutomationBase<TableParser> implements Tabl
         TableParser cell2 = new Cell2State<>(this, this, agendaBuilder);
         TableParser cell3 = new Cell3State<>(this, this, agendaBuilder);
         TableParser waitForRowEnd = new WaitForRowEndState<>(this, this, agendaBuilder);
-        TableParser watingForNextRow = new WatingForNextRowState<>(this, this, agendaBuilder);
+        TableParser watingForNextRow = new WatingForNextRowState<>(this, this, agendaBuilder); // TODO: 13.06.2016 удалить?
         TableParser parsingDone = new ParsingDoneState<>(this, this, agendaBuilder);
 
 
@@ -42,8 +41,8 @@ public class TableParserImpl extends AutomationBase<TableParser> implements Tabl
     }
 
     // Создание экземпляра автомата
-    public static TableParser createAutomaton() {
-        return new TableParserImpl();
+    public static TableParser createAutomaton(AgendaBuilder agendaBuilder) {
+        return new TableParserImpl(agendaBuilder);
     }
 
     // Делегирование методов интерфейса

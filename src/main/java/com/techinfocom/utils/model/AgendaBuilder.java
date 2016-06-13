@@ -28,6 +28,10 @@ public class AgendaBuilder {
     private ObjectFactory objectFactory;
     private Agenda agenda;
 
+    public Agenda getAgenda() {
+        return agenda;
+    }
+
 
     public void createAgenda() {
         if (agenda == null) {
