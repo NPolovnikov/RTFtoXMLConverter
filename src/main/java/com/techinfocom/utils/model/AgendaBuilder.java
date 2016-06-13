@@ -29,11 +29,6 @@ public class AgendaBuilder {
     private Agenda agenda;
 
 
-    public void processString(String string) {
-        System.err.println("Билдеру дали строку=" + string);
-    }
-
-
     public void createAgenda() {
         if (agenda == null) {
             agenda = objectFactory.createAgenda();
@@ -55,11 +50,62 @@ public class AgendaBuilder {
         return currentItem;
     }
 
+    public Group newCurrentGroup() {
+        if (currentGroup == null) {
+            currentGroup = objectFactory.createGroup();
+            currentGroup.setGroupName("");
+        } else {
+            throw new RuntimeException("CurrentGroup already exists");
+        }
+        return currentGroup;
+    }
+
+
+    public Group.Speakers.Speaker newCurrentSpeaker() {
+        if (currentSpeaker == null) {
+            currentSpeaker = objectFactory.createGroupSpeakersSpeaker();
+            currentSpeaker.setName("");
+            currentSpeaker.setPost("");
+        } else {
+            throw new RuntimeException("CurrentSpeaker already exists");
+        }
+        return currentSpeaker;
+    }
+
     public void mergeItem() {
         agenda.getItemOrBlock().add(currentItem);
         currentItem = null;
     }
 
+    public Group getCurrentGroup() {
+        return currentGroup;
+    }
+
+    public void mergeCurrentGroup() {
+        if (currentItem.getSpeakerGroups() == null) {
+            currentItem.setSpeakerGroups(objectFactory.createSpeakers());
+        }
+        currentItem.getSpeakerGroups().getGroup().add(currentGroup);
+        trim(currentGroup);
+        currentGroup = null;//чтобы null poiter сгенерировался, если криво начнем контекст отслеживать.
+    }
+
+    public Group.Speakers.Speaker getCurrentSpeaker() {
+        return currentSpeaker;
+    }
+
+    public void mergeCurrentSpeaker() {
+        if (currentGroup.getSpeakers() == null) {
+            currentGroup.setSpeakers(objectFactory.createGroupSpeakers());
+        }
+        trim(currentSpeaker);
+        currentGroup.getSpeakers().getSpeaker().add(currentSpeaker);
+        currentSpeaker = null;//чтобы null poiter сгенерировался, если криво начнем контекст отслеживать.
+    }
+
+    public ObjectFactory getObjectFactory() {
+        return objectFactory;
+    }
 
     /**
      * преобразует двойные пробелы, абзацы
@@ -81,60 +127,9 @@ public class AgendaBuilder {
         return conformed;
     }
 
-    public Group newCurrentGroup() {
-        if (currentGroup == null) {
-            currentGroup = objectFactory.createGroup();
-            currentGroup.setGroupName("");
-        } else {
-            throw new RuntimeException("CurrentGroup already exists");
-        }
-        return currentGroup;
-    }
-
-    public Group getCurrentGroup() {
-        return currentGroup;
-    }
-
-    public void mergeCurrentGroup() {
-        if (currentItem.getSpeakerGroups() == null) {
-            currentItem.setSpeakerGroups(objectFactory.createSpeakers());
-        }
-        currentItem.getSpeakerGroups().getGroup().add(currentGroup);
-        trim(currentGroup);
-        currentGroup = null;//чтобы null poiter сгенерировался, если криво начнем контекст отслеживать.
-    }
-
-    public Group.Speakers.Speaker newCurrentSpeaker() {
-        if (currentSpeaker == null) {
-            currentSpeaker = objectFactory.createGroupSpeakersSpeaker();
-            currentSpeaker.setName("");
-            currentSpeaker.setPost("");
-        } else {
-            throw new RuntimeException("CurrentSpeaker already exists");
-        }
-        return currentSpeaker;
-    }
-
-    public Group.Speakers.Speaker getCurrentSpeaker() {
-        return currentSpeaker;
-    }
-
-    public void mergeCurrentSpeaker() {
-        if (currentGroup.getSpeakers() == null) {
-            currentGroup.setSpeakers(objectFactory.createGroupSpeakers());
-        }
-        trim(currentSpeaker);
-        currentGroup.getSpeakers().getSpeaker().add(currentSpeaker);
-        currentSpeaker = null;//чтобы null poiter сгенерировался, если криво начнем контекст отслеживать.
-    }
-
     private void trim(Group.Speakers.Speaker speaker) {
         speaker.setName(conformString(speaker.getName()));
         speaker.setPost(conformString(speaker.getPost()));
-    }
-
-    public ObjectFactory getObjectFactory() {
-        return objectFactory;
     }
 
 
