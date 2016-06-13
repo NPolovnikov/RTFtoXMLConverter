@@ -47,7 +47,7 @@ public class WaitForNextSpeakers<AI extends Cell3Parser> extends StateBase<AI> i
         //подчеркнутый, не наклонный. Еще группа докладчиков
         if (fc.getTextFormat().fontContain(ul) &&
                 !fc.getTextFormat().fontContain(i)) {
-            LOGGER.debug("state={}. Обнаружен подчеркнутый, ненаклонный текст ''. Созданы CurrentGroup", STATE_NAME, fc.getC());
+            LOGGER.debug("state={}. Обнаружен подчеркнутый, ненаклонный текст ''. Это тип очередного доклада. Созданы CurrentGroup", STATE_NAME, fc.getC());
             agendaBuilder.newCurrentGroup();
             eventSink.castEvent(NEW_SPEAKER_GROUP_FOUND);
         }

@@ -34,6 +34,9 @@ public class Name<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
             LOGGER.debug("state={}. Обнаружен \\n. Объединены CurrentSpeaker, CurrentGroup", STATE_NAME);
         } else {
             String currentName = agendaBuilder.getCurrentSpeaker().getName();
+            if (currentName == null) {
+                currentName = "";
+            }
             agendaBuilder.getCurrentSpeaker().setName(currentName + String.valueOf(fc.getC()));
         }
     }
@@ -58,7 +61,7 @@ public class Name<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     public void analyseFormat(FormatedChar fc) {
         //неформатированый- новый докладчик в текущем докладе
         if (fc.getTextFormat().getFontFormat().isEmpty()) {
-            LOGGER.debug("state={}. Обнаружен неформатированный текст '{}'. Объединены CurrentSpeaker, создан новый CurrentSpeaker", STATE_NAME, fc.getC());
+            LOGGER.debug("state={}. Обнаружен неформатированный текст '{}'. Это должность очередного докладчика. Объединены CurrentSpeaker, создан новый CurrentSpeaker", STATE_NAME, fc.getC());
             agendaBuilder.mergeCurrentSpeaker();
             agendaBuilder.newCurrentSpeaker();
             eventSink.castEvent(POST_FOUND);

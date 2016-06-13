@@ -30,6 +30,9 @@ public class Post<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     @Override
     public void processChar(FormatedChar fc) {
         String currentPost = agendaBuilder.getCurrentSpeaker().getPost();
+        if(currentPost == null){
+            currentPost = "";
+        }
         agendaBuilder.getCurrentSpeaker().setPost(currentPost + String.valueOf(fc.getC()).replace("\n", "\r\n"));
     }
 

@@ -44,9 +44,14 @@ public class Cell2State<AI extends TableParser> extends StateBase<AI> implements
             case cell:
                 System.err.println("Состояние Cell2State, поймано событие cell");
                 String conformed = agendaBuilder.conformString(collected.toString());
-                agendaBuilder.getCurrentItem().setInfo(conformed);
+                if(!conformed.equals("")) {
+                    agendaBuilder.getCurrentItem().setInfo(conformed);
+                }
                 collected = new StringBuilder();
                 eventSink.castEvent(CELL_END);
+                break;
+            case row:
+                // TODO: 13.06.2016 игнорировать данные row
                 break;
         }
     }

@@ -65,7 +65,7 @@ public class Text<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
 
     @Override
     public void exit() {
-
+        LOGGER.error("необрабатываемый ошибочный EXIT");
     }
 
 }

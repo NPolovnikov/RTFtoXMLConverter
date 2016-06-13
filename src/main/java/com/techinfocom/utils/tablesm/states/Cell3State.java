@@ -71,6 +71,9 @@ public class Cell3State<AI extends TableParser> extends StateBase<AI> implements
                 init();//переинициализируем для следующего применения.
                 eventSink.castEvent(CELL_END);
                 break;
+            case row:
+                // TODO: 13.06.2016 игнорировать? два же столбца оказывается
+                break;
             default:
                 break;
         }

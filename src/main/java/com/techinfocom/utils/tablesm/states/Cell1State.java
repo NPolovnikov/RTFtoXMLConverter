@@ -46,7 +46,9 @@ public class Cell1State<AI extends TableParser> extends StateBase<AI> implements
             case cell:
                 System.err.println("Состояние Cell1State, поймано событие cell"); // TODO: 08.06.2016 Убрать везде system.err
                 String conformed = agendaBuilder.conformString(collected.toString());
-                agendaBuilder.getCurrentItem().setNumber(conformed);
+                if (!conformed.equals("")) { //пустые строки не пускаем. иначе возникает несоответствие схеме.
+                    agendaBuilder.getCurrentItem().setNumber(conformed);
+                }
                 collected = new StringBuilder();//почистим для применения при следующем входе.
                 eventSink.castEvent(CELL_END);
                 break;
