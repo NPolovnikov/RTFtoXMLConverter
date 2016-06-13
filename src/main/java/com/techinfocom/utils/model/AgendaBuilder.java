@@ -128,7 +128,7 @@ public class AgendaBuilder {
         String conformed = null;
         if (srcStr != null) {
             conformed = srcStr.replaceAll("  ", " ");
-            List<String> pars = Arrays.asList(conformed.split("\\r\\n"));
+            List<String> pars = Arrays.asList(conformed.split("(\\r\\n)|(\\n)"));
             //раскладывает на абзацы, удаляет начальные конечные пробелы, удаляет пустые абзацы, складывает обратно через перевод каретки.
             conformed = pars.stream()
                     .map(String::trim)
