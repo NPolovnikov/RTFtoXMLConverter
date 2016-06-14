@@ -73,7 +73,7 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
 
     @Override
     public void exit() {
-        LOGGER.error("необрабатываемый ошибочный EXIT");
+        LOGGER.debug("state={}. Получен сигнал о завершении ячейки.", STATE_NAME);
         //поищем номер документа.
         agendaBuilder.docNumberExtractAndSave();
         eventSink.castEvent(EXIT);
