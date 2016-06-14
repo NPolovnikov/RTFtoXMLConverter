@@ -65,7 +65,7 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
             if (text == null) {
                 text = "";
             }
-            agendaBuilder.getAgendaItem().setText(text + "\r\n");//восстановим пропущенный сигнальный перевод строки
+            agendaBuilder.getAgendaItem().setText(text + "\n");//восстановим пропущенный сигнальный перевод строки
 
             eventSink.castEvent(NO_SPEAKERS);
         }

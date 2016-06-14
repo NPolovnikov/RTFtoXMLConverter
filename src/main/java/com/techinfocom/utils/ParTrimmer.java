@@ -8,7 +8,7 @@ public class ParTrimmer {
 
     public FormatedChar trim(FormatedChar fc) {
         if (buffer == null) {
-            if (fc.getC() == (' ')) { //вначале всего текста следует игнорировать только пробелы
+            if (fc.getC() == (' ') || fc.getC() == ('\n')) { //вначале всего текста следует игнорировать только пробелы и переводы строк
                 return null;
             } else {
                 buffer = fc; //иначе заполняем буфер

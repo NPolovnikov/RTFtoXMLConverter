@@ -78,8 +78,10 @@ public class Cell3State<AI extends TableParser> extends StateBase<AI> implements
             case row:
                 LOGGER.info("Неожиданный конец строки таблицы. контекст = {}. Данные строки проигнорированы", "");// TODO: 13.06.2016 включить контекст
                 cell3Parser.exit();
+                parTrimmer.finish();
                 agendaBuilder.dropAgendaItem();//Если что-то успели насобирать- забудем.
                 agendaBuilder.newAgendaItem();
+                init();//переинициализируем для следующего применения.
                 eventSink.castEvent(ROW_END);
                 break;
             default:
