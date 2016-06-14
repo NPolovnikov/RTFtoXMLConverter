@@ -46,7 +46,8 @@ public class SpeakType<AI extends Cell3Parser> extends StateBase<AI> implements 
     @Override
     public void analyseFormat(FormatedChar fc) {
         //текст без форматирования- началась должность.
-        if (fc.getTextFormat().getFontFormat().isEmpty()) {
+        if (fc.getTextFormat().getFontFormat().isEmpty() &&
+                fc.getC() != '\n' && fc.getC() != ' ') {
             LOGGER.debug("state={}. Обнаружен текст '{}' без форматирования. Созданы CurrentSpeaker", STATE_NAME, fc.getC());
             agendaBuilder.newSpeaker();
             castEvent(POST_FOUND);

@@ -29,7 +29,7 @@ public class Post<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     @Override
     public void processChar(FormatedChar fc) {
         String currentPost = agendaBuilder.getSpeaker().getPost();
-        if(currentPost == null){
+        if (currentPost == null) {
             currentPost = "";
         }
         agendaBuilder.getSpeaker().setPost(currentPost + String.valueOf(fc.getC()).replace("\n", "\r\n"));
@@ -43,7 +43,8 @@ public class Post<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     @Override
     public void analyseFormat(FormatedChar fc) {
         //жирный текст- ФИО докладчика
-        if (fc.getTextFormat().fontContain(b)) {
+        if (fc.getTextFormat().fontContain(b) &&
+                fc.getC() != '\n' && fc.getC() != ' ') {
             LOGGER.debug("state={}. Обнаружен жирный текст '{}'.", STATE_NAME, fc.getC());
             eventSink.castEvent(NAME_FOUND);
         }

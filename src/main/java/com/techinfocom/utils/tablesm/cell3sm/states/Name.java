@@ -60,7 +60,8 @@ public class Name<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     @Override
     public void analyseFormat(FormatedChar fc) {
         //неформатированый- новый докладчик в текущем докладе
-        if (fc.getTextFormat().getFontFormat().isEmpty()) {
+        if (fc.getTextFormat().getFontFormat().isEmpty() &&
+                fc.getC() != '\n' && fc.getC() != ' ') {    //но не перевод и не пробелы, иначе можно ошибочно переключиться в ожидание следующей должности
             LOGGER.debug("state={}. Обнаружен неформатированный текст '{}'. Это должность очередного докладчика. Объединены CurrentSpeaker, создан новый CurrentSpeaker", STATE_NAME, fc.getC());
             agendaBuilder.mergeSpeaker();
             agendaBuilder.newSpeaker();
