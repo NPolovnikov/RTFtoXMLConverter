@@ -44,7 +44,7 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
-                    <mainClass>com.techinfocom.utils.App</mainClass>
+                    <mainClass>com.techinfocom.nvis.agendartftoxml.utils.App</mainClass>
                 </configuration>
             </plugin>
 
@@ -58,7 +58,7 @@
                         <manifest>
                             <classpathPrefix>lib/</classpathPrefix>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.techinfocom.utils.App</mainClass>
+                            <mainClass>com.techinfocom.nvis.agendartftoxml.utils.App</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
