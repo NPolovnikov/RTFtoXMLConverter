@@ -32,7 +32,7 @@ public class JaxbXmlCodec {
             JAXBContext jaxbContextReq = JAXBContext.newInstance(Agenda.class);
 
             Marshaller m = jaxbContextReq.createMarshaller();
-            m.setSchema(schema);
+            //m.setSchema(schema);
             m.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
             m.setProperty(Marshaller.JAXB_FRAGMENT, true);
             marshaller = m;

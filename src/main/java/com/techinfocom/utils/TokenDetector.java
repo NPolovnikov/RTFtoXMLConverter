@@ -2,10 +2,13 @@ package com.techinfocom.utils;
 
 import com.rtfparserkit.parser.IRtfListener;
 import com.rtfparserkit.rtf.Command;
+import com.techinfocom.utils.docsm.DocParser;
+import com.techinfocom.utils.docsm.DocParserImpl;
 import com.techinfocom.utils.model.AgendaBuilder;
+import com.techinfocom.utils.model.FormatedChar;
+import com.techinfocom.utils.model.RtfCommand;
 import com.techinfocom.utils.tablesm.TableParser;
 import com.techinfocom.utils.tablesm.TableParserImpl;
-import org.slf4j.*;
 import org.slf4j.Logger;
 
 import java.util.Arrays;
@@ -23,11 +26,13 @@ public class TokenDetector implements IRtfListener {
         groupState = new GroupState();
         agendaBuilder = new AgendaBuilder();
         tableParser = TableParserImpl.createAutomaton(agendaBuilder);
+        docParser = DocParserImpl.createAutomaton();
     }
 
     private final GroupState groupState;
     private Integer dstDepthBegin;
     private final TableParser tableParser;
+    private final DocParser docParser;
 
     @Override
     public void processDocumentStart() {
@@ -70,7 +75,8 @@ public class TokenDetector implements IRtfListener {
         if (dstDepthBegin == null) {
             LOGGER.debug("processString={} at groupState={}", string, groupState.printCurrentLevel());
             for (char c : string.toCharArray()) {
-                tableParser.processChar(new FormatedChar(c, groupState.getCurrent()));
+                //tableParser.processChar(new FormatedChar(c, groupState.getCurrent()));
+                docParser.processChar(new FormatedChar(c, groupState.getCurrent()));
             }
 
         }
@@ -107,7 +113,8 @@ public class TokenDetector implements IRtfListener {
                     break;
                 default:
                     groupState.processCommand(rtfCommand);
-                    tableParser.processCommand(rtfCommand, groupState.getCurrent());
+                    //tableParser.processCommand(rtfCommand, groupState.getCurrent());
+                    docParser.processCommand(rtfCommand, groupState.getCurrent());
                     break;
             }
         }

@@ -1,4 +1,6 @@
-package com.techinfocom.utils;
+package com.techinfocom.utils.model;
+
+import com.techinfocom.utils.model.TextFormat;
 
 /**
  * Created by volkov_kv on 11.06.2016.

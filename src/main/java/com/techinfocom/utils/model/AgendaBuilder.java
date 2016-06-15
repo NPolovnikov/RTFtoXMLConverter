@@ -1,13 +1,10 @@
 package com.techinfocom.utils.model;
 
-import com.techinfocom.utils.GroupState;
-import com.techinfocom.utils.RtfCommand;
 import com.techinfocom.utils.model.agenda.Agenda;
 import com.techinfocom.utils.model.agenda.AgendaItem;
 import com.techinfocom.utils.model.agenda.Group;
 import com.techinfocom.utils.model.agenda.ObjectFactory;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;

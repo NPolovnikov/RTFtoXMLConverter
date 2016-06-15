@@ -1,19 +1,16 @@
 package com.techinfocom.utils.tablesm.states;
 
 import com.techinfocom.utils.*;
-import com.techinfocom.utils.Logger;
 import com.techinfocom.utils.model.AgendaBuilder;
+import com.techinfocom.utils.model.FormatedChar;
+import com.techinfocom.utils.model.RtfCommand;
+import com.techinfocom.utils.model.TextFormat;
 import com.techinfocom.utils.statemachine.Event;
 import com.techinfocom.utils.statemachine.EventSink;
 import com.techinfocom.utils.statemachine.StateBase;
 import com.techinfocom.utils.tablesm.TableParser;
 import com.techinfocom.utils.tablesm.cell3sm.Cell3Parser;
 import com.techinfocom.utils.tablesm.cell3sm.Cell3ParserImpl;
-import org.slf4j.*;
-
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.rtfparserkit.rtf.Command.*;
 

@@ -1,5 +1,7 @@
 package com.techinfocom.utils;
 
+import com.techinfocom.utils.model.FormatedChar;
+
 /**
  * Created by volkov_kv on 11.06.2016.
  */

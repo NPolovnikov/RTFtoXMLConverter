@@ -1,6 +1,6 @@
 package com.techinfocom.utils.tablesm.cell3sm.states;
 
-import com.techinfocom.utils.FormatedChar;
+import com.techinfocom.utils.model.FormatedChar;
 import com.techinfocom.utils.model.AgendaBuilder;
 import com.techinfocom.utils.statemachine.Event;
 import com.techinfocom.utils.statemachine.EventSink;

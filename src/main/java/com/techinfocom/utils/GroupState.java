@@ -1,5 +1,8 @@
 package com.techinfocom.utils;
 
+import com.techinfocom.utils.model.RtfCommand;
+import com.techinfocom.utils.model.TextFormat;
+
 import java.util.Stack;
 
 /**

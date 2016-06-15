@@ -1,8 +1,6 @@
 package com.techinfocom.utils.tablesm.cell3sm;
 
-import com.techinfocom.utils.FormatedChar;
-import com.techinfocom.utils.RtfCommand;
-import com.techinfocom.utils.TextFormat;
+import com.techinfocom.utils.model.FormatedChar;
 
 /**
  * Created by volkov_kv on 09.06.2016.

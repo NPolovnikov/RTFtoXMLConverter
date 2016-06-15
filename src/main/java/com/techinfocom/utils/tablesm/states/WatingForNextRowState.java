@@ -1,9 +1,8 @@
 package com.techinfocom.utils.tablesm.states;
 
-import com.techinfocom.utils.DocEvent;
-import com.techinfocom.utils.FormatedChar;
-import com.techinfocom.utils.RtfCommand;
-import com.techinfocom.utils.TextFormat;
+import com.techinfocom.utils.model.FormatedChar;
+import com.techinfocom.utils.model.RtfCommand;
+import com.techinfocom.utils.model.TextFormat;
 import com.techinfocom.utils.model.AgendaBuilder;
 import com.techinfocom.utils.statemachine.Event;
 import com.techinfocom.utils.statemachine.EventSink;

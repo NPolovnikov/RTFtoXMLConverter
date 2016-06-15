@@ -1,6 +1,6 @@
 package com.techinfocom.utils.tablesm.cell3sm;
 
-import com.techinfocom.utils.FormatedChar;
+import com.techinfocom.utils.model.FormatedChar;
 import com.techinfocom.utils.model.AgendaBuilder;
 import com.techinfocom.utils.statemachine.AutomationBase;
 import com.techinfocom.utils.tablesm.cell3sm.states.*;

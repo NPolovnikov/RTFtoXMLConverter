@@ -1,4 +1,4 @@
-package com.techinfocom.utils;
+package com.techinfocom.utils.model;
 
 import com.rtfparserkit.rtf.Command;
 
