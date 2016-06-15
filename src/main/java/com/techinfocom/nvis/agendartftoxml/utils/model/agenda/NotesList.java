@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -29,12 +28,11 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "notesList", namespace = "http://techinfocom.com/nvis/agenda", propOrder = {
+@XmlType(name = "notesList", propOrder = {
     "note"
 })
 public class NotesList {
 
-    @XmlElement(namespace = "http://techinfocom.com/nvis/agenda")
     protected List<String> note;
 
     /**

@@ -20,11 +20,12 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
+ *         &lt;element name="id" type="{http://techinfocom.com/nvis/agenda}UUID"/>
  *         &lt;element name="number" type="{http://techinfocom.com/nvis/agenda}NonEmptyString" minOccurs="0"/>
  *         &lt;element name="info" type="{http://techinfocom.com/nvis/agenda}NonEmptyString" minOccurs="0"/>
  *         &lt;element name="addon" type="{http://techinfocom.com/nvis/agenda}NonEmptyString" minOccurs="0"/>
  *         &lt;element name="rn" type="{http://techinfocom.com/nvis/agenda}NonEmptyString" minOccurs="0"/>
- *         &lt;element name="text" type="{http://techinfocom.com/nvis/agenda}NonEmptyString"/>
+ *         &lt;element name="text" type="{http://techinfocom.com/nvis/agenda}NonEmptyString" minOccurs="0"/>
  *         &lt;element name="notes" type="{http://techinfocom.com/nvis/agenda}notesList" minOccurs="0"/>
  *         &lt;element name="speakerGroups" type="{http://techinfocom.com/nvis/agenda}Speakers" minOccurs="0"/>
  *         &lt;choice minOccurs="0">
@@ -46,6 +47,7 @@ import javax.xml.bind.annotation.XmlType;
  *                       &lt;/complexType>
  *                     &lt;/element>
  *                   &lt;/sequence>
+ *                   &lt;attribute name="autoupdate" type="{http://www.w3.org/2001/XMLSchema}boolean" />
  *                 &lt;/restriction>
  *               &lt;/complexContent>
  *             &lt;/complexType>
@@ -62,6 +64,7 @@ import javax.xml.bind.annotation.XmlType;
  *                       &lt;/restriction>
  *                     &lt;/simpleType>
  *                   &lt;/attribute>
+ *                   &lt;attribute name="autoupdate" type="{http://www.w3.org/2001/XMLSchema}boolean" />
  *                 &lt;/restriction>
  *               &lt;/complexContent>
  *             &lt;/complexType>
@@ -76,7 +79,8 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "AgendaItem", namespace = "http://techinfocom.com/nvis/agenda", propOrder = {
+@XmlType(name = "AgendaItem", propOrder = {
+    "id",
     "number",
     "info",
     "addon",
@@ -89,24 +93,41 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class AgendaItem {
 
-    @XmlElement(namespace = "http://techinfocom.com/nvis/agenda")
+    @XmlElement(required = true)
+    protected String id;
     protected String number;
-    @XmlElement(namespace = "http://techinfocom.com/nvis/agenda")
     protected String info;
-    @XmlElement(namespace = "http://techinfocom.com/nvis/agenda")
     protected String addon;
-    @XmlElement(namespace = "http://techinfocom.com/nvis/agenda")
     protected String rn;
-    @XmlElement(namespace = "http://techinfocom.com/nvis/agenda", required = true)
     protected String text;
-    @XmlElement(namespace = "http://techinfocom.com/nvis/agenda")
     protected NotesList notes;
-    @XmlElement(namespace = "http://techinfocom.com/nvis/agenda")
     protected Speakers speakerGroups;
-    @XmlElement(namespace = "http://techinfocom.com/nvis/agenda")
     protected AgendaItem.Manualdocs manualdocs;
-    @XmlElement(namespace = "http://techinfocom.com/nvis/agenda")
     protected AgendaItem.Autodocs autodocs;
+
+    /**
+     * Gets the value of the id property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Sets the value of the id property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setId(String value) {
+        this.id = value;
+    }
 
     /**
      * Gets the value of the number property.
@@ -342,6 +363,7 @@ public class AgendaItem {
      *           &lt;/restriction>
      *         &lt;/simpleType>
      *       &lt;/attribute>
+     *       &lt;attribute name="autoupdate" type="{http://www.w3.org/2001/XMLSchema}boolean" />
      *     &lt;/restriction>
      *   &lt;/complexContent>
      * &lt;/complexType>
@@ -355,6 +377,8 @@ public class AgendaItem {
 
         @XmlAttribute(name = "loadType", required = true)
         protected String loadType;
+        @XmlAttribute(name = "autoupdate")
+        protected Boolean autoupdate;
 
         /**
          * Gets the value of the loadType property.
@@ -378,6 +402,30 @@ public class AgendaItem {
          */
         public void setLoadType(String value) {
             this.loadType = value;
+        }
+
+        /**
+         * Gets the value of the autoupdate property.
+         * 
+         * @return
+         *     possible object is
+         *     {@link Boolean }
+         *     
+         */
+        public Boolean isAutoupdate() {
+            return autoupdate;
+        }
+
+        /**
+         * Sets the value of the autoupdate property.
+         * 
+         * @param value
+         *     allowed object is
+         *     {@link Boolean }
+         *     
+         */
+        public void setAutoupdate(Boolean value) {
+            this.autoupdate = value;
         }
 
     }
@@ -406,6 +454,7 @@ public class AgendaItem {
      *           &lt;/complexType>
      *         &lt;/element>
      *       &lt;/sequence>
+     *       &lt;attribute name="autoupdate" type="{http://www.w3.org/2001/XMLSchema}boolean" />
      *     &lt;/restriction>
      *   &lt;/complexContent>
      * &lt;/complexType>
@@ -419,8 +468,10 @@ public class AgendaItem {
     })
     public static class Manualdocs {
 
-        @XmlElement(namespace = "http://techinfocom.com/nvis/agenda", required = true)
+        @XmlElement(required = true)
         protected List<AgendaItem.Manualdocs.Document> document;
+        @XmlAttribute(name = "autoupdate")
+        protected Boolean autoupdate;
 
         /**
          * Gets the value of the document property.
@@ -451,6 +502,30 @@ public class AgendaItem {
             return this.document;
         }
 
+        /**
+         * Gets the value of the autoupdate property.
+         * 
+         * @return
+         *     possible object is
+         *     {@link Boolean }
+         *     
+         */
+        public Boolean isAutoupdate() {
+            return autoupdate;
+        }
+
+        /**
+         * Sets the value of the autoupdate property.
+         * 
+         * @param value
+         *     allowed object is
+         *     {@link Boolean }
+         *     
+         */
+        public void setAutoupdate(Boolean value) {
+            this.autoupdate = value;
+        }
+
 
         /**
          * <p>Java class for anonymous complex type.
@@ -478,9 +553,9 @@ public class AgendaItem {
         })
         public static class Document {
 
-            @XmlElement(namespace = "http://techinfocom.com/nvis/agenda", required = true)
+            @XmlElement(required = true)
             protected String displayTitle;
-            @XmlElement(namespace = "http://techinfocom.com/nvis/agenda", required = true)
+            @XmlElement(required = true)
             protected String searchCriteria;
 
             /**

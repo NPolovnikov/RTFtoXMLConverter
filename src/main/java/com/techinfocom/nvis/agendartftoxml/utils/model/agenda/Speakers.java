@@ -29,12 +29,12 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Speakers", namespace = "http://techinfocom.com/nvis/agenda", propOrder = {
+@XmlType(name = "Speakers", propOrder = {
     "group"
 })
 public class Speakers {
 
-    @XmlElement(namespace = "http://techinfocom.com/nvis/agenda", required = true)
+    @XmlElement(required = true)
     protected List<Group> group;
 
     /**

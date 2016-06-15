@@ -51,14 +51,14 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Group", namespace = "http://techinfocom.com/nvis/agenda", propOrder = {
+@XmlType(name = "Group", propOrder = {
 
 })
 public class Group {
 
-    @XmlElement(namespace = "http://techinfocom.com/nvis/agenda", required = true)
+    @XmlElement(required = true)
     protected String groupName;
-    @XmlElement(namespace = "http://techinfocom.com/nvis/agenda", required = true)
+    @XmlElement(required = true)
     protected Group.Speakers speakers;
 
     /**
@@ -146,7 +146,7 @@ public class Group {
     })
     public static class Speakers {
 
-        @XmlElement(namespace = "http://techinfocom.com/nvis/agenda", required = true)
+        @XmlElement(required = true)
         protected List<Group.Speakers.Speaker> speaker;
 
         /**
@@ -205,9 +205,8 @@ public class Group {
         })
         public static class Speaker {
 
-            @XmlElement(namespace = "http://techinfocom.com/nvis/agenda", required = true)
+            @XmlElement(required = true)
             protected String post;
-            @XmlElement(namespace = "http://techinfocom.com/nvis/agenda")
             protected String name;
 
             /**

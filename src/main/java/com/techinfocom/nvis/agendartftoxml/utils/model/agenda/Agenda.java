@@ -39,12 +39,12 @@ import javax.xml.datatype.XMLGregorianCalendar;
 @XmlType(name = "", propOrder = {
     "itemOrBlock"
 })
-@XmlRootElement(name = "agenda", namespace = "http://techinfocom.com/nvis/agenda")
+@XmlRootElement(name = "agenda")
 public class Agenda {
 
     @XmlElements({
-        @XmlElement(name = "item", namespace = "http://techinfocom.com/nvis/agenda", type = AgendaItem.class),
-        @XmlElement(name = "block", namespace = "http://techinfocom.com/nvis/agenda", type = AgendaBlockItem.class)
+        @XmlElement(name = "item", type = AgendaItem.class),
+        @XmlElement(name = "block", type = AgendaBlockItem.class)
     })
     protected List<Object> itemOrBlock;
     @XmlAttribute(name = "meetingDate")

@@ -17,6 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
+ *         &lt;element name="id" type="{http://techinfocom.com/nvis/agenda}UUID"/>
  *         &lt;element name="info" type="{http://techinfocom.com/nvis/agenda}NonEmptyString"/>
  *         &lt;element name="text" type="{http://techinfocom.com/nvis/agenda}NonEmptyString"/>
  *         &lt;element name="children" type="{http://techinfocom.com/nvis/agenda}BlockOrItemList" minOccurs="0"/>
@@ -29,19 +30,45 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "AgendaBlockItem", namespace = "http://techinfocom.com/nvis/agenda", propOrder = {
+@XmlType(name = "AgendaBlockItem", propOrder = {
+    "id",
     "info",
     "text",
     "children"
 })
 public class AgendaBlockItem {
 
-    @XmlElement(namespace = "http://techinfocom.com/nvis/agenda", required = true)
+    @XmlElement(required = true)
+    protected String id;
+    @XmlElement(required = true)
     protected String info;
-    @XmlElement(namespace = "http://techinfocom.com/nvis/agenda", required = true)
+    @XmlElement(required = true)
     protected String text;
-    @XmlElement(namespace = "http://techinfocom.com/nvis/agenda")
     protected BlockOrItemList children;
+
+    /**
+     * Gets the value of the id property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Sets the value of the id property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setId(String value) {
+        this.id = value;
+    }
 
     /**
      * Gets the value of the info property.

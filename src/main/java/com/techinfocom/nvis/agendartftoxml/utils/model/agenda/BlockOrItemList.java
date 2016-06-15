@@ -31,14 +31,14 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "BlockOrItemList", namespace = "http://techinfocom.com/nvis/agenda", propOrder = {
+@XmlType(name = "BlockOrItemList", propOrder = {
     "itemOrBlock"
 })
 public class BlockOrItemList {
 
     @XmlElements({
-        @XmlElement(name = "item", namespace = "http://techinfocom.com/nvis/agenda", type = AgendaItem.class),
-        @XmlElement(name = "block", namespace = "http://techinfocom.com/nvis/agenda", type = AgendaBlockItem.class)
+        @XmlElement(name = "item", type = AgendaItem.class),
+        @XmlElement(name = "block", type = AgendaBlockItem.class)
     })
     protected List<Object> itemOrBlock;
 
