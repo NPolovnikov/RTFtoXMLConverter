@@ -37,7 +37,7 @@ public class TokenDetector implements IRtfListener {
 
     @Override
     public void processDocumentEnd() {
-        LOGGER.debug("message:DocEnd");
+        docParser.processDocumentEnd();
     }
 
     @Override

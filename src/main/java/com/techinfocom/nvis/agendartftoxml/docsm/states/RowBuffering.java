@@ -7,6 +7,7 @@ import com.techinfocom.nvis.agendartftoxml.model.AgendaBuilder;
 import com.techinfocom.nvis.agendartftoxml.model.FormatedChar;
 import com.techinfocom.nvis.agendartftoxml.model.RtfCommand;
 import com.techinfocom.nvis.agendartftoxml.model.RtfWord;
+import com.techinfocom.nvis.agendartftoxml.report.WarningMessage;
 import com.techinfocom.nvis.agendartftoxml.statemachine.Event;
 import com.techinfocom.nvis.agendartftoxml.statemachine.EventSink;
 import com.techinfocom.nvis.agendartftoxml.statemachine.StateBase;
@@ -103,6 +104,9 @@ public class RowBuffering<AI extends DocParser> extends StateBase<AI> implements
             case row:  //завершение строки таблицы
                 if (cellCount.equals(3)) {
                     //Нашли первую строку с тремя ячеями, принимаем ее за начало таблицы расписания.
+                    if (agendaBuilder.getAgenda().getMeetingDate() == null){
+                        agendaBuilder.getConversionReport().collectMessage(new WarningMessage("Не обнаружена дата заседания"));
+                    }
                     agendaBuilder.newAgendaItem();
                     dataBuffer.stream().forEach(tableParser::processWord);//сначала скормим весь буффер
                     initState();
@@ -120,5 +124,11 @@ public class RowBuffering<AI extends DocParser> extends StateBase<AI> implements
     private void processChar(FormatedChar formatedChar) {
         dataBuffer.add(formatedChar); // TODO: 15.06.2016 проверить каковы ограничения очереди на размер. Когда вылетит исключение?
     }
+
+    @Override
+    public void processDocumentEnd() {
+
+    }
+
 
 }

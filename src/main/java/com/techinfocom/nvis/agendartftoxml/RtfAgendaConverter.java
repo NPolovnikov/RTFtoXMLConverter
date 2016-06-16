@@ -22,18 +22,14 @@ public class RtfAgendaConverter {
         IRtfParser parser = new StandardRtfParser();
         TokenDetector tokenDetector = new TokenDetector();
         ConversionReport conversionReport = tokenDetector.getAgendaBuilder().getConversionReport();
-        Exception exception = null;
+        byte[] xmlBytes = new byte[0];
         try {
             parser.parse(iRtfSource, tokenDetector);
-        } catch (Exception e) {
-            exception = e;
-        }
-        byte[] xmlBytes = new byte[0];
-        if (exception == null) {
             JaxbXmlCodec xmlCodec = JaxbXmlCodec.getInstance();
             xmlBytes = xmlCodec.marshalData(tokenDetector.getAgendaBuilder().getAgenda());
-        } else {
-            conversionReport.collectMessage(new ErrorMessage("Фатальная ошибка. Не удается обработать документ", null));
+        } catch (Exception e) {
+            conversionReport.collectMessage(new ErrorMessage("Общая ошибка. Не удается обработать документ", null));
+            LOGGER.error("RTF parsing error", e);
         }
 
         return new AgendaConverterResponse(xmlBytes, conversionReport);

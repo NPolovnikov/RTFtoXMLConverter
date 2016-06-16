@@ -8,5 +8,11 @@ public class WarningMessage extends ReportMessage {
         super(ReportMessageType.WARNING, message);
         this.estimated = estimated;
     }
+
+    public WarningMessage(String message) {
+        super(ReportMessageType.WARNING, message);
+        this.estimated = null;
+    }
+
     private final String estimated; //примерное положение заданное через текст документа.
 }

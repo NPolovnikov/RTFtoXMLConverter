@@ -12,4 +12,5 @@ public interface DocParser {
 
     void processWord(RtfWord rtfWord);
 
+    void processDocumentEnd();
 }

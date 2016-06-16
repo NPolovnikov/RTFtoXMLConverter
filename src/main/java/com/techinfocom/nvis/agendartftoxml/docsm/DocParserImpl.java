@@ -49,5 +49,12 @@ public class DocParserImpl extends AutomationBase<DocParserState> implements Doc
         state.analyseWord(rtfWord);
         state.processWord(rtfWord);
     }
+
+    @Override
+    public void processDocumentEnd() {
+        state.processDocumentEnd();
+    }
+
+
 }
 

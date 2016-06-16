@@ -8,5 +8,11 @@ public class ErrorMessage extends ReportMessage {
         super(ReportMessageType.ERROR, message);
         this.estimated = estimated;
     }
+
+    public ErrorMessage(String message) {
+        super(ReportMessageType.ERROR, message);
+        estimated = null;
+    }
+
     private final String estimated; //примерное положение заданное через текст документа.
 }

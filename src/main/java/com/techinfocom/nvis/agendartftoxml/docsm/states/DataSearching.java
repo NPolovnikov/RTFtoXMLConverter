@@ -4,6 +4,7 @@ import com.rtfparserkit.rtf.Command;
 import com.techinfocom.nvis.agendartftoxml.docsm.DocParser;
 import com.techinfocom.nvis.agendartftoxml.docsm.DocParserState;
 import com.techinfocom.nvis.agendartftoxml.model.*;
+import com.techinfocom.nvis.agendartftoxml.report.ErrorMessage;
 import com.techinfocom.nvis.agendartftoxml.statemachine.Event;
 import com.techinfocom.nvis.agendartftoxml.statemachine.EventSink;
 import com.techinfocom.nvis.agendartftoxml.statemachine.StateBase;
@@ -72,4 +73,10 @@ public class DataSearching<AI extends DocParser> extends StateBase<AI> implement
                 break;
         }
     }
+
+    @Override
+    public void processDocumentEnd() {
+        agendaBuilder.getConversionReport().collectMessage(new ErrorMessage("таблица с расписанием не обнаружена"));
+    }
+
 }
