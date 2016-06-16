@@ -64,8 +64,8 @@ public class DataSearching<AI extends DocParser> extends StateBase<AI> implement
     private void analyseCommand(RtfCommand rtfCommand) {
         switch (rtfCommand.getCommand()) {
             case trowd: //начало таблицы
-                // TODO: 16.06.2016  agendaBuilder.meetingDateExtractAndSave(collectedChars.toString()); //попробуем отыскать дату заседания
-                initState();
+                agendaBuilder.meetingDateExtractAndSave(collectedChars.toString());  //попробуем отыскать дату заседания
+                 initState();
                 eventSink.castEvent(SOME_ROW_FOUND);
                 break;
         }
