@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import java.util.Queue;
 
 /**
- * Created by volkov_kv on 15.06.2016.
+ * Класс для детектирования текста или начала таблицы
  */
 public class DataSearching<AI extends DocParser> extends StateBase<AI> implements DocParserState {
     public static final Event SOME_ROW_FOUND = new Event("SOME_ROW_FOUND");//какая-то строка таблицы найдена
@@ -64,7 +64,9 @@ public class DataSearching<AI extends DocParser> extends StateBase<AI> implement
     private void analyseCommand(RtfCommand rtfCommand) {
         switch (rtfCommand.getCommand()) {
             case trowd: //начало таблицы
-                agendaBuilder.meetingDateExtractAndSave(collectedChars.toString());  //попробуем отыскать дату заседания
+                if(collectedChars.length() > 0) {
+                    agendaBuilder.meetingDateExtractAndSave(collectedChars.toString());  //попробуем отыскать дату заседания
+                }
                  initState();
                 eventSink.castEvent(SOME_ROW_FOUND);
                 break;
