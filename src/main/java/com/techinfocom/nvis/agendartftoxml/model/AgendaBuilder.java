@@ -30,11 +30,13 @@ public class AgendaBuilder {
     private int parsedRowCount = 0;
     private int acceptedRowCount = 0;
     private final ConversionReport conversionReport;
+    private final AgendaValidator agendaValidator;
 
     public AgendaBuilder() {
         objectFactory = new ObjectFactory();
         agenda = objectFactory.createAgenda();
         conversionReport = new ConversionReport();
+        agendaValidator = new AgendaValidator();
     }
 
     public Agenda getAgenda() {
@@ -73,6 +75,7 @@ public class AgendaBuilder {
 
     public void mergeAgendaItem() {
         if (currentItem != null) {
+            //agendaValidator.validate(currentItem, conversionReport, agenda.getItemOrBlock()::add);
             agenda.getItemOrBlock().add(currentItem);
             currentItem = null;
         } else throw new RuntimeException("can't merge null currentItem");
