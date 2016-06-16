@@ -4,6 +4,7 @@ import com.techinfocom.nvis.agendartftoxml.model.agenda.Agenda;
 import com.techinfocom.nvis.agendartftoxml.model.agenda.Group;
 import com.techinfocom.nvis.agendartftoxml.model.agenda.ObjectFactory;
 import com.techinfocom.nvis.agendartftoxml.model.agenda.AgendaItem;
+import com.techinfocom.nvis.agendartftoxml.report.ConversionReport;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,13 +21,15 @@ public class AgendaBuilder {
     private AgendaItem currentItem;
     private Group currentGroup;
     private Group.Speakers.Speaker currentSpeaker;
-    private ObjectFactory objectFactory;
+    private final ObjectFactory objectFactory;
     private final Agenda agenda;
     private int rowCount = 0;
+    private final ConversionReport conversionReport;
 
     public AgendaBuilder() {
         objectFactory = new ObjectFactory();
         agenda = objectFactory.createAgenda();
+        conversionReport = new ConversionReport();
     }
 
     public Agenda getAgenda() {
@@ -116,6 +119,10 @@ public class AgendaBuilder {
 
     public int getRowCount() {
         return rowCount;
+    }
+
+    public ConversionReport getConversionReport() {
+        return conversionReport;
     }
 
     /**
