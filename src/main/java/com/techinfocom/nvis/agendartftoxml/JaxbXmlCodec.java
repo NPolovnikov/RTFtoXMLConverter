@@ -14,6 +14,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.*;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 /**
  * Created by volkov_kv on 22.10.2015.
@@ -27,19 +28,26 @@ public class JaxbXmlCodec {
     private JaxbXmlCodec() throws InitException {
         try {
             SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            File schemeFile = new File(JaxbXmlCodec.class.getClassLoader().getResource("agenda-internal-new.xsd").toURI());
-            //File schemeFile = new File(this.getClass().getClassLoader().getResourceAsStream("agenda-internal-new.xsd"));
+            //File schemeFile = new File(JaxbXmlCodec.class.getClassLoader().getResource("agenda-internal-new.xsd").toURI());
+            ClassLoader classLoader = getClass().getClassLoader();
+            URL xsdUrl = classLoader.getResource("agenda-internal-new.xsd");
+            File schemeFile = null;
+            if (xsdUrl != null) {
+                schemeFile = new File(xsdUrl.getFile());
+            } else {
+                throw new InitException("can't load XML scheme");
+            }
             Schema schema = sf.newSchema(schemeFile);
             JAXBContext jaxbContextReq = JAXBContext.newInstance(Agenda.class);
 
             Marshaller m = jaxbContextReq.createMarshaller();
-            //m.setSchema(schema);
+            m.setSchema(schema);
             m.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
             m.setProperty(Marshaller.JAXB_FRAGMENT, true);
             marshaller = m;
 
             xmlOutputFactory = XMLOutputFactory.newFactory();
-        } catch (URISyntaxException | SAXException | JAXBException e) {
+        } catch (InitException | SAXException | JAXBException e) {
             throw new InitException("XML marshaller initialization error", e);
         }
     }
