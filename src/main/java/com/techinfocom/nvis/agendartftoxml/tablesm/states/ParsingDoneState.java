@@ -1,10 +1,7 @@
 package com.techinfocom.nvis.agendartftoxml.tablesm.states;
 
-import com.techinfocom.nvis.agendartftoxml.model.RtfCommand;
-import com.techinfocom.nvis.agendartftoxml.model.TextFormat;
+import com.techinfocom.nvis.agendartftoxml.model.*;
 import com.techinfocom.nvis.agendartftoxml.statemachine.EventSink;
-import com.techinfocom.nvis.agendartftoxml.model.FormatedChar;
-import com.techinfocom.nvis.agendartftoxml.model.AgendaBuilder;
 import com.techinfocom.nvis.agendartftoxml.statemachine.StateBase;
 import com.techinfocom.nvis.agendartftoxml.tablesm.TableParser;
 import org.slf4j.Logger;
@@ -24,13 +21,19 @@ public class ParsingDoneState<AI extends TableParser> extends StateBase<AI> impl
         this.agendaBuilder = agendaBuilder;
     }
 
+
     @Override
-    public void processChar(FormatedChar fc) {
-        //ignore any strings
+    public void processWord(RtfWord rtfWord) {
+        switch (rtfWord.getRtfWordType()) {
+            case COMMAND:
+                break;
+            case CHAR:
+                break;
+        }
     }
 
     @Override
-    public void processCommand(RtfCommand rtfCommand, TextFormat textFormat) {
-        System.err.print("");
+    public void exit() {
+
     }
 }

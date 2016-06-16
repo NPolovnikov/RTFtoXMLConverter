@@ -6,8 +6,6 @@ import com.techinfocom.nvis.agendartftoxml.docsm.DocParser;
 import com.techinfocom.nvis.agendartftoxml.docsm.DocParserImpl;
 import com.techinfocom.nvis.agendartftoxml.model.AgendaBuilder;
 import com.techinfocom.nvis.agendartftoxml.model.RtfCommand;
-import com.techinfocom.nvis.agendartftoxml.tablesm.TableParser;
-import com.techinfocom.nvis.agendartftoxml.tablesm.TableParserImpl;
 import com.techinfocom.nvis.agendartftoxml.model.FormatedChar;
 import org.slf4j.Logger;
 
@@ -24,15 +22,13 @@ public class TokenDetector implements IRtfListener {
 
     public TokenDetector() {
         groupState = new GroupState();
-        agendaBuilder = new AgendaBuilder();
-        tableParser = TableParserImpl.createAutomaton(agendaBuilder);
-        docParser = DocParserImpl.createAutomaton();
+        agendaBuilder = new AgendaBuilder();//общая база данных для всех автоматов
+        docParser = DocParserImpl.createAutomaton(agendaBuilder);
     }
 
-    private final GroupState groupState;
-    private Integer dstDepthBegin;
-    private final TableParser tableParser;
-    private final DocParser docParser;
+    private final GroupState groupState; //форматирование
+    private Integer dstDepthBegin; //монитор степени погружения в dst
+    private final DocParser docParser; //парсер структуры документа.
 
     @Override
     public void processDocumentStart() {
@@ -75,10 +71,8 @@ public class TokenDetector implements IRtfListener {
         if (dstDepthBegin == null) {
             LOGGER.debug("processString={} at groupState={}", string, groupState.printCurrentLevel());
             for (char c : string.toCharArray()) {
-                //tableParser.processChar(new FormatedChar(c, groupState.getCurrent()));
-                docParser.processChar(new FormatedChar(c, groupState.getCurrent()));
+                docParser.processWord(new FormatedChar(c, groupState.getCurrent()));
             }
-
         }
     }
 
@@ -91,7 +85,7 @@ public class TokenDetector implements IRtfListener {
                 LOGGER.debug("processCommand. command=" + command.getCommandName() + "-" + command.getCommandType() + "; parameter=" + parameter + "; hasParameter=" + hasParameter + "; optional=" + optional);
             }
         }
-        RtfCommand rtfCommand = new RtfCommand(command, parameter, hasParameter, optional);
+        RtfCommand rtfCommand = new RtfCommand(command, parameter, hasParameter, optional, groupState.getCurrent());
 
         if (dstDepthBegin != null) {
             //System.err.println("режим сбора DST. пока игнор");
@@ -113,8 +107,7 @@ public class TokenDetector implements IRtfListener {
                     break;
                 default:
                     groupState.processCommand(rtfCommand);
-                    //tableParser.processCommand(rtfCommand, groupState.getCurrent());
-                    docParser.processCommand(rtfCommand, groupState.getCurrent());
+                    docParser.processWord(rtfCommand);
                     break;
             }
         }

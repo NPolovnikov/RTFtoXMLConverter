@@ -25,5 +25,7 @@ public class RtfAgendaConverterTest {
         String xml = new String(xmlBytes);
 
         assertNotNull(xml);
+
+        
     }
 }

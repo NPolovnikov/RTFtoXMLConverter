@@ -7,6 +7,7 @@ import com.techinfocom.nvis.agendartftoxml.model.agenda.AgendaItem;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -19,30 +20,24 @@ public class AgendaBuilder {
     private AgendaItem currentItem;
     private Group currentGroup;
     private Group.Speakers.Speaker currentSpeaker;
+    private ObjectFactory objectFactory;
+    private final Agenda agenda;
+    private int rowCount = 0;
 
     public AgendaBuilder() {
         objectFactory = new ObjectFactory();
+        agenda = objectFactory.createAgenda();
     }
-
-    private ObjectFactory objectFactory;
-    private Agenda agenda;
 
     public Agenda getAgenda() {
         return agenda;
     }
 
-
-    public void createAgenda() {
-        if (agenda == null) {
-            agenda = objectFactory.createAgenda();
-        } else {
-            throw new RuntimeException("agenda already exists"); // TODO: 08.06.2016 заменить исключение
-        }
-    }
-
     public AgendaItem newAgendaItem() {
+        rowCount++;
         if (currentItem == null) {
             currentItem = objectFactory.createAgendaItem();
+            currentItem.setId(UUID.randomUUID().toString());
         } else {
             throw new RuntimeException("currentItem already exists"); // TODO: 08.06.2016 заменить исключение
         }
@@ -117,6 +112,10 @@ public class AgendaBuilder {
 
     public ObjectFactory getObjectFactory() {
         return objectFactory;
+    }
+
+    public int getRowCount() {
+        return rowCount;
     }
 
     /**

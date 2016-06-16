@@ -1,10 +1,7 @@
 package com.techinfocom.nvis.agendartftoxml.tablesm.states;
 
-import com.techinfocom.nvis.agendartftoxml.model.RtfCommand;
-import com.techinfocom.nvis.agendartftoxml.model.TextFormat;
+import com.techinfocom.nvis.agendartftoxml.model.*;
 import com.techinfocom.nvis.agendartftoxml.statemachine.EventSink;
-import com.techinfocom.nvis.agendartftoxml.model.FormatedChar;
-import com.techinfocom.nvis.agendartftoxml.model.AgendaBuilder;
 import com.techinfocom.nvis.agendartftoxml.statemachine.Event;
 import com.techinfocom.nvis.agendartftoxml.statemachine.StateBase;
 import com.techinfocom.nvis.agendartftoxml.tablesm.TableParser;
@@ -31,6 +28,22 @@ public class Cell1State<AI extends TableParser> extends StateBase<AI> implements
     }
 
     @Override
+    public void processWord(RtfWord rtfWord) {
+        switch (rtfWord.getRtfWordType()) {
+            case COMMAND:
+                processCommand((RtfCommand) rtfWord);
+                break;
+            case CHAR:
+                processChar((FormatedChar) rtfWord);
+                break;
+        }
+    }
+
+    @Override
+    public void exit() {
+        eventSink.castEvent(TABLE_END);
+    }
+
     public void processChar(FormatedChar fc) {
         if (fc.getTextFormat().paragraphContain(intbl)) {
             collected.append(fc.getC());
@@ -39,8 +52,8 @@ public class Cell1State<AI extends TableParser> extends StateBase<AI> implements
         }
     }
 
-    @Override
-    public void processCommand(RtfCommand rtfCommand, TextFormat textFormat) {
+    public void processCommand(RtfCommand rtfCommand) {
+        TextFormat textFormat = rtfCommand.getTextFormat();
         switch (rtfCommand.getCommand()) {
             case par:
                 processChar(new FormatedChar('\n', textFormat));

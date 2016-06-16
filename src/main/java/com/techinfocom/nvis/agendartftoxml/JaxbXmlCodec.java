@@ -28,6 +28,7 @@ public class JaxbXmlCodec {
         try {
             SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             File schemeFile = new File(JaxbXmlCodec.class.getClassLoader().getResource("agenda-internal-new.xsd").toURI());
+            //File schemeFile = new File(this.getClass().getClassLoader().getResourceAsStream("agenda-internal-new.xsd"));
             Schema schema = sf.newSchema(schemeFile);
             JAXBContext jaxbContextReq = JAXBContext.newInstance(Agenda.class);
 
@@ -57,7 +58,7 @@ public class JaxbXmlCodec {
             xmlStreamWriter.writeEndDocument();
             xmlStreamWriter.close();
         } catch (XMLStreamException | JAXBException e) {
-            LOGGER.error("Ошибка преобразования в XML, {}", e.getStackTrace());
+            LOGGER.error("Ошибка преобразования в XML, {}", e);
             throw new MarshalingException("Agenda marshalling error", e);
         }
         return baos.toByteArray();

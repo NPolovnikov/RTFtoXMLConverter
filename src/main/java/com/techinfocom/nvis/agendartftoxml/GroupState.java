@@ -6,7 +6,8 @@ import com.techinfocom.nvis.agendartftoxml.model.TextFormat;
 import java.util.Stack;
 
 /**
- * Created by volkov_kv on 27.05.2016.
+ * Отслеживает текущее форматирование каждого символа, обрабатывает вложенности заданные в RTF
+ * фигурными скобками. Не знает ничего о destination
  */
 public class GroupState {
     private Stack<TextFormat> stack;

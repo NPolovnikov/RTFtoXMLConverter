@@ -1,10 +1,10 @@
 package com.techinfocom.nvis.agendartftoxml.docsm;
 
-import com.techinfocom.nvis.agendartftoxml.model.RtfCommand;
-import com.techinfocom.nvis.agendartftoxml.model.TextFormat;
+import com.techinfocom.nvis.agendartftoxml.docsm.states.*;
+import com.techinfocom.nvis.agendartftoxml.model.*;
 import com.techinfocom.nvis.agendartftoxml.statemachine.AutomationBase;
-import com.techinfocom.nvis.agendartftoxml.model.FormatedChar;
-import com.techinfocom.nvis.agendartftoxml.docsm.states.DataSearching;
+import com.techinfocom.nvis.agendartftoxml.tablesm.TableParser;
+import com.techinfocom.nvis.agendartftoxml.tablesm.TableParserImpl;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -12,36 +12,42 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  * Created by volkov_kv on 07.06.2016.
  */
-public class DocParserImpl extends AutomationBase<DocParser> implements DocParser {
+public class DocParserImpl extends AutomationBase<DocParserState> implements DocParser {
 
-    public DocParserImpl() {
-        Queue<FormatedChar> dataBuffer = new ConcurrentLinkedQueue<>();
+    public DocParserImpl(AgendaBuilder agendaBuilder) {
+        //создание автомата парсинга таблицы
+        TableParser tableParser = TableParserImpl.createAutomaton(agendaBuilder);
+
+        Queue<RtfWord> dataBuffer = new ConcurrentLinkedQueue<>();
 
         //создание объектов-состояний
-        DocParser dataSearching = new DataSearching<>(this, this, dataBuffer);
-
+        DocParserState dataSearching = new DataSearching<>(this, this, dataBuffer, agendaBuilder, tableParser);
+        RowBuffering rowBuffering = new RowBuffering<>(this, this, dataBuffer, agendaBuilder, tableParser);
+        AgendaPassthrough agendaPassthrough = new AgendaPassthrough<>(this, this, dataBuffer, agendaBuilder, tableParser);
+        PassOver passOver = new PassOver<>(this, this, dataBuffer, agendaBuilder, tableParser);
 
         //Создание переходов
-        //addEdge(dataSearching, DataSearching.AGENDA_FOUND, dataSearching);
+        addEdge(dataSearching, DataSearching.SOME_ROW_FOUND, rowBuffering);//нашлась какя-то строка, какой-то таблицы. Надо начать собирать ее в буфер.
+        addEdge(rowBuffering, RowBuffering.AGENDA_FOUND, agendaPassthrough);
+        addEdge(rowBuffering, RowBuffering.TABLE_END_FOUND, dataSearching);
+        addEdge(agendaPassthrough, AgendaPassthrough.AGENDA_END_FOUND, passOver);
 
         //Начальное состояние
         state = dataSearching;
     }
 
     // Создание экземпляра автомата
-    public static DocParser createAutomaton() {
-        return new DocParserImpl();
+    public static DocParser createAutomaton(AgendaBuilder agendaBuilder) {
+        return new DocParserImpl(agendaBuilder);
     }
 
     // Делегирование методов интерфейса
-    @Override
-    public void processChar(FormatedChar fc) {
-        state.processChar(fc);
-    }
 
     @Override
-    public void processCommand(RtfCommand rtfCommand, TextFormat textFormat) {
-        state.processCommand(rtfCommand, textFormat);
+    public void processWord(RtfWord rtfWord) {
+        //сначала анализ и смена состояния, потом обработка.
+        state.analyseWord(rtfWord);
+        state.processWord(rtfWord);
     }
 }
 

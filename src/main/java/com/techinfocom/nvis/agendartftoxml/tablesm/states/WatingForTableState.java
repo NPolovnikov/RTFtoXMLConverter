@@ -1,11 +1,8 @@
 package com.techinfocom.nvis.agendartftoxml.tablesm.states;
 
 import com.rtfparserkit.rtf.Command;
-import com.techinfocom.nvis.agendartftoxml.model.RtfCommand;
-import com.techinfocom.nvis.agendartftoxml.model.TextFormat;
+import com.techinfocom.nvis.agendartftoxml.model.*;
 import com.techinfocom.nvis.agendartftoxml.statemachine.EventSink;
-import com.techinfocom.nvis.agendartftoxml.model.FormatedChar;
-import com.techinfocom.nvis.agendartftoxml.model.AgendaBuilder;
 import com.techinfocom.nvis.agendartftoxml.statemachine.Event;
 import com.techinfocom.nvis.agendartftoxml.statemachine.StateBase;
 import com.techinfocom.nvis.agendartftoxml.tablesm.TableParser;
@@ -32,6 +29,15 @@ public class WatingForTableState<AI extends TableParser> extends StateBase<AI> i
     }
 
     @Override
+    public void processWord(RtfWord rtfWord) {
+
+    }
+
+    @Override
+    public void exit() {
+
+    }
+
     public void processChar(FormatedChar fc) {
         if (!fc.getTextFormat().paragraphContain(Command.intbl)) { //любой символ без признака того. что он находится в таблице
             state = SearchState.WAITING_FOR_TABLE;
@@ -39,7 +45,6 @@ public class WatingForTableState<AI extends TableParser> extends StateBase<AI> i
     }
 
 
-    @Override
     public void processCommand(RtfCommand rtfCommand, TextFormat textFormat) {
         switch (state) {
             case WAITING_FOR_TABLE:
@@ -61,7 +66,6 @@ public class WatingForTableState<AI extends TableParser> extends StateBase<AI> i
 
         if (tableCount >= AGENDA_TABLE_NUMBER) {
             //нашли нужную таблицу.
-            agendaBuilder.createAgenda();
             agendaBuilder.newAgendaItem();
             eventSink.castEvent(TABLE_FOUND);
         }
