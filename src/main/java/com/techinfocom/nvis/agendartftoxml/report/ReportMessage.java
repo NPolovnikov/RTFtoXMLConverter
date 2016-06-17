@@ -4,8 +4,8 @@ package com.techinfocom.nvis.agendartftoxml.report;
  * Created by volkov_kv on 16.06.2016.
  */
 public abstract class ReportMessage {
-    private final ReportMessageType reportMessageType;
-    private final String message;
+    protected final ReportMessageType reportMessageType;
+    final String message;
 
     public ReportMessage(ReportMessageType reportMessageType, String message) {
         this.reportMessageType = reportMessageType;
@@ -16,7 +16,7 @@ public abstract class ReportMessage {
         return reportMessageType;
     }
 
-    enum ReportMessageType {
+    public enum ReportMessageType {
         INFO("INFO"),
         WARNING("WARNING"),
         ERROR("ERROR");

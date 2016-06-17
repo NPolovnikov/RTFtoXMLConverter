@@ -15,4 +15,18 @@ public class WarningMessage extends ReportMessage {
     }
 
     private final String estimated; //примерное положение заданное через текст документа.
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(reportMessageType.toString())
+                .append(": ")
+                .append(message);
+        if (estimated != null){
+            sb.append("; Примерное положение: ").append(estimated);
+        }
+        return sb.toString();
+    }
+
 }
