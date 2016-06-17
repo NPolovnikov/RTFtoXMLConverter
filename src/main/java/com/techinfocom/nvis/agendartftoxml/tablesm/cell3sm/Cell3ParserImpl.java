@@ -27,6 +27,7 @@ public class Cell3ParserImpl extends AutomationBase<Cell3Parser> implements Cell
         addEdge(waitForSpeakers, WaitForSpeakers.SPEAKERS_FOUND, speakType);
         addEdge(speakType, SpeakType.POST_FOUND, post);
         addEdge(post, Post.NAME_FOUND, name);
+        addEdge(post, Post.END_OF_SPEAKER_GROUP, waitForNextSpeakers);
         addEdge(name, Name.POST_FOUND, post);
         addEdge(name, Name.END_OF_SPEAKER_GROUP, waitForNextSpeakers);
         addEdge(waitForNextSpeakers, WaitForNextSpeakers.NEW_SPEAKER_GROUP_FOUND, speakType);
@@ -39,7 +40,7 @@ public class Cell3ParserImpl extends AutomationBase<Cell3Parser> implements Cell
 
 
         //Начальное состояние
-        state = text;
+        state = waitForSpeakers; //может начаться прямо с докладчиков.
 
     }
 

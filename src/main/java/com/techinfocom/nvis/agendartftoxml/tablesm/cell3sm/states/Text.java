@@ -25,15 +25,16 @@ public class Text<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
 
     @Override
     public void processChar(FormatedChar fc) {
+        //перевод строки все равно запомним. Не дело восстанавливать из другого состояния, угадывая, что он был.
+        String text = agendaBuilder.getAgendaItem().getText();
+        if (text == null) {
+            text = "";
+        }
+        agendaBuilder.getAgendaItem().setText(text + String.valueOf(fc.getC()));
+
         if (fc.getC() == '\n') {
             LOGGER.debug("state={}. Обнаружен \\n. Ожидаем тип доклада", STATE_NAME);
             eventSink.castEvent(PAR_FOUND);
-        } else {
-            String text = agendaBuilder.getAgendaItem().getText();
-            if (text == null) {
-                text = "";
-            }
-            agendaBuilder.getAgendaItem().setText(text + String.valueOf(fc.getC()));
         }
     }
 
