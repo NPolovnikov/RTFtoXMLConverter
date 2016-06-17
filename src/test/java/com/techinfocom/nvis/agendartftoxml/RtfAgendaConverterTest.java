@@ -23,8 +23,8 @@ public class RtfAgendaConverterTest {
     public void testSuccessConvert() throws Exception {
 
         File[] files = new File(getClass().getClassLoader().getResource("right/").toURI()).listFiles();
-        for(File f : files){
-            if(f.isDirectory()){
+        for (File f : files) {
+            if (f.isDirectory()) {
                 File[] rtfFiles = f.listFiles((dir, name) -> name.endsWith(".rtf"));
                 File[] xmlFiles = f.listFiles((dir, name) -> name.endsWith(".xml"));
                 if (rtfFiles.length > 0) {
@@ -59,7 +59,6 @@ public class RtfAgendaConverterTest {
 //        assertNotNull(xml);
 
 
-
         // TODO: 16.06.2016 добавить упоминание имени схемы в документ
 
     }
@@ -76,6 +75,20 @@ public class RtfAgendaConverterTest {
 
         assertTrue(agendaConverterResponse.getXmlBytes().length == 0);
         String report = agendaConverterResponse.printReport("ERROR", "WARNING");
+        assertFalse(report.isEmpty());
+
+        //case 2
+        file = null;
+        agendaConverterResponse = null;
+        report = null;
+        file = new File(getClass().getClassLoader().getResource("failed/1005wo_date/10-05_wo_date.rtf").getFile());
+        is = new FileInputStream(file);
+
+        converter = new RtfAgendaConverter();
+        agendaConverterResponse = converter.convert(is);
+
+        assertTrue(agendaConverterResponse.getXmlBytes().length > 0);
+        report = agendaConverterResponse.printReport("ERROR", "WARNING");
         assertFalse(report.isEmpty());
 
 
