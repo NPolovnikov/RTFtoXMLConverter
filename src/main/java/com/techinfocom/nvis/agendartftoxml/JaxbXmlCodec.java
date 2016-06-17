@@ -10,6 +10,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.*;
@@ -28,26 +29,24 @@ public class JaxbXmlCodec {
     private JaxbXmlCodec() throws InitException {
         try {
             SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            //File schemeFile = new File(JaxbXmlCodec.class.getClassLoader().getResource("agenda-internal-new.xsd").toURI());
-            ClassLoader classLoader = getClass().getClassLoader();
-            URL xsdUrl = classLoader.getResource("agenda-internal-new.xsd");
-            File schemeFile = null;
-            if (xsdUrl != null) {
-                schemeFile = new File(xsdUrl.getFile());
-            } else {
-                throw new InitException("can't load XML scheme");
-            }
-            Schema schema = sf.newSchema(schemeFile);
-            JAXBContext jaxbContextReq = JAXBContext.newInstance(Agenda.class);
+            final String schemaFileName = "agenda-internal-new.xsd";
 
-            Marshaller m = jaxbContextReq.createMarshaller();
+            InputStream schemaStream = this.getClass().getResourceAsStream(schemaFileName);
+            if (schemaStream == null) {
+                schemaStream = this.getClass().getClassLoader().getResourceAsStream(schemaFileName);
+            }
+
+            Schema schema = sf.newSchema(new StreamSource(schemaStream));
+            final JAXBContext jaxbContextReq = JAXBContext.newInstance(Agenda.class);
+
+            final Marshaller m = jaxbContextReq.createMarshaller();
             m.setSchema(schema);
             m.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
             m.setProperty(Marshaller.JAXB_FRAGMENT, true);
             marshaller = m;
 
             xmlOutputFactory = XMLOutputFactory.newFactory();
-        } catch (InitException | SAXException | JAXBException e) {
+        } catch (SAXException | JAXBException e) {
             throw new InitException("XML marshaller initialization error", e);
         }
     }

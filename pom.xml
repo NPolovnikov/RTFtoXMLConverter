@@ -44,7 +44,6 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
-                    <mainClass>com.techinfocom.nvis.agendartftoxml.utils.App</mainClass>
                 </configuration>
             </plugin>
 
