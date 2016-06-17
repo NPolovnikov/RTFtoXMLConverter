@@ -177,9 +177,9 @@ public class AgendaBuilder {
      * @return
      */
     public void docNumberExtractAndSave() {
-        String text = currentItem.getText(); // TODO: 13.06.2016  до первого переовода строки выделить
+        String text = currentItem.getText();
         if (text != null) {
-            Pattern p = Pattern.compile("^.*№ ?(\\d{1,10}-\\d{1,2}) +.*$", Pattern.MULTILINE);
+            Pattern p = Pattern.compile("№ ?(\\d{1,10}-\\d{1,2})", Pattern.MULTILINE);
             Matcher m = p.matcher(text);
             if (m.find()) {
                 String docNumber = m.group(1);
