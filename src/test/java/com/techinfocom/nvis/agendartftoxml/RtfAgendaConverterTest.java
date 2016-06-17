@@ -5,6 +5,11 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 import static org.testng.Assert.*;
 
@@ -16,16 +21,41 @@ public class RtfAgendaConverterTest {
     @Test
     public void testConvert() throws Exception {
 
+        Path rightPath = Paths.get(getClass().getClassLoader().getResource("right/").toURI());
+        File[] files = new File(getClass().getClassLoader().getResource("right/").toURI()).listFiles();
+        for(File f : files){
+            if(f.isDirectory()){
+                File[] rtfFiles = f.listFiles((dir, name) -> name.endsWith(".rtf"));
+                File[] xmlFiles = f.listFiles((dir, name) -> name.endsWith(".xml"));
+                if (rtfFiles.length > 0) {
+                    InputStream is = new FileInputStream(rtfFiles[0]);
+                    RtfAgendaConverter converter = new RtfAgendaConverter();
+                    AgendaConverterResponse agendaConverterResponse = converter.convert(is);
 
-        File file = new File(getClass().getClassLoader().getResource("right/1005/10-05.rtf").getFile());
-        InputStream is = new FileInputStream(file);
+                    String xml = new String(agendaConverterResponse.getXmlBytes());
 
-        RtfAgendaConverter converter = new RtfAgendaConverter();
-        AgendaConverterResponse agendaConverterResponse = converter.convert(is);
+                    assertNotNull(xml);
 
-        String xml = new String(agendaConverterResponse.getXmlBytes());
+                }
+            }
+        }
 
-        assertNotNull(xml);
+//        try(DirectoryStream<Path> rightStream = Files.newDirectoryStream(rightPath)) {
+//            for(Path p: rightStream){
+//
+//            }
+//
+//        }
+//
+//        File file = new File(getClass().getClassLoader().getResource("right/1005/10-05.rtf").getFile());
+//        InputStream is = new FileInputStream(file);
+//
+//        RtfAgendaConverter converter = new RtfAgendaConverter();
+//        AgendaConverterResponse agendaConverterResponse = converter.convert(is);
+//
+//        String xml = new String(agendaConverterResponse.getXmlBytes());
+//
+//        assertNotNull(xml);
 
 
 
