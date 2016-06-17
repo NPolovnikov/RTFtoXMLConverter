@@ -26,4 +26,8 @@ public class AgendaConverterResponse {
     public String printReport(String... types ){
         return conversionReport.printReport(types);
     }
+
+    public boolean hasMessage(String type){
+        return conversionReport.hasMessage(type);
+    }
 }

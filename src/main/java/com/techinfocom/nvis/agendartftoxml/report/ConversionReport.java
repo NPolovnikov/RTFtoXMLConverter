@@ -32,4 +32,9 @@ public class ConversionReport {
         return messages.stream().filter(m -> typeList.contains(m.getReportMessageType())).map(m -> m.toString())
                 .collect(Collectors.joining("\r\n"));
     }
+
+    public boolean hasMessage(String type) {
+        ReportMessage.ReportMessageType type1 = ReportMessage.ReportMessageType.valueOf(type);
+        return messages.stream().anyMatch(m -> m.getReportMessageType() == type1);
+    }
 }
