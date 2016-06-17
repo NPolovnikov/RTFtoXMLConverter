@@ -55,7 +55,7 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
             LOGGER.debug("state={}. Обнаружен подчеркнутый, ненаклонный текст ''. Это тип доклада. Созданы CurrentGroup", STATE_NAME, fc.getC());
             agendaBuilder.newGroup();
             //поищем номер документа.
-            agendaBuilder.docNumberExtractAndSave();
+            agendaBuilder.splitTextToItem();
             eventSink.castEvent(SPEAKERS_FOUND);
         } else {
             //не подчеркнутый текст, это продолжение text
@@ -74,7 +74,7 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
     public void exit() {
         LOGGER.debug("state={}. Получен сигнал о завершении ячейки.", STATE_NAME);
         //поищем номер документа.
-        agendaBuilder.docNumberExtractAndSave();
+        agendaBuilder.splitTextToItem();
         eventSink.castEvent(EXIT);
     }
 

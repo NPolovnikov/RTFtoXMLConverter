@@ -60,7 +60,7 @@ public class Text<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     public void exit() {
         LOGGER.debug("state={}. Получен сигнал о завершении ячейки. Состояние не меняется", STATE_NAME);
         //поищем номер документа.
-        agendaBuilder.docNumberExtractAndSave();
+        agendaBuilder.splitTextToItem();
     }
 
 }

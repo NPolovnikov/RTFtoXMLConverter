@@ -1,12 +1,8 @@
 package com.techinfocom.nvis.agendartftoxml.model;
 
-import com.techinfocom.nvis.agendartftoxml.model.agenda.Agenda;
-import com.techinfocom.nvis.agendartftoxml.model.agenda.Group;
-import com.techinfocom.nvis.agendartftoxml.model.agenda.ObjectFactory;
-import com.techinfocom.nvis.agendartftoxml.model.agenda.AgendaItem;
+import com.techinfocom.nvis.agendartftoxml.model.agenda.*;
 import com.techinfocom.nvis.agendartftoxml.report.ConversionReport;
 
-import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.time.LocalDate;
@@ -21,6 +17,8 @@ import java.util.stream.Collectors;
  * Created by volkov_kv on 07.06.2016.
  */
 public class AgendaBuilder {
+
+    private final Pattern rnPattern = Pattern.compile("№ ?(\\d{1,10}-\\d{1,2}) +");
 
     private AgendaItem currentItem;
     private Group currentGroup;
@@ -164,31 +162,6 @@ public class AgendaBuilder {
     }
 
 
-    /**
-     * извлекает номер документа, согласно описанию:
-     * Для поиска регистрационного номера документа выделяется в тексте первого абзаца ячейки таблицы выделяется
-     * строка, начинающаяся символом №, за которым идет один иле несколько пробелов, потом одна или несколько
-     * десятичных цифр (не более 10), потом символ «-» (минус), потом одна или две цифры, потом один или несколько
-     * пробелов. В случае, если в первом абзаце пункта порядка работы встретилось несколько подстрок, удовлетворяющих
-     * описанному шаблону, регистрационный номер выделяется из первой встреченной подстроки. В качестве
-     * регистрационного номера выделяется подстрока, начинающаяся с цифры и заканчивающаяся последней
-     * цифрой в найденном шаблоне;
-     *
-     * @return
-     */
-    public void docNumberExtractAndSave() {
-        String text = currentItem.getText();
-        if (text != null) {
-            Pattern p = Pattern.compile("№ ?(\\d{1,10}-\\d{1,2})", Pattern.MULTILINE);
-            Matcher m = p.matcher(text);
-            if (m.find()) {
-                String docNumber = m.group(1);
-                currentItem.setRn(docNumber);
-            }
-        }
-    }
-
-
     public boolean meetingDateExtractAndSave(String string) {
         List<Pattern> patterns = new ArrayList<>();
         patterns.add(Pattern.compile("(\\d{1,2}) {1,4}([^ \\d]{3,10}) {1,4}(20\\d{2})", Pattern.MULTILINE)); //формат 10 мая 2016 года
@@ -258,5 +231,36 @@ public class AgendaBuilder {
                 return null;
         }
     }
+
+    public void splitTextToItem() {
+        String text = currentItem.getText();
+        if (text == null) {
+            return;
+        }
+        List<String> pars = Arrays.asList(text.split("(\\n)|(\\r\\n)"));
+        String first = pars.get(0);
+
+        Matcher m = rnPattern.matcher(first);
+        //Если в первом абзаце найден номер
+        if (m.find()) {
+            String rn = m.group(1);
+            String addon = first.substring(0, m.start()).trim(); //до номера
+            String textNew = first.substring(m.end(), first.length()); //после номера
+
+            currentItem.setAddon(addon);
+            currentItem.setRn(rn);
+            currentItem.setText(textNew);
+        } else {
+            currentItem.setText(first);
+        }
+        NotesList notesList = new NotesList();
+        for (int i = 1; i < pars.size(); i++) {
+            notesList.getNote().add(pars.get(i));
+        }
+        if (notesList.getNote().size()>0){
+            currentItem.setNotes(notesList);
+        }
+    }
+
 }
 
