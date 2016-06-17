@@ -59,7 +59,7 @@ public class Cell1State<AI extends TableParser> extends StateBase<AI> implements
                 processChar(new FormatedChar('\n', textFormat));
                 break;
             case cell:
-                System.err.println("Состояние Cell1State, поймано событие cell"); // TODO: 08.06.2016 Убрать везде system.err
+                LOGGER.debug("Состояние Cell1State, поймано событие cell");
                 String conformed = agendaBuilder.conformString(collected.toString());
                 if (!conformed.equals("")) { //пустые строки не пускаем. иначе возникает несоответствие схеме.
                     agendaBuilder.getAgendaItem().setNumber(conformed);

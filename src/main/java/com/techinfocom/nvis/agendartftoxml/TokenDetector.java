@@ -58,12 +58,12 @@ public class TokenDetector implements IRtfListener {
 
     @Override
     public void processCharacterBytes(byte[] data) {
-        System.err.println("processCharacterBytes=" + new String(data));
+        //System.err.println("processCharacterBytes=" + new String(data));
     }
 
     @Override
     public void processBinaryBytes(byte[] data) {
-        System.err.println("processBinaryBytes=" + new String(data));
+        //System.err.println("processBinaryBytes=" + new String(data));
     }
 
     @Override

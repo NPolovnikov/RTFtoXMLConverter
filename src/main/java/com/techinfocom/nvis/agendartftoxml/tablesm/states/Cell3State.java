@@ -73,8 +73,7 @@ public class Cell3State<AI extends TableParser> extends StateBase<AI> implements
                 processChar(new FormatedChar('\n', textFormat));
                 break;
             case cell:
-                System.err.println("Состояние Cell3State, поймано событие cell.");
-
+                LOGGER.debug("Состояние Cell3State, поймано событие cell.");
                 FormatedChar trimmedChar = parTrimmer.finish();
                 if (trimmedChar != null) {
                     //поскольку формат текста отслеживается отдельным хендлером, следут сначала проанализировать

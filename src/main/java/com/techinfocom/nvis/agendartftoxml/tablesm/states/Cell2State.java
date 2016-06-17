@@ -60,7 +60,7 @@ public class Cell2State<AI extends TableParser> extends StateBase<AI> implements
                 processChar(new FormatedChar('\n', textFormat));
                 break;
             case cell:
-                System.err.println("Состояние Cell2State, поймано событие cell");
+                LOGGER.debug("Состояние Cell2State, поймано событие cell");
                 String conformed = agendaBuilder.conformString(collected.toString());
                 if (!conformed.equals("")) {
                     agendaBuilder.getAgendaItem().setInfo(conformed);
