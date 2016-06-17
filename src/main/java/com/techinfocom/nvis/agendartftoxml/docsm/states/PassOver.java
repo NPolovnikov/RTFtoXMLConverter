@@ -38,4 +38,10 @@ public class PassOver<AI extends DocParser> extends StateBase<AI> implements Doc
     public void processWord(RtfWord rtfWord) {
 
     }
+
+    @Override
+    public void processDocumentEnd() {
+        //Идеальный случай
+    }
+
 }

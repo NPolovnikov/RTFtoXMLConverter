@@ -4,6 +4,7 @@ import com.rtfparserkit.rtf.Command;
 import com.techinfocom.nvis.agendartftoxml.docsm.DocParser;
 import com.techinfocom.nvis.agendartftoxml.docsm.DocParserState;
 import com.techinfocom.nvis.agendartftoxml.model.*;
+import com.techinfocom.nvis.agendartftoxml.report.ErrorMessage;
 import com.techinfocom.nvis.agendartftoxml.statemachine.Event;
 import com.techinfocom.nvis.agendartftoxml.statemachine.EventSink;
 import com.techinfocom.nvis.agendartftoxml.statemachine.StateBase;
@@ -13,7 +14,7 @@ import org.slf4j.Logger;
 import java.util.Queue;
 
 /**
- * Created by volkov_kv on 15.06.2016.
+ * Класс для детектирования текста или начала таблицы
  */
 public class DataSearching<AI extends DocParser> extends StateBase<AI> implements DocParserState {
     public static final Event SOME_ROW_FOUND = new Event("SOME_ROW_FOUND");//какая-то строка таблицы найдена
@@ -64,10 +65,18 @@ public class DataSearching<AI extends DocParser> extends StateBase<AI> implement
     private void analyseCommand(RtfCommand rtfCommand) {
         switch (rtfCommand.getCommand()) {
             case trowd: //начало таблицы
-                // TODO: 16.06.2016  agendaBuilder.meetingDateExtractAndSave(collectedChars.toString()); //попробуем отыскать дату заседания
-                initState();
+                if(collectedChars.length() > 0) {
+                    agendaBuilder.meetingDateExtractAndSave(collectedChars.toString());  //попробуем отыскать дату заседания
+                }
+                 initState();
                 eventSink.castEvent(SOME_ROW_FOUND);
                 break;
         }
     }
+
+    @Override
+    public void processDocumentEnd() {
+        agendaBuilder.getConversionReport().collectMessage(new ErrorMessage("таблица с расписанием не обнаружена"));
+    }
+
 }

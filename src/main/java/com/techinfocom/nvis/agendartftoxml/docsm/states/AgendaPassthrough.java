@@ -108,6 +108,14 @@ public class AgendaPassthrough<AI extends DocParser> extends StateBase<AI> imple
         }
     }
 
+    @Override
+    public void processDocumentEnd() {
+        //возможно, если после таблицы не будет ни одного символа
+        tableParser.exit();
+        eventSink.castEvent(AGENDA_END_FOUND);
+
+    }
+
     private enum State {
         IN_ROW,
         OUT_OF_ROW

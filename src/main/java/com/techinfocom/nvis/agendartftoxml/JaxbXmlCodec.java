@@ -57,8 +57,13 @@ public class JaxbXmlCodec {
     }
 
 
-    public byte[] marshalData(Object request) throws MarshalingException {
+    public byte[] marshalData(Agenda request) throws MarshalingException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        if (request == null ||
+                request.getItemOrBlock().size() <= 0) {
+            return baos.toByteArray();
+        }
+
         try {
             XMLStreamWriter xmlStreamWriter = xmlOutputFactory.createXMLStreamWriter(baos, (String) marshaller.getProperty(Marshaller.JAXB_ENCODING));
             xmlStreamWriter.writeStartDocument((String) marshaller.getProperty(Marshaller.JAXB_ENCODING), "1.0");

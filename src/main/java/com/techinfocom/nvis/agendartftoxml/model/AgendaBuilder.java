@@ -4,10 +4,15 @@ import com.techinfocom.nvis.agendartftoxml.model.agenda.Agenda;
 import com.techinfocom.nvis.agendartftoxml.model.agenda.Group;
 import com.techinfocom.nvis.agendartftoxml.model.agenda.ObjectFactory;
 import com.techinfocom.nvis.agendartftoxml.model.agenda.AgendaItem;
+import com.techinfocom.nvis.agendartftoxml.report.ConversionReport;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.ZoneId;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -20,13 +25,18 @@ public class AgendaBuilder {
     private AgendaItem currentItem;
     private Group currentGroup;
     private Group.Speakers.Speaker currentSpeaker;
-    private ObjectFactory objectFactory;
+    private final ObjectFactory objectFactory;
     private final Agenda agenda;
-    private int rowCount = 0;
+    private int parsedRowCount = 0;
+    private int acceptedRowCount = 0;
+    private final ConversionReport conversionReport;
+    private final AgendaValidator agendaValidator;
 
     public AgendaBuilder() {
         objectFactory = new ObjectFactory();
         agenda = objectFactory.createAgenda();
+        conversionReport = new ConversionReport();
+        agendaValidator = new AgendaValidator();
     }
 
     public Agenda getAgenda() {
@@ -34,7 +44,7 @@ public class AgendaBuilder {
     }
 
     public AgendaItem newAgendaItem() {
-        rowCount++;
+        parsedRowCount++;
         if (currentItem == null) {
             currentItem = objectFactory.createAgendaItem();
             currentItem.setId(UUID.randomUUID().toString());
@@ -65,6 +75,7 @@ public class AgendaBuilder {
 
     public void mergeAgendaItem() {
         if (currentItem != null) {
+            //agendaValidator.validate(currentItem, conversionReport, agenda.getItemOrBlock()::add);
             agenda.getItemOrBlock().add(currentItem);
             currentItem = null;
         } else throw new RuntimeException("can't merge null currentItem");
@@ -114,8 +125,12 @@ public class AgendaBuilder {
         return objectFactory;
     }
 
-    public int getRowCount() {
-        return rowCount;
+    public int getParsedRowCount() {
+        return parsedRowCount;
+    }
+
+    public ConversionReport getConversionReport() {
+        return conversionReport;
     }
 
     /**
@@ -162,9 +177,9 @@ public class AgendaBuilder {
      * @return
      */
     public void docNumberExtractAndSave() {
-        String text = currentItem.getText(); // TODO: 13.06.2016  до первого переовода строки выделить
+        String text = currentItem.getText();
         if (text != null) {
-            Pattern p = Pattern.compile("^.*№ ?(\\d{1,10}-\\d{1,2}) +.*$", Pattern.MULTILINE);
+            Pattern p = Pattern.compile("№ ?(\\d{1,10}-\\d{1,2})", Pattern.MULTILINE);
             Matcher m = p.matcher(text);
             if (m.find()) {
                 String docNumber = m.group(1);
@@ -173,5 +188,75 @@ public class AgendaBuilder {
         }
     }
 
+
+    public boolean meetingDateExtractAndSave(String string) {
+        List<Pattern> patterns = new ArrayList<>();
+        patterns.add(Pattern.compile("(\\d{1,2}) {1,4}([^ \\d]{3,10}) {1,4}(20\\d{2})", Pattern.MULTILINE)); //формат 10 мая 2016 года
+        patterns.add(Pattern.compile("(\\d{1,2})\\.(\\d{2})\\.(20\\d{2})", Pattern.MULTILINE)); //формат 10.05.2016
+        LocalDate date = null;
+        Matcher m;
+        try {
+            m = patterns.get(0).matcher(string);
+            if (date == null && m.find()) {
+                int day = Integer.valueOf(m.group(1));
+                String month = m.group(2);
+                int year = Integer.valueOf(m.group(3));
+                Month mo = getMonth(month);
+                if (mo != null) {
+                    date = LocalDate.of(year, mo, day);
+                }
+            }
+
+            m = patterns.get(1).matcher(string);
+            if (date == null && m.find()) {
+                int day = Integer.valueOf(m.group(1));
+                int mo = Integer.valueOf(m.group(2));
+                int year = Integer.valueOf(m.group(3));
+                date = LocalDate.of(year, mo, day);
+            }
+
+            if (date != null) {
+                GregorianCalendar gcal = GregorianCalendar.from(date.atStartOfDay(ZoneId.systemDefault()));
+                XMLGregorianCalendar xcal = null;
+                xcal = DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
+                agenda.setMeetingDate(xcal);
+                return true;
+            } else return false;
+        } catch (Exception e) {
+            return false;
+        }
+
+    }
+
+    private Month getMonth(String month) {
+        switch (month.toLowerCase()) {
+            case "января":
+                return Month.JANUARY;
+            case "февраля":
+                return Month.FEBRUARY;
+            case "марта":
+                return Month.MARCH;
+            case "апреля":
+                return Month.APRIL;
+            case "мая":
+                return Month.MAY;
+            case "июня":
+                return Month.JUNE;
+            case "июля":
+                return Month.JULY;
+            case "августа":
+                return Month.AUGUST;
+            case "сентября":
+                return Month.SEPTEMBER;
+            case "октября":
+                return Month.OCTOBER;
+            case "ноября":
+                return Month.NOVEMBER;
+            case "декабря":
+                return Month.DECEMBER;
+            default:
+                return null;
+        }
+    }
 }
 

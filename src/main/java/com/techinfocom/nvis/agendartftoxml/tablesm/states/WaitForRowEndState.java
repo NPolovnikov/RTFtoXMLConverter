@@ -46,7 +46,7 @@ public class WaitForRowEndState<AI extends TableParser> extends StateBase<AI> im
     public void processCommand(RtfCommand rtfCommand) {
         switch (rtfCommand.getCommand()) {
             case row:
-                System.err.println("В состоянии WaitForRowEnd поймали row");
+                LOGGER.debug("В состоянии WaitForRowEnd поймали row");
                 agendaBuilder.mergeAgendaItem();
                 agendaBuilder.newAgendaItem();
                 eventSink.castEvent(ROW_END);
