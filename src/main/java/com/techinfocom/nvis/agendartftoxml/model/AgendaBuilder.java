@@ -1,6 +1,7 @@
 package com.techinfocom.nvis.agendartftoxml.model;
 
 import com.techinfocom.nvis.agendartftoxml.model.agenda.*;
+import com.techinfocom.nvis.agendartftoxml.model.validation.AgendaValidator;
 import com.techinfocom.nvis.agendartftoxml.report.ConversionReport;
 
 import javax.xml.datatype.DatatypeFactory;
@@ -73,7 +74,7 @@ public class AgendaBuilder {
 
     public void mergeAgendaItem() {
         if (currentItem != null) {
-            //agendaValidator.validate(currentItem, conversionReport, agenda.getItemOrBlock()::add);
+            agendaValidator.validate(currentItem, conversionReport);
             agenda.getItemOrBlock().add(currentItem);
             currentItem = null;
         } else throw new RuntimeException("can't merge null currentItem");
@@ -84,8 +85,9 @@ public class AgendaBuilder {
             if (currentItem.getSpeakerGroups() == null) {
                 currentItem.setSpeakerGroups(objectFactory.createSpeakers());
             }
-            currentItem.getSpeakerGroups().getGroup().add(currentGroup);
             trim(currentGroup);
+            agendaValidator.validate(currentGroup, conversionReport);
+            currentItem.getSpeakerGroups().getGroup().add(currentGroup);
             currentGroup = null;//чтобы null poiter сгенерировался, если криво начнем контекст отслеживать.
         } else {
             throw new RuntimeException("can't merge null currentGroup");
@@ -98,6 +100,7 @@ public class AgendaBuilder {
                 currentGroup.setSpeakers(objectFactory.createGroupSpeakers());
             }
             trim(currentSpeaker);
+            agendaValidator.validate(currentSpeaker, conversionReport);
             currentGroup.getSpeakers().getSpeaker().add(currentSpeaker);
             currentSpeaker = null;//чтобы null poiter сгенерировался, если криво начнем контекст отслеживать.
         } else throw new RuntimeException("can't merge null currentSpeaker");

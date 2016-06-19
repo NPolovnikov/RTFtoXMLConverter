@@ -88,6 +88,7 @@ public class RtfAgendaConverterTest {
         agendaConverterResponse = converter.convert(is);
 
         assertTrue(agendaConverterResponse.getXmlBytes().length > 0);
+        String xml = new String(agendaConverterResponse.getXmlBytes());
         report = agendaConverterResponse.printReport("ERROR", "WARNING");
         assertFalse(report.isEmpty());
 
