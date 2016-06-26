@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://techinfocom.com/nvis/agenda" elementFormDefault="qualified"
-        xmlns="http://www.w3.org/2001/XMLSchema" xmlns:a="http://techinfocom.com/nvis/agenda">
+<schema targetNamespace="http://techinfocom.com/nvis/agenda-internal" elementFormDefault="qualified"
+        xmlns="http://www.w3.org/2001/XMLSchema" xmlns:a="http://techinfocom.com/nvis/agenda-internal">
 
     <element name="agenda">
         <complexType>
@@ -12,9 +12,66 @@
         </complexType>
     </element>
 
-    <simpleType name="NonEmptyString">
+    <simpleType name="AgendaItemNumber">
         <restriction base="string">
             <minLength value="1"/>
+            <maxLength value="8"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="AgendaItemInfo">
+        <restriction base="string">
+            <minLength value="1"/>
+            <maxLength value="255"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="AgendaItemRn">
+        <restriction base="string">
+            <minLength value="1"/>
+            <maxLength value="15"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="AgendaItemAddon">
+        <restriction base="string">
+            <minLength value="1"/>
+            <maxLength value="255"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="AgendaItemText">
+        <restriction base="string">
+            <minLength value="1"/>
+            <maxLength value="4096"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="AgendaItemGroupName">
+        <restriction base="string">
+            <minLength value="1"/>
+            <maxLength value="25"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="AgendaItemPostName">
+        <restriction base="string">
+            <minLength value="1"/>
+            <maxLength value="250"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="AgendaItemFio">
+        <restriction base="string">
+            <minLength value="1"/>
+            <maxLength value="150"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="AgendaItemNote">
+        <restriction base="string">
+            <minLength value="1"/>
+            <maxLength value="250"/>
         </restriction>
     </simpleType>
 
@@ -32,7 +89,7 @@
                     <documentation>UUID элемента порядка работы</documentation>
                 </annotation>
             </element>
-            <element name="number" type="a:NonEmptyString" minOccurs="0" maxOccurs="1">
+            <element name="number" type="a:AgendaItemNumber" minOccurs="0" maxOccurs="1">
                 <annotation>
                     <documentation>Номер пункта по порядку.
                         Пример1:
@@ -42,7 +99,7 @@
                     </documentation>
                 </annotation>
             </element>
-            <element name="info" type="a:NonEmptyString" minOccurs="0" maxOccurs="1">
+            <element name="info" type="a:AgendaItemInfo" minOccurs="0" maxOccurs="1">
                 <annotation>
                     <documentation>Дополнительная информация по пункту порядка работы
                         время рассмотрения или просьба о рассмотрении в отсутсвии
@@ -56,7 +113,7 @@
                     </documentation>
                 </annotation>
             </element>
-            <element name="addon" type="a:NonEmptyString" minOccurs="0" maxOccurs="1">
+            <element name="addon" type="a:AgendaItemAddon" minOccurs="0" maxOccurs="1">
                 <annotation>
                     <documentation>Дополнение
                         Пример:
@@ -64,7 +121,7 @@
                     </documentation>
                 </annotation>
             </element>
-            <element name="rn" type="a:NonEmptyString" minOccurs="0" maxOccurs="1">
+            <element name="rn" type="a:AgendaItemRn" minOccurs="0" maxOccurs="1">
                 <annotation>
                     <documentation>Регистрационный номер
                         Пример:
@@ -72,7 +129,7 @@
                     </documentation>
                 </annotation>
             </element>
-            <element name="text" type="a:NonEmptyString" minOccurs="0">
+            <element name="text" type="a:AgendaItemText" minOccurs="0">
                 <annotation>
                     <documentation>Текст пункта порядка работы
                         Пример:
@@ -123,9 +180,9 @@
     </complexType>
     <complexType name="Speakers">
         <sequence>
-            <element name="group" type="a:Group" minOccurs="1" maxOccurs="unbounded">
+            <element name="group" type="a:Group" minOccurs="1" maxOccurs="10">
                 <annotation>
-                    <documentation>Группа докладчиков, объединенная одним пипом доклада</documentation>
+                    <documentation>Группа докладчиков, объединенная одним типом доклада</documentation>
                 </annotation>
             </element>
         </sequence>
@@ -133,7 +190,7 @@
 
     <complexType name="Group">
         <all>
-            <element name="groupName" type="a:NonEmptyString" minOccurs="1" maxOccurs="1">
+            <element name="groupName" type="a:AgendaItemGroupName" minOccurs="1" maxOccurs="1">
                 <annotation>
                     <documentation>Наименование доклада:
                         Пример1:
@@ -149,7 +206,7 @@
                         <element name="speaker" minOccurs="1" maxOccurs="unbounded">
                             <complexType>
                                 <all>
-                                    <element name="post" type="a:NonEmptyString">
+                                    <element name="post" type="a:AgendaItemPostName">
                                         <annotation>
                                             <documentation>Должность выступающего в виде, отображаемом в порядке работы:
                                                 Пример1:
@@ -159,7 +216,7 @@
                                             </documentation>
                                         </annotation>
                                     </element>
-                                    <element name="name" type="a:NonEmptyString" minOccurs="0">
+                                    <element name="name" type="a:AgendaItemFio" minOccurs="0">
                                         <annotation>
                                             <documentation>Фамилия, имя, отчество докладчика в виде, указываемом в порядке работы:
                                                 Пример:
@@ -178,7 +235,7 @@
 
     <complexType name="notesList">
         <sequence>
-            <element name="note" type="a:NonEmptyString" minOccurs="0" maxOccurs="unbounded">
+            <element name="note" type="a:AgendaItemNote" minOccurs="0" maxOccurs="unbounded">
                 <annotation>
                     <documentation>Примечание
                         Пример:
@@ -194,8 +251,8 @@
     <complexType name="AgendaBlockItem">
         <sequence>
             <element name="id" type="a:UUID" minOccurs="1" maxOccurs="1"/>
-            <element name="info" type="a:NonEmptyString"></element>
-            <element name="text" type="a:NonEmptyString"></element>
+            <element name="info" type="a:AgendaItemInfo"></element>
+            <element name="text" type="a:AgendaItemText"></element>
             <element name="children" type="a:BlockOrItemList" maxOccurs="1" minOccurs="0"></element>
         </sequence>
     </complexType>

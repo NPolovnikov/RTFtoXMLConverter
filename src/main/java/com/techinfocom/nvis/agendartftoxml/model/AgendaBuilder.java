@@ -1,8 +1,10 @@
 package com.techinfocom.nvis.agendartftoxml.model;
 
+import com.techinfocom.nvis.agendartftoxml.ConfigHandler;
 import com.techinfocom.nvis.agendartftoxml.model.agenda.*;
 import com.techinfocom.nvis.agendartftoxml.model.validation.AgendaValidator;
 import com.techinfocom.nvis.agendartftoxml.report.ConversionReport;
+import com.techinfocom.nvis.agendartftoxml.report.WarningMessage;
 
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -74,6 +76,18 @@ public class AgendaBuilder {
 
     public void mergeAgendaItem() {
         if (currentItem != null) {
+            if (ConfigHandler.getInstance().getValidationRules().hasPath("maxItemCount")) {
+                int count = agenda.getItemOrBlock().size();
+                int maxItemCount = ConfigHandler.getInstance().getValidationRules().getInt("maxItemCount");
+                if (count > maxItemCount) {
+                    WarningMessage warningMessage = new WarningMessage("Кол-во пунктов превышает максимально " +
+                            "допустимое - " + maxItemCount + ". Пункт " + currentItem.getNumber() + " проигнорирован");
+                    conversionReport.collectMessage(warningMessage);
+                    currentItem = null;
+                    return;
+                }
+            }
+
             agendaValidator.validate(currentItem, conversionReport);
             agenda.getItemOrBlock().add(currentItem);
             currentItem = null;
@@ -88,7 +102,7 @@ public class AgendaBuilder {
             trim(currentGroup);
             agendaValidator.validate(currentGroup, conversionReport);
             currentItem.getSpeakerGroups().getGroup().add(currentGroup);
-            currentGroup = null;//чтобы null poiter сгенерировался, если криво начнем контекст отслеживать.
+            currentGroup = null;//чтобы null pointer сгенерировался, если криво начнем контекст отслеживать.
         } else {
             throw new RuntimeException("can't merge null currentGroup");
         }
@@ -260,7 +274,7 @@ public class AgendaBuilder {
         for (int i = 1; i < pars.size(); i++) {
             notesList.getNote().add(pars.get(i));
         }
-        if (notesList.getNote().size()>0){
+        if (notesList.getNote().size() > 0) {
             currentItem.setNotes(notesList);
         }
     }

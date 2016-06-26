@@ -15,10 +15,14 @@ public class ConfigHandler {
     }
 
     private ConfigHandler() {
-        conf = ConfigFactory.load();
+        conf = ConfigFactory.load("agendaValidationRules.conf");
     }
 
-    public Config getValidationRules() {
-        return conf.getConfig("validationRules");
+    public Config getValidationRules() throws InitException {
+        Config config = conf.getConfig("agendaValidationRules");
+        if (config == null) {
+            throw new InitException("can't load validation rules from conf file");
+        }
+        return conf.getConfig("agendaValidationRules");
     }
 }
