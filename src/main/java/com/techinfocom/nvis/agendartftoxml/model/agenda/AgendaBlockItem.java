@@ -17,10 +17,10 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="id" type="{http://techinfocom.com/nvis/agenda}UUID"/>
- *         &lt;element name="info" type="{http://techinfocom.com/nvis/agenda}NonEmptyString"/>
- *         &lt;element name="text" type="{http://techinfocom.com/nvis/agenda}NonEmptyString"/>
- *         &lt;element name="children" type="{http://techinfocom.com/nvis/agenda}BlockOrItemList" minOccurs="0"/>
+ *         &lt;element name="id" type="{http://techinfocom.com/nvis/agenda-internal}UUID"/>
+ *         &lt;element name="info" type="{http://techinfocom.com/nvis/agenda-internal}AgendaItemInfo"/>
+ *         &lt;element name="text" type="{http://techinfocom.com/nvis/agenda-internal}AgendaItemText"/>
+ *         &lt;element name="children" type="{http://techinfocom.com/nvis/agenda-internal}BlockOrItemList" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>

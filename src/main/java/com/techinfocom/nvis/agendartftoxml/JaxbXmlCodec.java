@@ -29,7 +29,7 @@ public class JaxbXmlCodec {
     private JaxbXmlCodec() throws InitException {
         try {
             SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            final String schemaFileName = "agenda-internal-new.xsd";
+            final String schemaFileName = "agenda-internal.xsd";
 
             InputStream schemaStream = this.getClass().getResourceAsStream(schemaFileName);
             if (schemaStream == null) {

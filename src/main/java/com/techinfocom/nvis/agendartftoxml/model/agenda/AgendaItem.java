@@ -20,14 +20,14 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="id" type="{http://techinfocom.com/nvis/agenda}UUID"/>
- *         &lt;element name="number" type="{http://techinfocom.com/nvis/agenda}NonEmptyString" minOccurs="0"/>
- *         &lt;element name="info" type="{http://techinfocom.com/nvis/agenda}NonEmptyString" minOccurs="0"/>
- *         &lt;element name="addon" type="{http://techinfocom.com/nvis/agenda}NonEmptyString" minOccurs="0"/>
- *         &lt;element name="rn" type="{http://techinfocom.com/nvis/agenda}NonEmptyString" minOccurs="0"/>
- *         &lt;element name="text" type="{http://techinfocom.com/nvis/agenda}NonEmptyString" minOccurs="0"/>
- *         &lt;element name="notes" type="{http://techinfocom.com/nvis/agenda}notesList" minOccurs="0"/>
- *         &lt;element name="speakerGroups" type="{http://techinfocom.com/nvis/agenda}Speakers" minOccurs="0"/>
+ *         &lt;element name="id" type="{http://techinfocom.com/nvis/agenda-internal}UUID"/>
+ *         &lt;element name="number" type="{http://techinfocom.com/nvis/agenda-internal}AgendaItemNumber" minOccurs="0"/>
+ *         &lt;element name="info" type="{http://techinfocom.com/nvis/agenda-internal}AgendaItemInfo" minOccurs="0"/>
+ *         &lt;element name="addon" type="{http://techinfocom.com/nvis/agenda-internal}AgendaItemAddon" minOccurs="0"/>
+ *         &lt;element name="rn" type="{http://techinfocom.com/nvis/agenda-internal}AgendaItemRn" minOccurs="0"/>
+ *         &lt;element name="text" type="{http://techinfocom.com/nvis/agenda-internal}AgendaItemText" minOccurs="0"/>
+ *         &lt;element name="notes" type="{http://techinfocom.com/nvis/agenda-internal}notesList" minOccurs="0"/>
+ *         &lt;element name="speakerGroups" type="{http://techinfocom.com/nvis/agenda-internal}Speakers" minOccurs="0"/>
  *         &lt;choice minOccurs="0">
  *           &lt;element name="manualdocs">
  *             &lt;complexType>

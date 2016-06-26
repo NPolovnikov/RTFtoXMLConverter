@@ -99,24 +99,28 @@ public class AgendaValidator {
         }
 
         //кол-во докладчиков
-        int maxSpeakerCount = config.getInt("speakerGroups.maxTotalSpeakerCount");
-        int speakerCount = 0;
-        for (Iterator<Group> i = agendaItem.getSpeakerGroups().getGroup().iterator(); i.hasNext(); ) {
-            Group group = i.next();
-            for (Iterator<Group.Speakers.Speaker> ii = group.getSpeakers().getSpeaker().iterator(); ii.hasNext(); ) {
-                Group.Speakers.Speaker speaker = ii.next();
-                speakerCount++;
-                if (speakerCount > maxSpeakerCount) {
-                    WarningMessage warningMessage = new WarningMessage("в пункте " +
-                            agendaItem.getNumber() + "число докладчиков превосходит максимально разрешенное - " +
-                            maxSpeakerCount + ". Докладчики проигнорированы.", speaker.getPost());
-                    conversionReport.collectMessage(warningMessage);
-                    ii.remove();
+        if (agendaItem.getSpeakerGroups() != null && !agendaItem.getSpeakerGroups().getGroup().isEmpty()) {
+            int maxSpeakerCount = itemValidationRules.getInt("speakerGroups.maxTotalSpeakerCount");
+            int speakerCount = 0;
+            for (Iterator<Group> i = agendaItem.getSpeakerGroups().getGroup().iterator(); i.hasNext(); ) {
+                Group group = i.next();
+                if (group.getSpeakers() != null && !group.getSpeakers().getSpeaker().isEmpty()) {
+                    for (Iterator<Group.Speakers.Speaker> ii = group.getSpeakers().getSpeaker().iterator(); ii.hasNext(); ) {
+                        Group.Speakers.Speaker speaker = ii.next();
+                        speakerCount++;
+                        if (speakerCount > maxSpeakerCount) {
+                            WarningMessage warningMessage = new WarningMessage("в пункте " +
+                                    agendaItem.getNumber() + "число докладчиков превосходит максимально разрешенное - " +
+                                    maxSpeakerCount + ". Докладчики проигнорированы.", speaker.getPost());
+                            conversionReport.collectMessage(warningMessage);
+                            ii.remove();
+                        }
+                    }
                 }
-            }
-            //если группа осталась пустой, удалим и ее
-            if (group.getSpeakers().getSpeaker().isEmpty()) {
-                i.remove();
+                //если группа осталась пустой, удалим и ее
+                if (group.getSpeakers().getSpeaker().isEmpty()) {
+                    i.remove();
+                }
             }
         }
 
@@ -126,7 +130,7 @@ public class AgendaValidator {
         if (group == null) {
             return;
         }
-        Config groupValidationRules = config.getConfig("speakerGroups.group");
+        Config groupValidationRules = config.getConfig("agendaItem.speakerGroups.group");
 
         if (group.getGroupName() != null) {
             ValidateResponse<String> gvr = validate(group.getGroupName(), groupValidationRules.getConfig("groupName"));
@@ -142,17 +146,17 @@ public class AgendaValidator {
         if (speaker == null) {
             return;
         }
-        Config groupValidationRules = this.config.getConfig("speakerGroups.group.speakers.speaker");
+        Config speakerValidationRule = this.config.getConfig("agendaItem.speakerGroups.group.speakers.speaker");
 
         if (speaker.getPost() != null) {
-            ValidateResponse<String> pvr = validate(speaker.getPost(), groupValidationRules.getConfig("post"));
+            ValidateResponse<String> pvr = validate(speaker.getPost(), speakerValidationRule.getConfig("post"));
             speaker.setPost(pvr.getValue());
             if (pvr.getMessage() != null) {
                 conversionReport.collectMessage(pvr.getMessage());
             }
         }
         if (speaker.getName() != null) {
-            ValidateResponse<String> nvr = validate(speaker.getName(), groupValidationRules.getConfig("name"));
+            ValidateResponse<String> nvr = validate(speaker.getName(), speakerValidationRule.getConfig("name"));
             speaker.setName(nvr.getValue());
             if (nvr.getMessage() != null) {
                 conversionReport.collectMessage(nvr.getMessage());

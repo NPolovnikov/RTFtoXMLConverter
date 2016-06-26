@@ -24,8 +24,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;choice maxOccurs="unbounded">
- *         &lt;element name="item" type="{http://techinfocom.com/nvis/agenda}AgendaItem"/>
- *         &lt;element name="block" type="{http://techinfocom.com/nvis/agenda}AgendaBlockItem"/>
+ *         &lt;element name="item" type="{http://techinfocom.com/nvis/agenda-internal}AgendaItem"/>
+ *         &lt;element name="block" type="{http://techinfocom.com/nvis/agenda-internal}AgendaBlockItem"/>
  *       &lt;/choice>
  *       &lt;attribute name="meetingDate" type="{http://www.w3.org/2001/XMLSchema}date" />
  *     &lt;/restriction>

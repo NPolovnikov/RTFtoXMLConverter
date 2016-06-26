@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="group" type="{http://techinfocom.com/nvis/agenda}Group" maxOccurs="unbounded"/>
+ *         &lt;element name="group" type="{http://techinfocom.com/nvis/agenda-internal}Group" maxOccurs="10"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>

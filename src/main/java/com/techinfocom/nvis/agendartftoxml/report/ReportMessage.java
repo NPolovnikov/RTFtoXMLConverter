@@ -5,7 +5,7 @@ package com.techinfocom.nvis.agendartftoxml.report;
  */
 public abstract class ReportMessage {
     protected final ReportMessageType reportMessageType;
-    private String message;
+    protected String message;
 
     public ReportMessage(ReportMessageType reportMessageType, String message) {
         this.reportMessageType = reportMessageType;

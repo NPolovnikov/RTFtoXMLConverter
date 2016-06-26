@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;all>
- *         &lt;element name="groupName" type="{http://techinfocom.com/nvis/agenda}NonEmptyString"/>
+ *         &lt;element name="groupName" type="{http://techinfocom.com/nvis/agenda-internal}AgendaItemGroupName"/>
  *         &lt;element name="speakers">
  *           &lt;complexType>
  *             &lt;complexContent>
@@ -30,8 +30,8 @@ import javax.xml.bind.annotation.XmlType;
  *                       &lt;complexContent>
  *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                           &lt;all>
- *                             &lt;element name="post" type="{http://techinfocom.com/nvis/agenda}NonEmptyString"/>
- *                             &lt;element name="name" type="{http://techinfocom.com/nvis/agenda}NonEmptyString" minOccurs="0"/>
+ *                             &lt;element name="post" type="{http://techinfocom.com/nvis/agenda-internal}AgendaItemPostName"/>
+ *                             &lt;element name="name" type="{http://techinfocom.com/nvis/agenda-internal}AgendaItemFio" minOccurs="0"/>
  *                           &lt;/all>
  *                         &lt;/restriction>
  *                       &lt;/complexContent>
@@ -125,8 +125,8 @@ public class Group {
      *             &lt;complexContent>
      *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *                 &lt;all>
-     *                   &lt;element name="post" type="{http://techinfocom.com/nvis/agenda}NonEmptyString"/>
-     *                   &lt;element name="name" type="{http://techinfocom.com/nvis/agenda}NonEmptyString" minOccurs="0"/>
+     *                   &lt;element name="post" type="{http://techinfocom.com/nvis/agenda-internal}AgendaItemPostName"/>
+     *                   &lt;element name="name" type="{http://techinfocom.com/nvis/agenda-internal}AgendaItemFio" minOccurs="0"/>
      *                 &lt;/all>
      *               &lt;/restriction>
      *             &lt;/complexContent>
@@ -189,8 +189,8 @@ public class Group {
          *   &lt;complexContent>
          *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
          *       &lt;all>
-         *         &lt;element name="post" type="{http://techinfocom.com/nvis/agenda}NonEmptyString"/>
-         *         &lt;element name="name" type="{http://techinfocom.com/nvis/agenda}NonEmptyString" minOccurs="0"/>
+         *         &lt;element name="post" type="{http://techinfocom.com/nvis/agenda-internal}AgendaItemPostName"/>
+         *         &lt;element name="name" type="{http://techinfocom.com/nvis/agenda-internal}AgendaItemFio" minOccurs="0"/>
          *       &lt;/all>
          *     &lt;/restriction>
          *   &lt;/complexContent>
