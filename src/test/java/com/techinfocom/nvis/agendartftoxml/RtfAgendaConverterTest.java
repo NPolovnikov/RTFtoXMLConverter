@@ -63,6 +63,7 @@ public class RtfAgendaConverterTest {
     }
 
     @Test(description = "Проверка обработки фатальных ошибок при импорте")
+    // TODO: 30.06.2016 проверить на соответствие заявленным целям
     public void testFailedConvert() throws Exception {
 
         //case 1
@@ -115,6 +116,29 @@ public class RtfAgendaConverterTest {
             assertTrue(report.contains("длина строки превышает максимальную") &&
                     report.contains("700.10.23"), "Сообщение валидатора не содержит ожидаемых фрагментов сообщения");
         }
+
+        // длина info
+        {
+            File file = new File(getClass().getClassLoader().getResource("validators/info/info_wrong.rtf").getFile());
+            InputStream is = new FileInputStream(file);
+
+            RtfAgendaConverter converter = new RtfAgendaConverter();
+            AgendaConverterResponse agendaConverterResponse = converter.convert(is);
+            String xml = new String(agendaConverterResponse.getXmlBytes());
+
+            assertTrue(agendaConverterResponse.getXmlBytes().length > 0);
+            assertFalse(agendaConverterResponse.hasMessage("ERROR"), "отчет об импорте содержит ERROR");
+            assertTrue(agendaConverterResponse.hasMessage("WARNING"), "отчет об импорте НЕ содержит WARNING");
+            List<ReportMessage> messageList = agendaConverterResponse.getConversionReport().getMessages();
+            assertTrue(messageList.size() == 1, "Кол-во сообщений в отчете более одного");
+            String report = agendaConverterResponse.printReport("WARNING");
+            //WARNING: В пункте 3., в доп информации длина строки превышает максимальную - 255; Примерное положение: Комитет рекомендует принять и еще раз принять, и еще попринимать, и напринимать, и с рассмотрением и без рассмотрения, Можно просто кнопки понажимать, можно в бД записать и сказать, что приняли Это строка из 256 символов. на 1 больше чем разрешено.. Лишнее
+            assertTrue(report.contains("длина строки превышает максимальную") &&
+                    report.contains("Комитет рекомендует"), "Сообщение валидатора не содержит ожидаемых фрагментов сообщения");
+            assertFalse(xml.contains("Лишнее"), "часть строки превосходящая разрешенную длину не была проигнорирована");
+            assertTrue(xml.contains("Лишне"), "Проигнорировано больше чем ожидалось");
+        }
+
 
     }
 
