@@ -15,7 +15,7 @@ public class ConfigHandler {
     }
 
     private ConfigHandler() {
-        conf = ConfigFactory.load("agendaValidationRules.conf");
+        conf = ConfigFactory.load();
     }
 
     public Config getValidationRules() throws InitException {
