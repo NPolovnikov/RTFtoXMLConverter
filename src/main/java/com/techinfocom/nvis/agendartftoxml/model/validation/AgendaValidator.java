@@ -43,7 +43,7 @@ public class AgendaValidator {
             agendaItem.setNumber(nvr.getValue());
             if (nvr.getMessage() != null) {
                 String strMessage = nvr.getMessage().getMessage();
-                nvr.getMessage().setMessage("В пункте " + agendaItem.getNumber() + " " + strMessage);
+                nvr.getMessage().setMessage("В пункте " + agendaItem.getNumber() + ", в номере пункта порядка работы " + strMessage);
                 conversionReport.collectMessage(nvr.getMessage());
             }
         }
@@ -52,7 +52,7 @@ public class AgendaValidator {
             agendaItem.setInfo(ivr.getValue());
             if (ivr.getMessage() != null) {
                 String strMessage = ivr.getMessage().getMessage();
-                ivr.getMessage().setMessage("В пункте " + agendaItem.getNumber() + " " + strMessage);
+                ivr.getMessage().setMessage("В пункте " + agendaItem.getNumber() + ", в доп информации " + strMessage);
                 conversionReport.collectMessage(ivr.getMessage());
             }
         }
@@ -61,7 +61,7 @@ public class AgendaValidator {
             agendaItem.setAddon(avr.getValue());
             if (avr.getMessage() != null) {
                 String strMessage = avr.getMessage().getMessage();
-                avr.getMessage().setMessage("В пункте " + agendaItem.getNumber() + " " + strMessage);
+                avr.getMessage().setMessage("В пункте " + agendaItem.getNumber() + ", в дополнении " + strMessage);
                 conversionReport.collectMessage(avr.getMessage());
             }
         }
@@ -70,7 +70,7 @@ public class AgendaValidator {
             agendaItem.setRn(rvr.getValue());
             if (rvr.getMessage() != null) {
                 String strMessage = rvr.getMessage().getMessage();
-                rvr.getMessage().setMessage("В пункте " + agendaItem.getNumber() + " " + strMessage);
+                rvr.getMessage().setMessage("В пункте " + agendaItem.getNumber() + ", в номере документа " + strMessage);
                 conversionReport.collectMessage(rvr.getMessage());
             }
         }
@@ -79,7 +79,7 @@ public class AgendaValidator {
             agendaItem.setText(tvr.getValue());
             if (tvr.getMessage() != null) {
                 String strMessage = tvr.getMessage().getMessage();
-                tvr.getMessage().setMessage("В пункте " + agendaItem.getNumber() + " " + strMessage);
+                tvr.getMessage().setMessage("В пункте " + agendaItem.getNumber() + ", в тексте пункта порядка работы " + strMessage);
                 conversionReport.collectMessage(tvr.getMessage());
             }
         }
@@ -92,7 +92,7 @@ public class AgendaValidator {
                 noteList.set(i, nvr.getValue());
                 if (nvr.getMessage() != null) {
                     String strMessage = nvr.getMessage().getMessage();
-                    nvr.getMessage().setMessage("В пункте " + agendaItem.getNumber() + " " + strMessage);
+                    nvr.getMessage().setMessage("В пункте " + agendaItem.getNumber() + ", в примечании " + strMessage);
                     conversionReport.collectMessage(nvr.getMessage());
                 }
             }
@@ -109,8 +109,8 @@ public class AgendaValidator {
                         Group.Speakers.Speaker speaker = ii.next();
                         speakerCount++;
                         if (speakerCount > maxSpeakerCount) {
-                            WarningMessage warningMessage = new WarningMessage("в пункте " +
-                                    agendaItem.getNumber() + "число докладчиков превосходит максимально разрешенное - " +
+                            WarningMessage warningMessage = new WarningMessage("В пункте " +
+                                    agendaItem.getNumber() + "кол-во докладчиков превосходит максимально разрешенное - " +
                                     maxSpeakerCount + ". Докладчики проигнорированы.", speaker.getPost());
                             conversionReport.collectMessage(warningMessage);
                             ii.remove();
