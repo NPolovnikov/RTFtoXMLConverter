@@ -289,6 +289,66 @@ public class RtfAgendaConverterTest {
 
         //тесты на кол-во элементов
 
+        //maxTotalSpeakerCount
+        {
+            File file = new File(getClass().getClassLoader().getResource("validators/speakerCount/speaker_count_wrong.rtf").getFile());
+            InputStream is = new FileInputStream(file);
+
+            RtfAgendaConverter converter = new RtfAgendaConverter();
+            AgendaConverterResponse agendaConverterResponse = converter.convert(is);
+            String xml = new String(agendaConverterResponse.getXmlBytes());
+
+            assertTrue(agendaConverterResponse.getXmlBytes().length > 0);
+            assertFalse(agendaConverterResponse.hasMessage("ERROR"), "отчет об импорте содержит ERROR");
+            assertTrue(agendaConverterResponse.hasMessage("WARNING"), "отчет об импорте НЕ содержит WARNING");
+            List<ReportMessage> messageList = agendaConverterResponse.getConversionReport().getMessages();
+            assertTrue(messageList.size() == 1, "Кол-во сообщений в отчете не равно 1");
+            String report = agendaConverterResponse.printReport("WARNING");
+            assertTrue(report.contains("кол-во докладчиков превосходит максимально") &&
+                    report.contains("Министра юстиции Российской Федерации"), "Сообщение валидатора не содержит ожидаемых фрагментов сообщения");
+            assertFalse(xml.contains("Лишнее"), "часть строки превосходящая разрешенную длину не была проигнорирована");
+            assertTrue(xml.contains("ВЛЕЗ"), "Проигнорировано больше чем ожидалось");
+        }
+
+        //maxItemCount разрешенное кол-во строк.
+        {
+            File file = new File(getClass().getClassLoader().getResource("validators/itemCount/item_count_right.rtf").getFile());
+            InputStream is = new FileInputStream(file);
+
+            RtfAgendaConverter converter = new RtfAgendaConverter();
+            AgendaConverterResponse agendaConverterResponse = converter.convert(is);
+            String xml = new String(agendaConverterResponse.getXmlBytes());
+
+            assertTrue(agendaConverterResponse.getXmlBytes().length > 0);
+            assertFalse(agendaConverterResponse.hasMessage("ERROR"), "отчет об импорте содержит ERROR");
+            assertFalse(agendaConverterResponse.hasMessage("WARNING"), "отчет об импорте содержит WARNING");
+            List<ReportMessage> messageList = agendaConverterResponse.getConversionReport().getMessages();
+            assertTrue(messageList.size() == 0, "Кол-во сообщений в отчете не равно 0");
+            assertTrue(xml.contains("как раз"), "проигнорировано больше чем ожидалось");
+        }
+        //maxItemCount кол-во строк превосходит разрешенное
+        {
+            File file = new File(getClass().getClassLoader().getResource("validators/itemCount/item_count_wrong.rtf").getFile());
+            InputStream is = new FileInputStream(file);
+
+            RtfAgendaConverter converter = new RtfAgendaConverter();
+            AgendaConverterResponse agendaConverterResponse = converter.convert(is);
+            String xml = new String(agendaConverterResponse.getXmlBytes());
+
+            assertTrue(agendaConverterResponse.getXmlBytes().length > 0);
+            assertFalse(agendaConverterResponse.hasMessage("ERROR"), "отчет об импорте содержит ERROR");
+            assertTrue(agendaConverterResponse.hasMessage("WARNING"), "отчет об импорте НЕ содержит WARNING");
+            List<ReportMessage> messageList = agendaConverterResponse.getConversionReport().getMessages();
+            assertTrue(messageList.size() == 1, "Кол-во сообщений в отчете не равно 1");
+            String report = agendaConverterResponse.printReport("WARNING");
+            assertTrue(report.contains("Кол-во пунктов превышает максимально допустимое") &&
+                    report.contains("Многа"), "Сообщение валидатора не содержит ожидаемых фрагментов сообщения");
+            assertFalse(xml.contains("Лишнее"), "часть строки превосходящая разрешенную длину не была проигнорирована");
+            assertTrue(xml.contains("как раз"), "Проигнорировано больше чем ожидалось");
+        }
+
+        //maxNoteCount
+
     }
 
 

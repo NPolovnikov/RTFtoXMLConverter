@@ -79,9 +79,16 @@ public class AgendaBuilder {
             if (ConfigHandler.getInstance().getValidationRules().hasPath("maxItemCount")) {
                 int count = agenda.getItemOrBlock().size();
                 int maxItemCount = ConfigHandler.getInstance().getValidationRules().getInt("maxItemCount");
-                if (count > maxItemCount) {
+
+                if (count > maxItemCount - 1 ) {//потому, что слияние еще впереди, надо на 1 уменьшить
+                    String number;
+                    if (currentItem.getNumber() == null && currentItem.getNumber().isEmpty()){
+                        number = "(не указан)";
+                    } else {
+                        number = currentItem.getNumber();
+                    }
                     WarningMessage warningMessage = new WarningMessage("Кол-во пунктов превышает максимально " +
-                            "допустимое - " + maxItemCount + ". Пункт " + currentItem.getNumber() + " проигнорирован");
+                            "допустимое - " + maxItemCount + ". Пункт " + number + " проигнорирован");
                     conversionReport.collectMessage(warningMessage);
                     currentItem = null;
                     return;

@@ -27,7 +27,8 @@ public class AgendaValidator {
     }
 
     /**
-     * Валидирует все простые свойства AgendaItem. Не валидирует иерархию speakerGroup
+     * Валидирует все простые свойства AgendaItem. Не валидирует иерархию speakerGroup, которая должна быть
+     * провалидирована ранее при слиянии с AgendaItem
      *
      * @param agendaItem
      * @param conversionReport
@@ -101,10 +102,12 @@ public class AgendaValidator {
         //кол-во докладчиков
         if (agendaItem.getSpeakerGroups() != null && !agendaItem.getSpeakerGroups().getGroup().isEmpty()) {
             int maxSpeakerCount = itemValidationRules.getInt("speakerGroups.maxTotalSpeakerCount");
-            int speakerCount = 0;
+            int speakerCount = 0; //считаем кол-во докладчиков во всех группах, поэтому инициализация вне первого цикла.
+
             for (Iterator<Group> i = agendaItem.getSpeakerGroups().getGroup().iterator(); i.hasNext(); ) {
                 Group group = i.next();
                 if (group.getSpeakers() != null && !group.getSpeakers().getSpeaker().isEmpty()) {
+
                     for (Iterator<Group.Speakers.Speaker> ii = group.getSpeakers().getSpeaker().iterator(); ii.hasNext(); ) {
                         Group.Speakers.Speaker speaker = ii.next();
                         speakerCount++;
