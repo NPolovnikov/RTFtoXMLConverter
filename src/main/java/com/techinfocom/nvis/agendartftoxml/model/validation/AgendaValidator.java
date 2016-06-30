@@ -112,8 +112,14 @@ public class AgendaValidator {
                         Group.Speakers.Speaker speaker = ii.next();
                         speakerCount++;
                         if (speakerCount > maxSpeakerCount) {
+                            String number;
+                            if (agendaItem.getNumber() == null && agendaItem.getNumber().isEmpty()) {
+                                number = "(не указан)";
+                            } else {
+                                number = agendaItem.getNumber();
+                            }
                             WarningMessage warningMessage = new WarningMessage("В пункте " +
-                                    agendaItem.getNumber() + "кол-во докладчиков превосходит максимально разрешенное - " +
+                                    number + "кол-во докладчиков превосходит максимально разрешенное - " +
                                     maxSpeakerCount + ". Докладчики проигнорированы.", speaker.getPost());
                             conversionReport.collectMessage(warningMessage);
                             ii.remove();
@@ -122,6 +128,29 @@ public class AgendaValidator {
                 }
                 //если группа осталась пустой, удалим и ее
                 if (group.getSpeakers().getSpeaker().isEmpty()) {
+                    i.remove();
+                }
+            }
+        }
+
+        //кол-во note
+        if (agendaItem.getNotes() != null && !agendaItem.getNotes().getNote().isEmpty()) {
+            int maxNoteCount = itemValidationRules.getInt("notes.maxNoteCount");
+            int noteCount = 0;
+            for (Iterator<String> i = agendaItem.getNotes().getNote().iterator(); i.hasNext(); ) {
+                String note = i.next();
+                noteCount++;
+                if (noteCount > maxNoteCount) {
+                    String number;
+                    if (agendaItem.getNumber() == null && agendaItem.getNumber().isEmpty()) {
+                        number = "(не указан)";
+                    } else {
+                        number = agendaItem.getNumber();
+                    }
+                    WarningMessage warningMessage = new WarningMessage("В пункте " +
+                            number + "кол-во примечаний превосходит максимально разрешенное - " +
+                            maxNoteCount + ". примечание проигнорировано.", note);
+                    conversionReport.collectMessage(warningMessage);
                     i.remove();
                 }
             }
