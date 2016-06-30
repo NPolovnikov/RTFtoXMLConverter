@@ -39,60 +39,44 @@ public class RtfAgendaConverterTest {
                 }
             }
         }
-
-//        try(DirectoryStream<Path> rightStream = Files.newDirectoryStream(rightPath)) {
-//            for(Path p: rightStream){
-//
-//            }
-//
-//        }
-//
-//        File file = new File(getClass().getClassLoader().getResource("right/1005/10-05.rtf").getFile());
-//        InputStream is = new FileInputStream(file);
-//
-//        RtfAgendaConverter converter = new RtfAgendaConverter();
-//        AgendaConverterResponse agendaConverterResponse = converter.convert(is);
-//
-//        String xml = new String(agendaConverterResponse.getXmlBytes());
-//
-//        assertNotNull(xml);
-
-
         // TODO: 16.06.2016 добавить упоминание имени схемы в документ
 
     }
 
     @Test(description = "Проверка обработки фатальных ошибок при импорте")
-    // TODO: 30.06.2016 проверить на соответствие заявленным целям
     public void testFailedConvert() throws Exception {
 
         //case 1
-        File file = new File(getClass().getClassLoader().getResource("failed/1005wo_table/10-05_wo_table.rtf").getFile());
-        InputStream is = new FileInputStream(file);
+        {
+            File file = new File(getClass().getClassLoader().getResource("failed/1005wo_table/10-05_wo_table.rtf").getFile());
+            InputStream is = new FileInputStream(file);
 
-        RtfAgendaConverter converter = new RtfAgendaConverter();
-        AgendaConverterResponse agendaConverterResponse = converter.convert(is);
+            RtfAgendaConverter converter = new RtfAgendaConverter();
+            AgendaConverterResponse agendaConverterResponse = converter.convert(is);
 
-        assertTrue(agendaConverterResponse.getXmlBytes().length == 0);
-        String report = agendaConverterResponse.printReport("ERROR", "WARNING");
-        assertFalse(report.isEmpty());
-
+            assertTrue(agendaConverterResponse.getXmlBytes().length == 0);
+            //ERROR: таблица с расписанием не обнаружена
+            assertTrue(agendaConverterResponse.hasMessage("ERROR"), "отчет об импорте НЕ содержит ERROR");
+            assertFalse(agendaConverterResponse.hasMessage("WARNING"), "отчет об импорте содержит WARNING");
+            List<ReportMessage> messageList = agendaConverterResponse.getConversionReport().getMessages();
+            assertTrue(messageList.size() == 1, "Кол-во сообщений в отчете не равно 1");
+            String report = agendaConverterResponse.printReport("ERROR");
+            assertTrue(report.contains("таблица с расписанием не обнаружена"), "Сообщение валидатора не содержит ожидаемых фрагментов сообщения");
+        }
         //case 2
-        file = null;
-        agendaConverterResponse = null;
-        report = null;
-        file = new File(getClass().getClassLoader().getResource("failed/1005wo_date/10-05_wo_date.rtf").getFile());
-        is = new FileInputStream(file);
+        {
+            File file = new File(getClass().getClassLoader().getResource("failed/1005wo_date/10-05_wo_date.rtf").getFile());
+            InputStream is = new FileInputStream(file);
 
-        converter = new RtfAgendaConverter();
-        agendaConverterResponse = converter.convert(is);
+            RtfAgendaConverter converter = new RtfAgendaConverter();
+            AgendaConverterResponse agendaConverterResponse = converter.convert(is);
 
-        assertTrue(agendaConverterResponse.getXmlBytes().length > 0);
-        String xml = new String(agendaConverterResponse.getXmlBytes());
-        report = agendaConverterResponse.printReport("ERROR", "WARNING");
-        assertFalse(report.isEmpty());
+            assertTrue(agendaConverterResponse.getXmlBytes().length > 0);
+            String xml = new String(agendaConverterResponse.getXmlBytes());
+            String report = agendaConverterResponse.printReport("ERROR", "WARNING");
 
-
+            assertFalse(report.isEmpty());
+        }
     }
 
     @Test(description = "Проверка функционирования валидаторов")
@@ -223,7 +207,7 @@ public class RtfAgendaConverterTest {
             assertFalse(xml.contains("Лишнее"), "часть строки превосходящая разрешенную длину не была проигнорирована");
             assertTrue(xml.contains("Лишне"), "Проигнорировано больше чем ожидалось");
         }
-        // TODO: 30.06.2016 тест на кол-во нотесов
+
         // длина GroupName
         {
             File file = new File(getClass().getClassLoader().getResource("validators/group_name/group_name_wrong.rtf").getFile());
