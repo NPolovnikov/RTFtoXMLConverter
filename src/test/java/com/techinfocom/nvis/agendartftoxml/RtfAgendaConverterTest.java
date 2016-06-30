@@ -98,6 +98,7 @@ public class RtfAgendaConverterTest {
     @Test(description = "Проверка функционирования валидаторов")
     public void testOfValidators() throws Exception {
 
+        //Тесты на длину строк
         //длина номера пункта работы
         {
             File file = new File(getClass().getClassLoader().getResource("validators/number/number_wrong.rtf").getFile());
@@ -243,6 +244,50 @@ public class RtfAgendaConverterTest {
             assertFalse(xml.contains("Лишнее"), "часть строки превосходящая разрешенную длину не была проигнорирована");
             assertTrue(xml.contains("Лишне"), "Проигнорировано больше чем ожидалось");
         }
+
+        // длина Post
+        {
+            File file = new File(getClass().getClassLoader().getResource("validators/post/post_wrong.rtf").getFile());
+            InputStream is = new FileInputStream(file);
+
+            RtfAgendaConverter converter = new RtfAgendaConverter();
+            AgendaConverterResponse agendaConverterResponse = converter.convert(is);
+            String xml = new String(agendaConverterResponse.getXmlBytes());
+
+            assertTrue(agendaConverterResponse.getXmlBytes().length > 0);
+            assertFalse(agendaConverterResponse.hasMessage("ERROR"), "отчет об импорте содержит ERROR");
+            assertTrue(agendaConverterResponse.hasMessage("WARNING"), "отчет об импорте НЕ содержит WARNING");
+            List<ReportMessage> messageList = agendaConverterResponse.getConversionReport().getMessages();
+            assertTrue(messageList.size() == 1, "Кол-во сообщений в отчете не равно 1");
+            String report = agendaConverterResponse.printReport("WARNING");
+            assertTrue(report.contains("длина строки превышает максимальную") &&
+                    report.contains("председателя Комитета по экономической политике"), "Сообщение валидатора не содержит ожидаемых фрагментов сообщения");
+            assertFalse(xml.contains("Лишнее"), "часть строки превосходящая разрешенную длину не была проигнорирована");
+            assertTrue(xml.contains("Лишне"), "Проигнорировано больше чем ожидалось");
+        }
+
+        // длина Name
+        {
+            File file = new File(getClass().getClassLoader().getResource("validators/name/name_wrong.rtf").getFile());
+            InputStream is = new FileInputStream(file);
+
+            RtfAgendaConverter converter = new RtfAgendaConverter();
+            AgendaConverterResponse agendaConverterResponse = converter.convert(is);
+            String xml = new String(agendaConverterResponse.getXmlBytes());
+
+            assertTrue(agendaConverterResponse.getXmlBytes().length > 0);
+            assertFalse(agendaConverterResponse.hasMessage("ERROR"), "отчет об импорте содержит ERROR");
+            assertTrue(agendaConverterResponse.hasMessage("WARNING"), "отчет об импорте НЕ содержит WARNING");
+            List<ReportMessage> messageList = agendaConverterResponse.getConversionReport().getMessages();
+            assertTrue(messageList.size() == 1, "Кол-во сообщений в отчете не равно 1");
+            String report = agendaConverterResponse.printReport("WARNING");
+            assertTrue(report.contains("длина строки превышает максимальную") &&
+                    report.contains("Андрея Михайловича Макарова"), "Сообщение валидатора не содержит ожидаемых фрагментов сообщения");
+            assertFalse(xml.contains("Лишнее"), "часть строки превосходящая разрешенную длину не была проигнорирована");
+            assertTrue(xml.contains("Лишне"), "Проигнорировано больше чем ожидалось");
+        }
+
+        //тесты на кол-во элементов
 
     }
 
