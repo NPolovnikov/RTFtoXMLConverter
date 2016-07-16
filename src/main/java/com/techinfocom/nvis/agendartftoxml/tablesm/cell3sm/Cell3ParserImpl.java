@@ -27,16 +27,18 @@ public class Cell3ParserImpl extends AutomationBase<Cell3Parser> implements Cell
         addEdge(waitForSpeakers, WaitForSpeakers.SPEAKERS_FOUND, speakType);
         addEdge(speakType, SpeakType.POST_FOUND, post);
         addEdge(post, Post.NAME_FOUND, name);
-        addEdge(post, Post.END_OF_SPEAKER_GROUP, waitForNextSpeakers);
+        addEdge(post, Post.PAR_FOUND, waitForNextSpeakers);
         addEdge(name, Name.POST_FOUND, post);
-        addEdge(name, Name.END_OF_SPEAKER_GROUP, waitForNextSpeakers);
+        addEdge(name, Name.PAR_FOUND, waitForNextSpeakers);
         addEdge(waitForNextSpeakers, WaitForNextSpeakers.NEW_SPEAKER_GROUP_FOUND, speakType);
+        addEdge(waitForNextSpeakers, WaitForNextSpeakers.POST_FOUND, post);
+        addEdge(waitForNextSpeakers, WaitForNextSpeakers.NAME_FOUND, name);
 
-        addEdge(waitForSpeakers, WaitForSpeakers.EXIT, text);
-        addEdge(speakType, SpeakType.EXIT, text);
-        addEdge(name, Name.EXIT, text);
-        addEdge(waitForNextSpeakers, WaitForNextSpeakers.EXIT, text);
-        addEdge(post, Post.EXIT, text);
+        addEdge(text, Text.EXIT, waitForSpeakers);
+        addEdge(speakType, SpeakType.EXIT, waitForSpeakers);
+        addEdge(name, Name.EXIT, waitForSpeakers);
+        addEdge(waitForNextSpeakers, WaitForNextSpeakers.EXIT, waitForSpeakers);
+        addEdge(post, Post.EXIT, waitForSpeakers);
 
 
         //Начальное состояние

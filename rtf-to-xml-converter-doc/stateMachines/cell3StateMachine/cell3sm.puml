@@ -1,0 +1,24 @@
+@startuml
+
+scale 500 width
+[*] --> waitForSpeakers
+text --> waitForSpeakers:parFound
+waitForSpeakers --> text : не (подчеркнутый НЕ наклонный)
+waitForSpeakers --> speakType: подчеркнутый НЕ наклонный
+speakType --> post:неформатированный
+post --> name:жирный
+post --> waitForNextSpeakers:перевод строки
+name --> post:неформатированный
+name -->waitForNextSpeakers:перевод строки
+waitForNextSpeakers--> speakType:подчеркнутый НЕ наклонный
+waitForNextSpeakers--> post:неформатированный
+waitForNextSpeakers--> name:жирный
+
+text --> waitForSpeakers:exit
+speakType --> waitForSpeakers:exit
+name --> waitForSpeakers:exit
+waitForNextSpeakers --> waitForSpeakers:exit
+post --> waitForSpeakers:exit
+waitForSpeakers --> [*]
+
+@enduml

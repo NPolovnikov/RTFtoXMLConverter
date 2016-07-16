@@ -18,7 +18,7 @@ public class Post<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     private static final Logger LOGGER = com.techinfocom.nvis.agendartftoxml.Logger.LOGGER;
     public static final Event NAME_FOUND = new Event("NAME_FOUND");
     public static final Event EXIT = new Event("EXIT");
-    public static final Event END_OF_SPEAKER_GROUP = new Event("END_OF_SPEAKER_GROUP");
+    public static final Event PAR_FOUND = new Event("PAR_FOUND");
 
     private final AgendaBuilder agendaBuilder;
 
@@ -29,11 +29,10 @@ public class Post<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
 
     @Override
     public void processChar(FormatedChar fc) {
+        //нашли перевод строки. далее будем ожидать либо жирного имени, либо другой должности, либо типа доклада
         if (fc.getC() == '\n') {
-            agendaBuilder.mergeSpeaker();
-            agendaBuilder.mergeGroup();
-            eventSink.castEvent(END_OF_SPEAKER_GROUP);
-            LOGGER.debug("state={}. Обнаружен \\n. Объединены CurrentSpeaker, CurrentGroup", STATE_NAME);
+            eventSink.castEvent(PAR_FOUND);
+            LOGGER.debug("state={}. Обнаружен \\n.", STATE_NAME);
         } else {
             String currentPost = agendaBuilder.getSpeaker().getPost();
             if (currentPost == null) {

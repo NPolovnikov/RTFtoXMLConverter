@@ -16,6 +16,7 @@ public class Text<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     private static final String STATE_NAME = Text.class.getSimpleName().toUpperCase();
     private static final Logger LOGGER = com.techinfocom.nvis.agendartftoxml.Logger.LOGGER;
     public static final Event PAR_FOUND = new Event("PAR_FOUND");
+    public static final Event EXIT = new Event("EXIT");
 
     private final AgendaBuilder agendaBuilder;
 
@@ -79,7 +80,7 @@ public class Text<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
 
     @Override
     public void exit() {
-        LOGGER.debug("state={}. Получен сигнал о завершении ячейки. Состояние не меняется", STATE_NAME);
+        LOGGER.debug("state={}. Получен сигнал о завершении ячейки.", STATE_NAME);
 
         //прикроем верхний индекс, если он оказался в самом конце ячейки, а значит не будет обнаружен
         if (agendaBuilder.isSupActive()) {
@@ -89,7 +90,7 @@ public class Text<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
 
         //разберем на элементы
         agendaBuilder.splitTextToItem();
-
+        eventSink.castEvent(EXIT);
 
     }
 

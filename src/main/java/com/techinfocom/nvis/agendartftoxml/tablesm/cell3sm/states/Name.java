@@ -15,7 +15,7 @@ public class Name<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     private static final String STATE_NAME = Name.class.getSimpleName().toUpperCase();
     private static final Logger LOGGER = com.techinfocom.nvis.agendartftoxml.Logger.LOGGER;
     public static final Event POST_FOUND = new Event("POST_FOUND");
-    public static final Event END_OF_SPEAKER_GROUP = new Event("END_OF_SPEAKER_GROUP");
+    public static final Event PAR_FOUND = new Event("PAR_FOUND");
     public static final Event EXIT = new Event("EXIT");
 
     private final AgendaBuilder agendaBuilder;
@@ -28,10 +28,8 @@ public class Name<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     @Override
     public void processChar(FormatedChar fc) {
         if (fc.getC() == '\n') {
-            agendaBuilder.mergeSpeaker();
-            agendaBuilder.mergeGroup();
-            eventSink.castEvent(END_OF_SPEAKER_GROUP);
-            LOGGER.debug("state={}. Обнаружен \\n. Объединены CurrentSpeaker, CurrentGroup", STATE_NAME);
+            eventSink.castEvent(PAR_FOUND);
+            LOGGER.debug("state={}. Обнаружен \\n. ", STATE_NAME);
         } else {
             String currentName = agendaBuilder.getSpeaker().getName();
             if (currentName == null) {

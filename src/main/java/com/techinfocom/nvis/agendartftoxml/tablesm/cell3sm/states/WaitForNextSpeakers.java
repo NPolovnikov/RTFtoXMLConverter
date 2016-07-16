@@ -20,6 +20,8 @@ public class WaitForNextSpeakers<AI extends Cell3Parser> extends StateBase<AI> i
     private static final Logger LOGGER = com.techinfocom.nvis.agendartftoxml.Logger.LOGGER;
     public static final Event NEW_SPEAKER_GROUP_FOUND = new Event("NEW_SPEAKER_GROUP_FOUND");
     public static final Event EXIT = new Event("EXIT");
+    public static final Event POST_FOUND = new Event("POST_FOUND");
+    public static final Event NAME_FOUND = new Event("NAME_FOUND");
     private final AgendaBuilder agendaBuilder;
 
     public WaitForNextSpeakers(AI automation, EventSink eventSink, AgendaBuilder agendaBuilder) {
@@ -49,15 +51,41 @@ public class WaitForNextSpeakers<AI extends Cell3Parser> extends StateBase<AI> i
         if (fc.getTextFormat().fontContain(ul) &&
                 !fc.getTextFormat().fontContain(i) &&
                 p.matcher(String.valueOf(fc.getC())).matches()) {
-            LOGGER.debug("state={}. Обнаружен подчеркнутый, ненаклонный текст ''. Это тип очередного доклада. Созданы CurrentGroup", STATE_NAME, fc.getC());
+            LOGGER.debug("state={}. Обнаружен подчеркнутый, ненаклонный текст ''. Это тип очередного доклада. Объединены CurrentSpeaker, CurrentGroup. Созданы CurrentGroup", STATE_NAME, fc.getC());
+            agendaBuilder.mergeSpeaker();
+            agendaBuilder.mergeGroup();
             agendaBuilder.newGroup();
             eventSink.castEvent(NEW_SPEAKER_GROUP_FOUND);
         }
+
+        //неформатированый- новый докладчик в текущем докладе
+        if (fc.getTextFormat().getFontFormat().isEmpty() &&
+                fc.getC() != '\n' && fc.getC() != ' ') {    //но не перевод и не пробелы, иначе можно ошибочно переключиться в ожидание следующей должности
+            LOGGER.debug("state={}. Обнаружен неформатированный текст '{}'. Это должность очередного докладчика. Объединены CurrentSpeaker, создан новый CurrentSpeaker", STATE_NAME, fc.getC());
+            agendaBuilder.mergeSpeaker();
+            agendaBuilder.newSpeaker();
+            eventSink.castEvent(POST_FOUND);
+        }
+
+        //жирный текст- ФИО докладчика
+        if (fc.getTextFormat().fontContain(b) &&
+                fc.getC() != '\n' && fc.getC() != ' ') {
+            LOGGER.debug("state={}. Обнаружен жирный текст '{}'.", STATE_NAME, fc.getC());
+            eventSink.castEvent(NAME_FOUND);
+        }
+
+
     }
 
     @Override
     public void exit() {
         LOGGER.debug("state={}. Получен сигнал о завершении ячейки.", STATE_NAME);
+        if (agendaBuilder.getSpeaker() != null){
+            agendaBuilder.mergeSpeaker();
+        }
+        if(agendaBuilder.getGroup() != null){
+            agendaBuilder.mergeGroup();
+        }
         eventSink.castEvent(EXIT);
     }
 }

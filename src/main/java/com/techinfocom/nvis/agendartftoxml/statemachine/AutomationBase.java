@@ -28,12 +28,13 @@ public abstract class AutomationBase<AI> implements EventSink {
     }
 
     public void castEvent(Event event) {
-        String report = state.getClass().getSimpleName().toUpperCase() + "-->";
+        String srcState = state.getClass().getSimpleName().toUpperCase();
+        String report = srcState + "-->";
         try {
             state = edges.get(state).get(event);
             report += state.getClass().getSimpleName().toUpperCase();
         } catch (NullPointerException e) {
-            throw new IllegalStateException("Edge is not defined");
+            throw new IllegalStateException("Edge is not defined: from state " + srcState + " with event " + event.getName());
         }
         LOGGER.debug(report);
     }

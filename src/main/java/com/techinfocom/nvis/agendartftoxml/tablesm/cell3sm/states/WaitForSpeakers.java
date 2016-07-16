@@ -20,7 +20,6 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
     private static final Logger LOGGER = com.techinfocom.nvis.agendartftoxml.Logger.LOGGER;
     public final static Event NO_SPEAKERS = new Event("NO_SPEAKERS");
     public final static Event SPEAKERS_FOUND = new Event("SPEAKERS_FOUND");
-    public static final Event EXIT = new Event("EXIT");
 
     private final AgendaBuilder agendaBuilder;
 
@@ -59,7 +58,7 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
             agendaBuilder.splitTextToItem();
             eventSink.castEvent(SPEAKERS_FOUND);
         } else {
-            //не подчеркнутый текст, это продолжение text
+            //не (подчеркнутый, НЕ НАКЛОННЫЙ) текст, это продолжение text
             LOGGER.debug("state={}. подчеркнутого текста не найдено. Продолжаем собирать text", STATE_NAME);
             String text = agendaBuilder.getAgendaItem().getText();
             if (text == null) {
@@ -72,10 +71,9 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
 
     @Override
     public void exit() {
-        LOGGER.debug("state={}. Получен сигнал о завершении ячейки.", STATE_NAME);
-        //поищем номер документа.
+        LOGGER.debug("state={}. Получен сигнал о завершении ячейки. Состояние менять не следует", STATE_NAME);
+        //Разложим на элементы
         agendaBuilder.splitTextToItem();
-        eventSink.castEvent(EXIT);
     }
 
 

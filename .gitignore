@@ -66,5 +66,9 @@ crashlytics-build.properties
 ~*.doc
 *.tmp
 
-rtf-to-xml-converter-doc/
+rtf-to-xml-converter-doc/Итерация1
+rtf-to-xml-converter-doc/Итерация2
+rtf-to-xml-converter-doc/тестовые документы
+rtf-to-xml-converter-doc/схемы
+
 target/
