@@ -105,9 +105,31 @@ public class TextFormat {
             case ulnone:
                 fontFormat.removeIf(c -> Arrays.asList(allUnderlinesA).contains(c.getCommand()));
                 break;
+
             /**
-             * Foreground color (default is 0). N specifies the color as an index of the color table.
+             * Superscripts text and shrinks point size according to font information.
              */
+            case supercmd:
+                fontFormat.add(rtfCommand);
+                break;
+            /**
+             * Subscripts text and shrinks point size according to font information.
+             */
+            case sub:
+                fontFormat.add(rtfCommand);
+                break;
+            /**
+             * Turns off superscripting or subscripting.
+             */
+            case nosupersub:
+                fontFormat.removeIf(c -> c.getCommand() == sub);
+                fontFormat.removeIf(c -> c.getCommand() == supercmd);
+                break;
+
+
+                /**
+                 * Foreground color (default is 0). N specifies the color as an index of the color table.
+                 */
             case cf:
                 //System.err.println("Цвет текста нашли");
                 break;
@@ -118,11 +140,11 @@ public class TextFormat {
 
     }
 
-    public boolean paragraphContain(Command command){
+    public boolean paragraphContain(Command command) {
         return paragraphFormat.stream().anyMatch(c -> c.getCommand() == command);
     }
 
-    public boolean fontContain(Command command){
+    public boolean fontContain(Command command) {
         return fontFormat.stream().anyMatch(c -> c.getCommand() == command);
     }
 

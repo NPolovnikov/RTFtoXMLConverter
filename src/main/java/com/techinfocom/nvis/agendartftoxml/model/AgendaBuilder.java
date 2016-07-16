@@ -32,6 +32,9 @@ public class AgendaBuilder {
     private int acceptedRowCount = 0;
     private final ConversionReport conversionReport;
     private final AgendaValidator agendaValidator;
+    private boolean supActive = false; //пришлось отслеживать нижний верхний индекс. переменные говорят о том, что открывающий html-тег был вставлен индекс активен сейчас.
+    private boolean subActive = false;
+
 
     public AgendaBuilder() {
         objectFactory = new ObjectFactory();
@@ -80,9 +83,9 @@ public class AgendaBuilder {
                 int count = agenda.getItemOrBlock().size();
                 int maxItemCount = ConfigHandler.getInstance().getValidationRules().getInt("maxItemCount");
 
-                if (count > maxItemCount - 1 ) {//потому, что слияние еще впереди, надо на 1 уменьшить
+                if (count > maxItemCount - 1) {//потому, что слияние еще впереди, надо на 1 уменьшить
                     String number;
-                    if (currentItem.getNumber() == null && currentItem.getNumber().isEmpty()){
+                    if (currentItem.getNumber() == null && currentItem.getNumber().isEmpty()) {
                         number = "(не указан)";
                     } else {
                         number = currentItem.getNumber();
@@ -262,15 +265,16 @@ public class AgendaBuilder {
             return;
         }
         List<String> pars = Arrays.asList(text.split("(\\n)|(\\r\\n)"));
-        String first = pars.get(0);
+        String first = pars.get(0); //абзацы
 
         Matcher m = rnPattern.matcher(first);
         //Если в первом абзаце найден номер
         if (m.find()) {
-            String rn = m.group(1);
+            String rn = m.group(1);//выделим номер
             String addon = first.substring(0, m.start()).trim(); //до номера
             String textNew = first.substring(m.end(), first.length()); //после номера
 
+            addon = addon.replaceAll("(<sup>)|(</sup>)", "");//удалим html-теги из элементов, в которых они не разрешены
             currentItem.setAddon(addon);
             currentItem.setRn(rn);
             currentItem.setText(textNew);
@@ -279,12 +283,29 @@ public class AgendaBuilder {
         }
         NotesList notesList = new NotesList();
         for (int i = 1; i < pars.size(); i++) {
-            notesList.getNote().add(pars.get(i));
+            String par = pars.get(i);
+            par = par.replaceAll("(<sup>)|(</sup>)", "");//удалим html-теги из элементов, в которых они не разрешены
+            notesList.getNote().add(par);
         }
         if (notesList.getNote().size() > 0) {
             currentItem.setNotes(notesList);
         }
     }
 
+    public boolean isSupActive() {
+        return supActive;
+    }
+
+    public void setSupActive(boolean supActive) {
+        this.supActive = supActive;
+    }
+
+    public boolean isSubActive() {
+        return subActive;
+    }
+
+    public void setSubActive(boolean subActive) {
+        this.subActive = subActive;
+    }
 }
 

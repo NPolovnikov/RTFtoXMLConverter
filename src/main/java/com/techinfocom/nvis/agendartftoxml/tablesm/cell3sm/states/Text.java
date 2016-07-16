@@ -1,5 +1,6 @@
 package com.techinfocom.nvis.agendartftoxml.tablesm.cell3sm.states;
 
+import com.rtfparserkit.rtf.Command;
 import com.techinfocom.nvis.agendartftoxml.statemachine.EventSink;
 import com.techinfocom.nvis.agendartftoxml.model.FormatedChar;
 import com.techinfocom.nvis.agendartftoxml.model.AgendaBuilder;
@@ -30,12 +31,32 @@ public class Text<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
         if (text == null) {
             text = "";
         }
-        agendaBuilder.getAgendaItem().setText(text + String.valueOf(fc.getC()));
+        //отловим возникновение или исчезновение верхнего, нижнего индекса и создадим нужные html теги
+        if (fc.getTextFormat().getFontFormat().stream().anyMatch(c -> c.getCommand() == Command.supercmd) &&
+                !agendaBuilder.isSupActive()) {
+            agendaBuilder.setSupActive(true);
+            text += "<sup>";
+        }
+        if (fc.getTextFormat().getFontFormat().stream().noneMatch(c -> c.getCommand() == Command.supercmd) &&
+                agendaBuilder.isSupActive()) {
+            agendaBuilder.setSupActive(false);
+            text += "</sup>";
+        }
 
         if (fc.getC() == '\n') {
             LOGGER.debug("state={}. Обнаружен \\n. Ожидаем тип доклада", STATE_NAME);
+
+            //не выпускаем верхний индекс за пределы абзаца. Иначе потом неверно разбивается по элементам.
+            //при следующем символе тек верхнего индекса будет проставлен заново.
+            if (agendaBuilder.isSupActive()) {
+                text += "</sup>";
+                agendaBuilder.setSupActive(false);
+            }
+
             eventSink.castEvent(PAR_FOUND);
         }
+
+        agendaBuilder.getAgendaItem().setText(text + String.valueOf(fc.getC()));
     }
 
 //    @Override
@@ -59,8 +80,17 @@ public class Text<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     @Override
     public void exit() {
         LOGGER.debug("state={}. Получен сигнал о завершении ячейки. Состояние не меняется", STATE_NAME);
-        //поищем номер документа.
+
+        //прикроем верхний индекс, если он оказался в самом конце ячейки, а значит не будет обнаружен
+        if (agendaBuilder.isSupActive()) {
+            agendaBuilder.setSupActive(false);
+            agendaBuilder.getAgendaItem().setText(agendaBuilder.getAgendaItem().getText() + "</sup>");
+        }
+
+        //разберем на элементы
         agendaBuilder.splitTextToItem();
+
+
     }
 
 }

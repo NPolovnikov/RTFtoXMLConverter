@@ -54,12 +54,11 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
             //создадим новую группу докладчиков и инициализируем тип доклада
             LOGGER.debug("state={}. Обнаружен подчеркнутый, ненаклонный текст ''. Это тип доклада. Созданы CurrentGroup", STATE_NAME, fc.getC());
             agendaBuilder.newGroup();
-            //поищем номер документа.
+            //разберем на элементы.
             agendaBuilder.splitTextToItem();
             eventSink.castEvent(SPEAKERS_FOUND);
         } else {
             //не подчеркнутый текст, это продолжение text
-            //восстановим перевод строки, принятый за сигнал
             LOGGER.debug("state={}. подчеркнутого текста не найдено. Продолжаем собирать text", STATE_NAME);
             String text = agendaBuilder.getAgendaItem().getText();
             if (text == null) {

@@ -3,16 +3,22 @@ package com.techinfocom.nvis.agendartftoxml;
 import com.techinfocom.nvis.agendartftoxml.report.ReportMessage;
 import org.testng.annotations.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.Scanner;
 
 import static org.testng.Assert.*;
 
 /**
  * Created by volkov_kv on 13.06.2016.
  */
+// TODO: 05.07.2016 сделать предупреждение о неполном использовании текста (уходим в ожидание конца ячейки, и начинаем собирать текст)
+// TODO: 16.06.2016 добавить упоминание имени схемы в документ
 @Test(testName = "Тестирование компонента RTFtoXMLConverter")
 public class RtfAgendaConverterTest {
 
@@ -39,9 +45,41 @@ public class RtfAgendaConverterTest {
                 }
             }
         }
-        // TODO: 16.06.2016 добавить упоминание имени схемы в документ
+    }
+
+    @Test(description = "Проверка обработки строк в верхнем индексе")
+    public void testSuperscript() throws Exception {
+        {
+            File rtfFile = new File(getClass().getClassLoader().getResource("superscript/upper_index1.rtf").getFile());
+            File xmlFile = new File(getClass().getClassLoader().getResource("superscript/upper_index1.xml").getFile());
+            InputStream rtfIs = new FileInputStream(rtfFile);
+            InputStream xmlIs = new FileInputStream(xmlFile);
+            String assertXml;
+            try (Scanner scanner = new Scanner(xmlFile, "UTF-8")) {
+                assertXml = scanner.useDelimiter("\\A").next();
+            }
+
+            RtfAgendaConverter converter = new RtfAgendaConverter();
+            AgendaConverterResponse agendaConverterResponse = converter.convert(rtfIs);
+            rtfIs.close();
+
+            assertTrue(agendaConverterResponse.getXmlBytes().length > 10);
+            String xml = new String(agendaConverterResponse.getXmlBytes());
+
+            String report = agendaConverterResponse.printReport("ERROR", "WARNING");
+            assertTrue(report.isEmpty(), "Возник ERROR или WARNING при импорте корректного документа");
+            assertNotNull(xml, "результат импорта - null");
+            assertTrue(xml.length() > 0, "результат импорта - пустая строка");
+
+            assertTrue(xml.contains("<text>\"О внесении изменения в статью 55&lt;sup&gt;24&lt;/sup&gt; Градостроительного кодекса Российской "));
+            assertTrue(xml.contains("Воткнем даже перенос строки в верхнем индексе) 55&lt;sup&gt;24&lt;/sup&gt;</text>"));
+
+
+            //assertTrue(assertXml.equals(xml)); не прокатит. будут разные UUID. Надо делать выброчное сравнение узлов xml
+        }
 
     }
+
 
     @Test(description = "Проверка обработки фатальных ошибок при импорте")
     public void testFailedConvert() throws Exception {
