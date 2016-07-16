@@ -32,14 +32,14 @@ public class RtfAgendaConverterTest {
                 File[] rtfFiles = f.listFiles((dir, name) -> name.endsWith(".rtf"));
                 File[] xmlFiles = f.listFiles((dir, name) -> name.endsWith(".xml"));
                 if (rtfFiles.length > 0) {
-                    InputStream is = new FileInputStream(rtfFiles[0]);
+                    InputStream is = new FileInputStream(rtfFiles[0]);//планируется по однму файлу, потому и 0
                     RtfAgendaConverter converter = new RtfAgendaConverter();
                     AgendaConverterResponse agendaConverterResponse = converter.convert(is);
 
                     assertTrue(agendaConverterResponse.getXmlBytes().length > 10);
                     String xml = new String(agendaConverterResponse.getXmlBytes());
                     String report = agendaConverterResponse.printReport("ERROR", "WARNING");
-                    assertTrue(report.isEmpty(), "Возник ERROR или WARNING при импорте корректного документа");
+                    assertTrue(report.isEmpty(), "Возник ERROR или WARNING при импорте корректного документа " + rtfFiles[0].getName() + ". Сообщение: " + report);
                     assertNotNull(xml, "результат импорта - null");
                     assertTrue(xml.length() > 0, "результат импорта - пустая строка");
                 }
@@ -390,6 +390,50 @@ public class RtfAgendaConverterTest {
             assertTrue(xml.contains("как раз1"), "Проигнорировано больше чем ожидалось");
             assertTrue(xml.contains("как раз2"), "Проигнорировано больше чем ожидалось");
         }
+
+        //сообщение об игнорировании текста
+        {
+            File file = new File(getClass().getClassLoader().getResource("validators/ignoredtext/ignored_text.rtf").getFile());
+            InputStream is = new FileInputStream(file);
+
+            RtfAgendaConverter converter = new RtfAgendaConverter();
+            AgendaConverterResponse agendaConverterResponse = converter.convert(is);
+            String xml = new String(agendaConverterResponse.getXmlBytes());
+
+            assertTrue(agendaConverterResponse.getXmlBytes().length > 0);
+            assertFalse(agendaConverterResponse.hasMessage("ERROR"), "отчет об импорте содержит ERROR");
+            assertTrue(agendaConverterResponse.hasMessage("WARNING"), "отчет об импорте НЕ содержит WARNING");
+            List<ReportMessage> messageList = agendaConverterResponse.getConversionReport().getMessages();
+            assertTrue(messageList.size() == 1, "Кол-во сообщений в отчете не равно 1");
+            String report = agendaConverterResponse.printReport("WARNING");
+            assertTrue(report.contains("Вероятно, нарушена структура документа. В пункте 2. проигнорирован текст: по Регламенту и организации работы Государственной\n" +
+                    "Думы Надежды Васильевны Герасимовой"), "Сообщение валидатора не содержит ожидаемых фрагментов сообщения");
+        }
+
+    }
+
+    @Test(enabled = false)
+    public void learnSomeDoc() throws Exception {
+        {
+            File rtfFile = new File(getClass().getClassLoader().getResource("learn/24-06.rtf").getFile());
+            InputStream rtfIs = new FileInputStream(rtfFile);
+
+            RtfAgendaConverter converter = new RtfAgendaConverter();
+            AgendaConverterResponse agendaConverterResponse = converter.convert(rtfIs);
+            rtfIs.close();
+
+            assertTrue(agendaConverterResponse.getXmlBytes().length > 10);
+            String xml = new String(agendaConverterResponse.getXmlBytes());
+
+            String report = agendaConverterResponse.printReport("ERROR", "WARNING");
+            assertTrue(report.isEmpty(), "Возник ERROR или WARNING при импорте корректного документа");
+            assertNotNull(xml, "результат импорта - null");
+            assertTrue(xml.length() > 0, "результат импорта - пустая строка");
+
+
+            //assertTrue(assertXml.equals(xml)); не прокатит. будут разные UUID. Надо делать выброчное сравнение узлов xml
+        }
+
     }
 
 

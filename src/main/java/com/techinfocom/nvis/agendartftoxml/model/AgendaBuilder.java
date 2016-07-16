@@ -32,6 +32,7 @@ public class AgendaBuilder {
     private int acceptedRowCount = 0;
     private final ConversionReport conversionReport;
     private final AgendaValidator agendaValidator;
+    private String ignoredString = ""; //при возникновении ошибок в структуре документа можем проигнорировать текст. Отследим это
     private boolean supActive = false; //пришлось отслеживать нижний верхний индекс. переменные говорят о том, что открывающий html-тег был вставлен индекс активен сейчас.
     private boolean subActive = false;
 
@@ -84,18 +85,20 @@ public class AgendaBuilder {
                 int maxItemCount = ConfigHandler.getInstance().getValidationRules().getInt("maxItemCount");
 
                 if (count > maxItemCount - 1) {//потому, что слияние еще впереди, надо на 1 уменьшить
-                    String number;
-                    if (currentItem.getNumber() == null && currentItem.getNumber().isEmpty()) {
-                        number = "(не указан)";
-                    } else {
-                        number = currentItem.getNumber();
-                    }
                     WarningMessage warningMessage = new WarningMessage("Кол-во пунктов превышает максимально " +
-                            "допустимое - " + maxItemCount + ". Пункт " + number + " проигнорирован");
+                            "допустимое - " + maxItemCount + ". Пункт " + extractNumber(currentItem) + " проигнорирован");
                     conversionReport.collectMessage(warningMessage);
                     currentItem = null;
                     return;
                 }
+            }
+
+            //проверим не возник ли проигнорированный текст
+            if(!ignoredString.isEmpty()){
+                WarningMessage warningMessage = new WarningMessage("Вероятно, нарушена структура документа. " +
+                        "В пункте " + extractNumber(currentItem) + " проигнорирован текст: "+ ignoredString);
+                conversionReport.collectMessage(warningMessage);
+                ignoredString = "";
             }
 
             agendaValidator.validate(currentItem, conversionReport);
@@ -306,6 +309,23 @@ public class AgendaBuilder {
 
     public void setSubActive(boolean subActive) {
         this.subActive = subActive;
+    }
+
+    public void appendToIgnored(String s){
+        ignoredString += s;
+    }
+
+    private String extractNumber(AgendaItem agendaItem){
+        if (agendaItem == null){
+            return null;
+        }
+        String number;
+        if (agendaItem.getNumber() == null || agendaItem.getNumber().isEmpty()) {
+            number = "(не указан)";
+        } else {
+            number = agendaItem.getNumber();
+        }
+        return number;
     }
 }
 

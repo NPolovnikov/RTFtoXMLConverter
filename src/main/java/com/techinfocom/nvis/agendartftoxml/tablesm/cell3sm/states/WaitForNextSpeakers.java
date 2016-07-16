@@ -29,7 +29,8 @@ public class WaitForNextSpeakers<AI extends Cell3Parser> extends StateBase<AI> i
 
     @Override
     public void processChar(FormatedChar fc) {
-        //eventSink.castEvent(ERROR); // TODO: 11.06.2016 не может быть тут текста
+        //текста тут быть не может. А если появился- значит нарушена структура.
+        agendaBuilder.appendToIgnored(String.valueOf(fc.getC()));
     }
 
 //    @Override

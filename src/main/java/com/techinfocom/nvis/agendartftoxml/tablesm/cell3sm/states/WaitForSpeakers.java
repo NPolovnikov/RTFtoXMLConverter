@@ -31,7 +31,8 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
 
     @Override
     public void processChar(FormatedChar fc) {
-
+        //текста тут быть не может. А если появился- значит нарушена структура.
+        agendaBuilder.appendToIgnored(String.valueOf(fc.getC()));
     }
 
 //    @Override
