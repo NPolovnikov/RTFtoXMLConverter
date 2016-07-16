@@ -277,7 +277,7 @@ public class AgendaBuilder {
             String addon = first.substring(0, m.start()).trim(); //до номера
             String textNew = first.substring(m.end(), first.length()); //после номера
 
-            addon = addon.replaceAll("(<sup>)|(</sup>)", "");//удалим html-теги из элементов, в которых они не разрешены
+            //addon = addon.replaceAll("(<sup>)|(</sup>)", "");//удалим html-теги из элементов, в которых они не разрешены
             currentItem.setAddon(addon);
             currentItem.setRn(rn);
             currentItem.setText(textNew);
@@ -287,7 +287,7 @@ public class AgendaBuilder {
         NotesList notesList = new NotesList();
         for (int i = 1; i < pars.size(); i++) {
             String par = pars.get(i);
-            par = par.replaceAll("(<sup>)|(</sup>)", "");//удалим html-теги из элементов, в которых они не разрешены
+            //par = par.replaceAll("(<sup>)|(</sup>)", "");//удалим html-теги из элементов, в которых они не разрешены
             notesList.getNote().add(par);
         }
         if (notesList.getNote().size() > 0) {
