@@ -402,12 +402,11 @@ public class RtfAgendaConverterTest {
 
             assertTrue(agendaConverterResponse.getXmlBytes().length > 0);
             assertFalse(agendaConverterResponse.hasMessage("ERROR"), "отчет об импорте содержит ERROR");
-            //assertTrue(agendaConverterResponse.hasMessage("WARNING"), "отчет об импорте НЕ содержит WARNING");
+            assertTrue(agendaConverterResponse.hasMessage("WARNING"), "отчет об импорте НЕ содержит WARNING");
             List<ReportMessage> messageList = agendaConverterResponse.getConversionReport().getMessages();
-            //assertTrue(messageList.size() == 1, "Кол-во сообщений в отчете не равно 1");
+            assertTrue(messageList.size() == 1, "Кол-во сообщений в отчете не равно 1");
             String report = agendaConverterResponse.printReport("WARNING");
-            //assertTrue(report.contains("Вероятно, нарушена структура документа. В пункте 2. проигнорирован текст: по Регламенту и организации работы Государственной\n" +
-             //       "Думы Надежды Васильевны Герасимовой"), "Сообщение валидатора не содержит ожидаемых фрагментов сообщения");
+            assertTrue(report.contains("WARNING: Вероятно, нарушена структура документа. В пункте 2. проигнорирован текст: Фигня какая-то"), "Сообщение валидатора не содержит ожидаемых фрагментов сообщения");
         }
 
     }
