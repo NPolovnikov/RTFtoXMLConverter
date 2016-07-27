@@ -12,23 +12,22 @@ import java.util.Map;
  * наследнику регистрировать переходы, используя метод addEdge. Дополнительно класс
  * AutomatonBase реализует интерфейс уведомления о событии
  */
-public abstract class AutomationBase<AI> implements EventSink {
+public abstract class AbstractAutomationBase<AI> implements EventSink {
     private static final Logger LOGGER = com.techinfocom.nvis.agendartftoxml.Logger.LOGGER;
     protected AI state;
-    private final Map<AI, Map<Event, AI>> edges =
-            new HashMap<AI, Map<Event, AI>>();
+    private final Map<AI, Map<Event, AI>> edges = new HashMap<>();
 
     protected void addEdge(AI source, Event event, AI target) {
         Map<Event, AI> row = edges.get(source);
         if (row == null) {
-            row = new IdentityHashMap<Event, AI>();
+            row = new IdentityHashMap<>();
             edges.put(source, row);
         }
         row.put(event, target);
     }
 
-    public void castEvent(Event event) {
-        String srcState = state.getClass().getSimpleName().toUpperCase();
+    public void castEvent(final Event event) {
+        final String srcState = state.getClass().getSimpleName().toUpperCase();
         String report = srcState + "-->";
         try {
             state = edges.get(state).get(event);

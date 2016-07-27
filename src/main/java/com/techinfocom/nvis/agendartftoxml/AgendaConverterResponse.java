@@ -1,7 +1,6 @@
 package com.techinfocom.nvis.agendartftoxml;
 
 import com.techinfocom.nvis.agendartftoxml.report.ConversionReport;
-import com.techinfocom.nvis.agendartftoxml.report.ReportMessage;
 
 /**
  * Created by volkov_kv on 16.06.2016.

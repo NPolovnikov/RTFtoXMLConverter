@@ -3691,7 +3691,7 @@ public enum Command
    private static final Map<String, Command> MAP = new HashMap<String, Command>();
    static
    {
-      for (Command command : Command.values())
+      for (final Command command : Command.values())
       {
          MAP.put(command.getCommandName(), command);
       }

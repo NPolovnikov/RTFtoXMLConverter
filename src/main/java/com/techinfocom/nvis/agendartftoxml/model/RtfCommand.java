@@ -5,7 +5,7 @@ import com.rtfparserkit.rtf.Command;
 /**
  * Created by volkov_kv on 27.05.2016.
  */
-public class RtfCommand extends RtfWord{
+public class RtfCommand extends AbstractRtfWord{
     private final Command command;
     private final int parameter;
     private final boolean hasParameter;

@@ -1,6 +1,6 @@
 package com.techinfocom.nvis.agendartftoxml.tablesm.cell3sm;
 
-import com.techinfocom.nvis.agendartftoxml.statemachine.AutomationBase;
+import com.techinfocom.nvis.agendartftoxml.statemachine.AbstractAutomationBase;
 import com.techinfocom.nvis.agendartftoxml.tablesm.cell3sm.states.*;
 import com.techinfocom.nvis.agendartftoxml.model.FormatedChar;
 import com.techinfocom.nvis.agendartftoxml.model.AgendaBuilder;
@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 /**
  * Created by volkov_kv on 09.06.2016.
  */
-public class Cell3ParserImpl extends AutomationBase<Cell3Parser> implements Cell3Parser {
+public class Cell3ParserImpl extends AbstractAutomationBase<Cell3Parser> implements Cell3Parser {
     private static final Logger LOGGER = com.techinfocom.nvis.agendartftoxml.Logger.LOGGER;
 
     public Cell3ParserImpl(AgendaBuilder agendaBuilder) {
@@ -51,7 +51,7 @@ public class Cell3ParserImpl extends AutomationBase<Cell3Parser> implements Cell
     }
 
     @Override
-    public void processChar(FormatedChar fc) {
+    public void processChar(final FormatedChar fc) {
         state.processChar(fc);
     }
 
@@ -61,7 +61,7 @@ public class Cell3ParserImpl extends AutomationBase<Cell3Parser> implements Cell
 //    }
 
     @Override
-    public void analyseFormat(FormatedChar fc) {
+    public void analyseFormat(final FormatedChar fc) {
         state.analyseFormat(fc);
     }
 

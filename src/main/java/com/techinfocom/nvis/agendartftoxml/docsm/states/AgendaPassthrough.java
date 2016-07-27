@@ -6,12 +6,11 @@ import com.techinfocom.nvis.agendartftoxml.docsm.DocParserState;
 import com.techinfocom.nvis.agendartftoxml.model.AgendaBuilder;
 import com.techinfocom.nvis.agendartftoxml.model.FormatedChar;
 import com.techinfocom.nvis.agendartftoxml.model.RtfCommand;
-import com.techinfocom.nvis.agendartftoxml.model.RtfWord;
+import com.techinfocom.nvis.agendartftoxml.model.AbstractRtfWord;
 import com.techinfocom.nvis.agendartftoxml.statemachine.Event;
 import com.techinfocom.nvis.agendartftoxml.statemachine.EventSink;
 import com.techinfocom.nvis.agendartftoxml.statemachine.StateBase;
 import com.techinfocom.nvis.agendartftoxml.tablesm.TableParser;
-import org.slf4j.Logger;
 
 import java.util.Queue;
 
@@ -20,17 +19,12 @@ import java.util.Queue;
  */
 public class AgendaPassthrough<AI extends DocParser> extends StateBase<AI> implements DocParserState {
     public static final Event AGENDA_END_FOUND = new Event("AGENDA_END_FOUND");
-    private final Queue<RtfWord> dataBuffer;
-    private final AgendaBuilder agendaBuilder;
     private final TableParser tableParser;
 
     State state; //легкое слежение за структурой таблицы, чтобы определить момент её завершения.
 
-    public AgendaPassthrough(AI automation, EventSink eventSink, Queue<RtfWord> dataBuffer,
-                             AgendaBuilder agendaBuilder, TableParser tableParser) {
+    public AgendaPassthrough(final AI automation, final EventSink eventSink, final TableParser tableParser) {
         super(automation, eventSink);
-        this.dataBuffer = dataBuffer;
-        this.agendaBuilder = agendaBuilder;
         this.tableParser = tableParser;
 
         initState();
@@ -41,7 +35,7 @@ public class AgendaPassthrough<AI extends DocParser> extends StateBase<AI> imple
     }
 
     @Override
-    public void analyseWord(RtfWord rtfWord) {
+    public void analyseWord(AbstractRtfWord rtfWord) {
         switch (rtfWord.getRtfWordType()) {
             case COMMAND:
                 RtfCommand rtfCommand = (RtfCommand) rtfWord;
@@ -55,7 +49,7 @@ public class AgendaPassthrough<AI extends DocParser> extends StateBase<AI> imple
     }
 
     @Override
-    public void processWord(RtfWord rtfWord) {
+    public void processWord(AbstractRtfWord rtfWord) {
         tableParser.processWord(rtfWord);
     }
 

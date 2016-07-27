@@ -3,13 +3,13 @@ package com.techinfocom.nvis.agendartftoxml.report;
 /**
  * Created by volkov_kv on 16.06.2016.
  */
-public class WarningMessage extends ReportMessage {
+public class WarningMessage extends AbstractReportMessage {
     public WarningMessage(String message, String estimated) {
         super(ReportMessageType.WARNING, message);
         this.estimated = estimated;
     }
 
-    public WarningMessage(String message) {
+    public WarningMessage(final String message) {
         super(ReportMessageType.WARNING, message);
         this.estimated = null;
     }

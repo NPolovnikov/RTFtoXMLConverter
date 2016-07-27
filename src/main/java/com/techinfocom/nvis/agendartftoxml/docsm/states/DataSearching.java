@@ -8,27 +8,18 @@ import com.techinfocom.nvis.agendartftoxml.report.ErrorMessage;
 import com.techinfocom.nvis.agendartftoxml.statemachine.Event;
 import com.techinfocom.nvis.agendartftoxml.statemachine.EventSink;
 import com.techinfocom.nvis.agendartftoxml.statemachine.StateBase;
-import com.techinfocom.nvis.agendartftoxml.tablesm.TableParser;
-import org.slf4j.Logger;
-
-import java.util.Queue;
 
 /**
  * Класс для детектирования текста или начала таблицы
  */
 public class DataSearching<AI extends DocParser> extends StateBase<AI> implements DocParserState {
     public static final Event SOME_ROW_FOUND = new Event("SOME_ROW_FOUND");//какая-то строка таблицы найдена
-    private final Queue<RtfWord> dataBuffer;
     private final AgendaBuilder agendaBuilder;
-    private final TableParser tableParser;
     private StringBuilder collectedChars;
 
-    public DataSearching(AI automation, EventSink eventSink, Queue<RtfWord> dataBuffer,
-                         AgendaBuilder agendaBuilder, TableParser tableParser) {
+    public DataSearching(final AI automation, final EventSink eventSink, final AgendaBuilder agendaBuilder) {
         super(automation, eventSink);
-        this.dataBuffer = dataBuffer;
         this.agendaBuilder = agendaBuilder;
-        this.tableParser = tableParser;
         initState();
     }
 
@@ -37,7 +28,7 @@ public class DataSearching<AI extends DocParser> extends StateBase<AI> implement
     }
 
     @Override
-    public void analyseWord(RtfWord rtfWord) {
+    public void analyseWord(final AbstractRtfWord rtfWord) {
         switch (rtfWord.getRtfWordType()) {
             case COMMAND:
                 RtfCommand rtfCommand = (RtfCommand) rtfWord;
@@ -47,7 +38,7 @@ public class DataSearching<AI extends DocParser> extends StateBase<AI> implement
     }
 
     @Override
-    public void processWord(RtfWord rtfWord) {
+    public void processWord(final AbstractRtfWord rtfWord) {
         switch (rtfWord.getRtfWordType()) {
             case CHAR:
                 FormatedChar fc = (FormatedChar) rtfWord;
@@ -56,13 +47,13 @@ public class DataSearching<AI extends DocParser> extends StateBase<AI> implement
             case COMMAND:
                 RtfCommand rtfCommand = (RtfCommand) rtfWord;
                 if (rtfCommand.getCommand() == Command.par) {
-                    collectedChars.append("\n");
+                    collectedChars.append('\n');
                 }
                 break;
         }
     }
 
-    private void analyseCommand(RtfCommand rtfCommand) {
+    private void analyseCommand(final RtfCommand rtfCommand) {
         switch (rtfCommand.getCommand()) {
             case trowd: //начало таблицы
                 if(collectedChars.length() > 0) {

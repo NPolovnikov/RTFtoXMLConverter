@@ -28,14 +28,14 @@ import com.rtfparserkit.parser.IRtfSource;
 public class StringTextConverter extends AbstractTextConverter
 {
    @Override
-   public void convert(IRtfSource source) throws IOException
+   public void convert(final IRtfSource source) throws IOException
    {
       buffer.setLength(0);
       super.convert(source);
    }
 
    @Override
-   public void processExtractedText(String text)
+   public void processExtractedText(final String text)
    {
       buffer.append(text);
    }
@@ -45,5 +45,5 @@ public class StringTextConverter extends AbstractTextConverter
       return buffer.toString();
    }
 
-   private StringBuilder buffer = new StringBuilder();
+   private final StringBuilder buffer = new StringBuilder();
 }

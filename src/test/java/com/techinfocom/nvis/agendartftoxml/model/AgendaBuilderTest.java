@@ -6,8 +6,6 @@ import org.testng.annotations.Test;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.time.LocalDate;
 
-import static org.testng.Assert.*;
-
 /**
  * Created by volkov_kv on 16.06.2016.
  */

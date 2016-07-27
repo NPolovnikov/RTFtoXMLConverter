@@ -26,7 +26,7 @@ public class Name<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     }
 
     @Override
-    public void processChar(FormatedChar fc) {
+    public void processChar(final FormatedChar fc) {
         if (fc.getC() == '\n') {
             eventSink.castEvent(PAR_FOUND);
             LOGGER.debug("state={}. Обнаружен \\n. ", STATE_NAME);
@@ -35,7 +35,7 @@ public class Name<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
             if (currentName == null) {
                 currentName = "";
             }
-            agendaBuilder.getSpeaker().setName(currentName + String.valueOf(fc.getC()));
+            agendaBuilder.getSpeaker().setName(currentName + fc.getC());
         }
     }
 
@@ -56,7 +56,7 @@ public class Name<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
 //    }
 
     @Override
-    public void analyseFormat(FormatedChar fc) {
+    public void analyseFormat(final FormatedChar fc) {
         //неформатированый- новый докладчик в текущем докладе
         if (fc.getTextFormat().getFontFormat().isEmpty() &&
                 fc.getC() != '\n' && fc.getC() != ' ') {    //но не перевод и не пробелы, иначе можно ошибочно переключиться в ожидание следующей должности

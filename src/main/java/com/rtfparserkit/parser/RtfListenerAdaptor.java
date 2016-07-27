@@ -18,7 +18,7 @@ package com.rtfparserkit.parser;
 
 import com.rtfparserkit.rtf.Command;
 
-/** 
+/**
  * This adaptor class is provided as a convenience for users of the IRtfListener
  * interface. Subclass this class to provide an implementation of IRtfListener
  * and override just the methods you need.
@@ -50,25 +50,25 @@ public class RtfListenerAdaptor implements IRtfListener
    }
 
    @Override
-   public void processCharacterBytes(byte[] data)
+   public void processCharacterBytes(final byte[] data)
    {
 
    }
 
    @Override
-   public void processBinaryBytes(byte[] data)
+   public void processBinaryBytes(final byte[] data)
    {
 
    }
 
    @Override
-   public void processString(String string)
+   public void processString(final String string)
    {
 
    }
 
    @Override
-   public void processCommand(Command command, int parameter, boolean hasParameter, boolean optional)
+   public void processCommand(final Command command, final int parameter, final boolean hasParameter, final boolean optional)
    {
 
    }

@@ -3,8 +3,8 @@ package com.techinfocom.nvis.agendartftoxml.model;
 /**
  * Created by volkov_kv on 11.06.2016.
  */
-public class FormatedChar extends RtfWord {
-    public FormatedChar(char c, TextFormat textFormat) {
+public class FormatedChar extends AbstractRtfWord {
+    public FormatedChar(final char c, final TextFormat textFormat) {
         super(RtfWordType.CHAR);
         this.c = c;
         this.textFormat = textFormat;

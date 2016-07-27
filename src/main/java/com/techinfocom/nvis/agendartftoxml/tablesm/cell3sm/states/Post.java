@@ -28,7 +28,7 @@ public class Post<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     }
 
     @Override
-    public void processChar(FormatedChar fc) {
+    public void processChar(final FormatedChar fc) {
         //нашли перевод строки. далее будем ожидать либо жирного имени, либо другой должности, либо типа доклада
         if (fc.getC() == '\n') {
             eventSink.castEvent(PAR_FOUND);
@@ -48,7 +48,7 @@ public class Post<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
 //    }
 
     @Override
-    public void analyseFormat(FormatedChar fc) {
+    public void analyseFormat(final FormatedChar fc) {
         //жирный текст- ФИО докладчика
         if (fc.getTextFormat().fontContain(b) &&
                 fc.getC() != '\n' && fc.getC() != ' ') {

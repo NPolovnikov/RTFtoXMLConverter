@@ -27,10 +27,10 @@ interface IParserEvent
    /**
     * Retrieve the event type.
     */
-   public ParserEventType getType();
+   ParserEventType getType();
 
    /**
     * Pass this event to the listener.
     */
-   public void fire(IRtfListener listener);
+   void fire(IRtfListener listener);
 }

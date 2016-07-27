@@ -29,7 +29,7 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
     }
 
     @Override
-    public void processChar(FormatedChar fc) {
+    public void processChar(final FormatedChar fc) {
         //текста тут быть не может. А если появился- значит нарушена структура.
         agendaBuilder.appendToIgnored(String.valueOf(fc.getC()));
     }
@@ -45,8 +45,8 @@ public class WaitForSpeakers<AI extends Cell3Parser> extends StateBase<AI> imple
 //    }
 
     @Override
-    public void analyseFormat(FormatedChar fc) {
-        Pattern p = Pattern.compile("[a-zA-Zа-яА-ЯёЁ]");//только буква
+    public void analyseFormat(final FormatedChar fc) {
+        final Pattern p = Pattern.compile("[a-zA-Zа-яА-ЯёЁ]");//только буква
         //если поймали подчеркнутый, НЕ НАКЛОННЫЙ текст, то это тип доклада, и началось описание докладчиков.
         if (fc.getTextFormat().fontContain(ul) &&
                 !fc.getTextFormat().fontContain(i) &&

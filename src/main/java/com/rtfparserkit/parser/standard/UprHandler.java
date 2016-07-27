@@ -42,7 +42,7 @@ public class UprHandler implements IParserEventHandler
    /**
     * Buffers events until the end of the group containing the upr command is reached.
     * Once the end of the group is reached, the buffered events representing the
-    * Unicode content is sent to the listener. 
+    * Unicode content is sent to the listener.
     */
    @Override
    public void handleEvent(IParserEvent event)
@@ -101,7 +101,7 @@ public class UprHandler implements IParserEventHandler
 
    /**
     * Extracts the Unicode version of the commands wrapped by the upr
-    * command and passes them to the listener. 
+    * command and passes them to the listener.
     */
    private void processCommands()
    {
@@ -115,7 +115,7 @@ public class UprHandler implements IParserEventHandler
          IParserEvent event = events.get(index);
          if (event.getType() == ParserEventType.COMMAND_EVENT)
          {
-            CommandEvent command = (CommandEvent) event;
+            final CommandEvent command = (CommandEvent) event;
             if (command.getCommand() == Command.ud)
             {
                break;

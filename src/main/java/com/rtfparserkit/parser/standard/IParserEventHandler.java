@@ -22,25 +22,25 @@ package com.rtfparserkit.parser.standard;
  * but there may be cases where we may wish to implement something like a state machine
  * to consume a set of related events, then take some action based on the complete set
  * of events read, rather than reacting to events one at a time.
- * 
+ *
  * This interface allows this functionality to be switched in and out as required.
  */
 interface IParserEventHandler
 {
    /**
-    * The parser informs the handler of an event. 
+    * The parser informs the handler of an event.
     */
-   public void handleEvent(IParserEvent event);
+   void handleEvent(IParserEvent event);
 
    /**
     * Retrieve the last event seen by the handler.
     */
-   public IParserEvent getLastEvent();
+   IParserEvent getLastEvent();
 
    /**
     * Assumes the handler is buffering events, and removes the last event from this buffer.
     */
-   public void removeLastEvent();
+   void removeLastEvent();
 
    /**
     * Returns false if this handler is OK to receive further events, or true
@@ -49,5 +49,5 @@ interface IParserEventHandler
     * last handler from the stack when the current handler has consumed all the events
     * it can.
     */
-   public boolean isComplete();
+   boolean isComplete();
 }

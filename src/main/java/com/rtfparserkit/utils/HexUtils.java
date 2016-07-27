@@ -51,7 +51,7 @@ public class HexUtils
    /**
     * Convert a string of hex digits into an array of bytes.
     */
-   public static final byte[] parseHexString(String hex)
+   public static final byte[] parseHexString(final String hex)
    {
       if (hex.length() % 2 != 0)
       {

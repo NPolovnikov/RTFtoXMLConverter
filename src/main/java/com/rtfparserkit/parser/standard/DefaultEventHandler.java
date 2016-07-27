@@ -37,12 +37,12 @@ class DefaultEventHandler implements IParserEventHandler
    }
 
    /**
-    * If we've reached the end of the document, flush all queued events to 
+    * If we've reached the end of the document, flush all queued events to
     * the listener and pass on the document end event.
     * If we have received consecutive string events, coalesce them into
     * a single event in the buffer.
     * If the buffer has reached its maximum size, remove the event from the
-    * front of the buffer and pass this to the listener. 
+    * front of the buffer and pass this to the listener.
     */
    @Override
    public void handleEvent(IParserEvent event)
@@ -54,7 +54,7 @@ class DefaultEventHandler implements IParserEventHandler
       }
       else
       {
-         IParserEvent lastEvent = events.peekLast();
+         final IParserEvent lastEvent = events.peekLast();
          if (lastEvent != null && lastEvent.getType() == ParserEventType.STRING_EVENT && event.getType() == ParserEventType.STRING_EVENT)
          {
             event = mergeStringEvents((StringEvent) event);

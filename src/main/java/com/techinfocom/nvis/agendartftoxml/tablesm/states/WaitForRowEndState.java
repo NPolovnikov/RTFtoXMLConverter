@@ -23,7 +23,7 @@ public class WaitForRowEndState<AI extends TableParser> extends StateBase<AI> im
     }
 
     @Override
-    public void processWord(RtfWord rtfWord) {
+    public void processWord(AbstractRtfWord rtfWord) {
         switch (rtfWord.getRtfWordType()) {
             case COMMAND:
                 processCommand((RtfCommand) rtfWord);
@@ -39,11 +39,11 @@ public class WaitForRowEndState<AI extends TableParser> extends StateBase<AI> im
 
     }
 
-    public void processChar(FormatedChar fc) {
+    public void processChar(final FormatedChar fc) {
         //ignore any stringsq
     }
 
-    public void processCommand(RtfCommand rtfCommand) {
+    public void processCommand(final RtfCommand rtfCommand) {
         switch (rtfCommand.getCommand()) {
             case row:
                 LOGGER.debug("В состоянии WaitForRowEnd поймали row");

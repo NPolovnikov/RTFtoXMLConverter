@@ -6,8 +6,10 @@ package com.techinfocom.nvis.agendartftoxml.statemachine;
 public class Event {
     private final String name;
 
-    public Event(String name){
-        if (name == null) throw new IllegalArgumentException();
+    public Event(final String name) {
+        if (name == null) {
+            throw new IllegalArgumentException();
+        }
         this.name = name;
     }
 

@@ -39,9 +39,12 @@ public class RawRtfParser implements IRtfParser
 {
    /**
     * Parse RTF data from an input source.
+     * @param source
+     * @param listener
+     * @throws java.io.IOException
     */
    @Override
-   public void parse(IRtfSource source, IRtfListener listener) throws IOException
+   public void parse(final IRtfSource source, final IRtfListener listener) throws IOException
    {
       this.source = source;
       this.listener = listener;
@@ -153,8 +156,8 @@ public class RawRtfParser implements IRtfParser
       boolean commandHasParameter = false;
       boolean parameterIsNegative = false;
       int parameterValue = 0;
-      StringBuilder commandText = new StringBuilder();
-      StringBuilder parameterText = new StringBuilder();
+      final StringBuilder commandText = new StringBuilder();
+      final StringBuilder parameterText = new StringBuilder();
 
       int ch = source.read();
       if (ch == -1)
@@ -242,12 +245,12 @@ public class RawRtfParser implements IRtfParser
    }
 
    /**
-    * Determine what to do with the extracted command. 
+    * Determine what to do with the extracted command.
     */
-   private void handleCommand(StringBuilder commandBuffer, int parameter, boolean hasParameter) throws IOException
+   private void handleCommand(final StringBuilder commandBuffer, final int parameter, final boolean hasParameter) throws IOException
    {
-      String commandName = commandBuffer.toString();
-      Command command = Command.getInstance(commandName);
+      final String commandName = commandBuffer.toString();
+      final Command command = Command.getInstance(commandName);
 
       //
       // Note that we silently ignore commands that we don't recognise
@@ -295,10 +298,10 @@ public class RawRtfParser implements IRtfParser
    /**
     * Pass binary data to the listener.
     */
-   private void handleBinaryData(int size) throws IOException
+   private void handleBinaryData(final int size) throws IOException
    {
-      byte[] data = new byte[size];
-      int bytesRead = source.read(data);
+      final byte[] data = new byte[size];
+      final int bytesRead = source.read(data);
       if (bytesRead != size)
       {
          throw new EOFException();

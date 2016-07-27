@@ -26,7 +26,7 @@ public class Text<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
     }
 
     @Override
-    public void processChar(FormatedChar fc) {
+    public void processChar(final FormatedChar fc) {
         //перевод строки все равно запомним. Не дело восстанавливать из другого состояния, угадывая, что он был.
         String text = agendaBuilder.getAgendaItem().getText();
         if (text == null) {
@@ -57,7 +57,7 @@ public class Text<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
             eventSink.castEvent(PAR_FOUND);
         }
 
-        agendaBuilder.getAgendaItem().setText(text + String.valueOf(fc.getC()));
+        agendaBuilder.getAgendaItem().setText(text + fc.getC());
     }
 
 //    @Override
@@ -74,7 +74,7 @@ public class Text<AI extends Cell3Parser> extends StateBase<AI> implements Cell3
 //    }
 
     @Override
-    public void analyseFormat(FormatedChar fc) {
+    public void analyseFormat(final FormatedChar fc) {
 
     }
 

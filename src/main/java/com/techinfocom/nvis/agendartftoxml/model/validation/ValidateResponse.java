@@ -1,13 +1,13 @@
 package com.techinfocom.nvis.agendartftoxml.model.validation;
 
-import com.techinfocom.nvis.agendartftoxml.report.ReportMessage;
+import com.techinfocom.nvis.agendartftoxml.report.AbstractReportMessage;
 
 /**
  * Created by volkov_kv on 19.06.2016.
  */
 public class ValidateResponse<T> {
     T value;
-    ReportMessage message;
+    AbstractReportMessage message;
 
     public T getValue() {
         return value;
@@ -17,11 +17,11 @@ public class ValidateResponse<T> {
         this.value = value;
     }
 
-    public ReportMessage getMessage() {
+    public AbstractReportMessage getMessage() {
         return message;
     }
 
-    public void setMessage(ReportMessage message) {
+    public void setMessage(AbstractReportMessage message) {
         this.message = message;
     }
 }

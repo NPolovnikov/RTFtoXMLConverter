@@ -1,6 +1,6 @@
 package com.techinfocom.nvis.agendartftoxml.docsm;
 
-import com.techinfocom.nvis.agendartftoxml.model.RtfWord;
+import com.techinfocom.nvis.agendartftoxml.model.AbstractRtfWord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 public interface DocParser {
     Logger LOGGER = LoggerFactory.getLogger(DocParser.class);
 
-    void processWord(RtfWord rtfWord);
+    void processWord(AbstractRtfWord rtfWord);
 
     void processDocumentEnd();
 }

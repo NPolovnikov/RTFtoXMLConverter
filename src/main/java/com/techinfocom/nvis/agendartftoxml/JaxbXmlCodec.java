@@ -14,8 +14,6 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 /**
  * Created by volkov_kv on 22.10.2015.
@@ -56,8 +54,8 @@ public class JaxbXmlCodec {
     }
 
 
-    public byte[] marshalData(Agenda request) throws MarshalingException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    public byte[] marshalData(final Agenda request) throws MarshalingException {
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         if (request == null ||
                 request.getItemOrBlock().size() <= 0) {
             return baos.toByteArray();

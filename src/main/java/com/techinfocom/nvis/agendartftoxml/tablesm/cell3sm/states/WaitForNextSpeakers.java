@@ -30,7 +30,7 @@ public class WaitForNextSpeakers<AI extends Cell3Parser> extends StateBase<AI> i
     }
 
     @Override
-    public void processChar(FormatedChar fc) {
+    public void processChar(final FormatedChar fc) {
         //текста тут быть не может. А если появился- значит нарушена структура.
         agendaBuilder.appendToIgnored(String.valueOf(fc.getC()));
     }
@@ -45,7 +45,7 @@ public class WaitForNextSpeakers<AI extends Cell3Parser> extends StateBase<AI> i
 //    }
 
     @Override
-    public void analyseFormat(FormatedChar fc) {
+    public void analyseFormat(final FormatedChar fc) {
         Pattern p = Pattern.compile("[a-zA-Zа-яА-ЯёЁ]");//только буква
         //подчеркнутый, не наклонный. Еще группа докладчиков
         if (fc.getTextFormat().fontContain(ul) &&

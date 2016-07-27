@@ -27,7 +27,7 @@ class CommandEvent implements IParserEvent
    /**
     * Constructor.
     */
-   public CommandEvent(Command command, int parameter, boolean hasParameter, boolean optional)
+   public CommandEvent(final Command command, final int parameter, final boolean hasParameter, final boolean optional)
    {
       this.command = command;
       this.parameter = parameter;
@@ -48,7 +48,7 @@ class CommandEvent implements IParserEvent
     * Pass the event to the listener.
     */
    @Override
-   public void fire(IRtfListener listener)
+   public void fire(final IRtfListener listener)
    {
       listener.processCommand(command, parameter, hasParameter, optional);
    }

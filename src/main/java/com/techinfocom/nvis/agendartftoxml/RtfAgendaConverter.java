@@ -7,7 +7,6 @@ import com.rtfparserkit.parser.standard.StandardRtfParser;
 import com.techinfocom.nvis.agendartftoxml.report.ConversionReport;
 import com.techinfocom.nvis.agendartftoxml.report.ErrorMessage;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 /**

@@ -14,7 +14,6 @@ import static com.rtfparserkit.rtf.Command.intbl;
  */
 public class Cell2State<AI extends TableParser> extends StateBase<AI> implements TableParser {
     private static final Logger LOGGER = com.techinfocom.nvis.agendartftoxml.Logger.LOGGER;
-    private static final String STATE_NAME = Cell2State.class.getSimpleName().toUpperCase();
     public static final Event CELL_END = new Event("CELL_END");
     public static final Event ROW_END = new Event("ROW_END");
     private final AgendaBuilder agendaBuilder;
@@ -28,7 +27,7 @@ public class Cell2State<AI extends TableParser> extends StateBase<AI> implements
     }
 
     @Override
-    public void processWord(RtfWord rtfWord) {
+    public void processWord(AbstractRtfWord rtfWord) {
         switch (rtfWord.getRtfWordType()) {
             case COMMAND:
                 processCommand((RtfCommand) rtfWord);
@@ -45,15 +44,15 @@ public class Cell2State<AI extends TableParser> extends StateBase<AI> implements
     }
 
 
-    public void processChar(FormatedChar fc) {
+    public void processChar(final FormatedChar fc) {
         if (fc.getTextFormat().paragraphContain(intbl)) {
             collected.append(fc.getC());
         }
     }
 
 
-    public void processCommand(RtfCommand rtfCommand) {
-        TextFormat textFormat = rtfCommand.getTextFormat();
+    public void processCommand(final RtfCommand rtfCommand) {
+        final TextFormat textFormat = rtfCommand.getTextFormat();
 
         switch (rtfCommand.getCommand()) {
             case par:

@@ -6,7 +6,7 @@ import com.techinfocom.nvis.agendartftoxml.docsm.DocParserState;
 import com.techinfocom.nvis.agendartftoxml.model.AgendaBuilder;
 import com.techinfocom.nvis.agendartftoxml.model.FormatedChar;
 import com.techinfocom.nvis.agendartftoxml.model.RtfCommand;
-import com.techinfocom.nvis.agendartftoxml.model.RtfWord;
+import com.techinfocom.nvis.agendartftoxml.model.AbstractRtfWord;
 import com.techinfocom.nvis.agendartftoxml.report.WarningMessage;
 import com.techinfocom.nvis.agendartftoxml.statemachine.Event;
 import com.techinfocom.nvis.agendartftoxml.statemachine.EventSink;
@@ -23,19 +23,17 @@ import java.util.function.Predicate;
 public class RowBuffering<AI extends DocParser> extends StateBase<AI> implements DocParserState {
     public static final Event AGENDA_FOUND = new Event("AGENDA_FOUND");
     public static final Event TABLE_END_FOUND = new Event("TABLE_END_FOUND");
-    private final Queue<RtfWord> wordBuffer;
+    private final Queue<AbstractRtfWord> wordBuffer;
     private final AgendaBuilder agendaBuilder;
     private final TableParser tableParser;
 
     private Integer cellCount;
 
-    public RowBuffering(AI automation, EventSink eventSink, Queue<RtfWord> wordBuffer,
-                        AgendaBuilder agendaBuilder, TableParser tableParser) {
+    public RowBuffering(final AI automation, final EventSink eventSink, final Queue<AbstractRtfWord> wordBuffer, final AgendaBuilder agendaBuilder, final TableParser tableParser) {
         super(automation, eventSink);
         this.wordBuffer = wordBuffer;
         this.agendaBuilder = agendaBuilder;
         this.tableParser = tableParser;
-
         initState();
     }
 
@@ -45,7 +43,7 @@ public class RowBuffering<AI extends DocParser> extends StateBase<AI> implements
     }
 
     @Override
-    public void analyseWord(RtfWord rtfWord) {
+    public void analyseWord(final AbstractRtfWord rtfWord) {
         switch (rtfWord.getRtfWordType()) {
             case COMMAND:
                 RtfCommand rtfCommand = (RtfCommand) rtfWord;
@@ -59,7 +57,7 @@ public class RowBuffering<AI extends DocParser> extends StateBase<AI> implements
     }
 
     @Override
-    public void processWord(RtfWord rtfWord) {
+    public void processWord(final AbstractRtfWord rtfWord) {
         switch (rtfWord.getRtfWordType()) {
             case COMMAND:
                 RtfCommand rtfCommand = (RtfCommand) rtfWord;
@@ -72,7 +70,7 @@ public class RowBuffering<AI extends DocParser> extends StateBase<AI> implements
         }
     }
 
-    private void analyseCommand(RtfCommand rtfCommand) {
+    private void analyseCommand(final RtfCommand rtfCommand) {
         switch (rtfCommand.getCommand()) {
             case par:
                 if (!rtfCommand.getTextFormat().paragraphContain(Command.intbl)) { //текст снова просится в таблицу- значит таблица продолжается.
@@ -84,7 +82,7 @@ public class RowBuffering<AI extends DocParser> extends StateBase<AI> implements
         }
     }
 
-    private void analyseChar(FormatedChar fc) {
+    private void analyseChar(final FormatedChar fc) {
         if (!fc.getTextFormat().paragraphContain(Command.intbl)) { //есть ли текст вне таблицы?
             //таблица кончилась, пошел обычный текст
             initState();
@@ -93,7 +91,7 @@ public class RowBuffering<AI extends DocParser> extends StateBase<AI> implements
         }
     }
 
-    private void processCommand(RtfCommand rtfCommand) {
+    private void processCommand(final RtfCommand rtfCommand) {
         wordBuffer.add(rtfCommand);
 
         switch (rtfCommand.getCommand()) {
@@ -115,8 +113,8 @@ public class RowBuffering<AI extends DocParser> extends StateBase<AI> implements
 
                 } else {
                     // Склеим все ячейки и попробуем найти дату заседания
-                    StringBuilder sb = new StringBuilder();
-                    Predicate<RtfWord> isString = (w) -> {
+                    final StringBuilder sb = new StringBuilder();
+                    Predicate<AbstractRtfWord> isString = (w) -> {
                         switch (w.getRtfWordType()) {
                             case CHAR:
                                 return true;
@@ -133,7 +131,7 @@ public class RowBuffering<AI extends DocParser> extends StateBase<AI> implements
                                 return false;
                         }
                     };
-                    Function<RtfWord, Character> toChar = (w) -> {
+                    final Function<AbstractRtfWord, Character> toChar = (w) -> {
                         switch (w.getRtfWordType()) {
                             case CHAR:
                                 return ((FormatedChar) w).getC();
@@ -153,7 +151,7 @@ public class RowBuffering<AI extends DocParser> extends StateBase<AI> implements
         }
     }
 
-    private void processChar(FormatedChar formatedChar) {
+    private void processChar(final FormatedChar formatedChar) {
         wordBuffer.add(formatedChar); // TODO: 15.06.2016 проверить каковы ограничения очереди на размер. Когда вылетит исключение?
     }
 

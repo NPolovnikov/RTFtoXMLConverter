@@ -25,9 +25,9 @@ public interface IRtfParser
 {
    /**
     * At the point the parser is constructed, a listener will have been
-    * supplied by the caller. When this method is called, the parser reads 
+    * supplied by the caller. When this method is called, the parser reads
     * RTF data from the source and calls the listener with details
     * of the content.
     */
-   public void parse(IRtfSource source, IRtfListener listener) throws IOException;
+   void parse(IRtfSource source, IRtfListener listener) throws IOException;
 }

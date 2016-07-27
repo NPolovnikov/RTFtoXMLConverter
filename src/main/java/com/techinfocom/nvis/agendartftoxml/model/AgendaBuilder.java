@@ -29,7 +29,6 @@ public class AgendaBuilder {
     private final ObjectFactory objectFactory;
     private final Agenda agenda;
     private int parsedRowCount = 0;
-    private int acceptedRowCount = 0;
     private final ConversionReport conversionReport;
     private final AgendaValidator agendaValidator;
     private String ignoredString = ""; //при возникновении ошибок в структуре документа можем проигнорировать текст. Отследим это
@@ -94,9 +93,9 @@ public class AgendaBuilder {
             }
 
             //проверим не возник ли проигнорированный текст
-            if(!ignoredString.isEmpty()){
+            if (!ignoredString.isEmpty()) {
                 WarningMessage warningMessage = new WarningMessage("Вероятно, нарушена структура документа. " +
-                        "В пункте " + extractNumber(currentItem) + " проигнорирован текст: "+ ignoredString);
+                        "В пункте " + extractNumber(currentItem) + " проигнорирован текст: " + ignoredString);
                 conversionReport.collectMessage(warningMessage);
                 ignoredString = "";
             }
@@ -104,7 +103,9 @@ public class AgendaBuilder {
             agendaValidator.validate(currentItem, conversionReport);
             agenda.getItemOrBlock().add(currentItem);
             currentItem = null;
-        } else throw new RuntimeException("can't merge null currentItem");
+        } else {
+            throw new RuntimeException("can't merge null currentItem");
+        }
     }
 
     public void mergeGroup() {
@@ -130,7 +131,9 @@ public class AgendaBuilder {
             agendaValidator.validate(currentSpeaker, conversionReport);
             currentGroup.getSpeakers().getSpeaker().add(currentSpeaker);
             currentSpeaker = null;//чтобы null poiter сгенерировался, если криво начнем контекст отслеживать.
-        } else throw new RuntimeException("can't merge null currentSpeaker");
+        } else {
+            throw new RuntimeException("can't merge null currentSpeaker");
+        }
     }
 
     public void dropAgendaItem() {
@@ -167,11 +170,11 @@ public class AgendaBuilder {
      * @param srcStr
      * @return
      */
-    public String conformString(String srcStr) {
+    public String conformString(final String srcStr) {
         String conformed = null;
         if (srcStr != null) {
             conformed = srcStr.replaceAll("  ", " ");
-            List<String> pars = Arrays.asList(conformed.split("(\\r\\n)|(\\n)"));
+            final List<String> pars = Arrays.asList(conformed.split("(\\r\\n)|(\\n)"));
             //раскладывает на абзацы, удаляет начальные конечные пробелы, удаляет пустые абзацы, складывает обратно через перевод каретки.
             conformed = pars.stream()
                     .map(String::trim)
@@ -192,8 +195,8 @@ public class AgendaBuilder {
     }
 
 
-    public boolean meetingDateExtractAndSave(String string) {
-        List<Pattern> patterns = new ArrayList<>();
+    public boolean meetingDateExtractAndSave(final String string) {
+        final List<Pattern> patterns = new ArrayList<>();
         patterns.add(Pattern.compile("(\\d{1,2}) {1,4}([^ \\d]{3,10}) {1,4}(20\\d{2})", Pattern.MULTILINE)); //формат 10 мая 2016 года
         patterns.add(Pattern.compile("(\\d{1,2})\\.(\\d{2})\\.(20\\d{2})", Pattern.MULTILINE)); //формат 10.05.2016
         LocalDate date = null;
@@ -201,9 +204,9 @@ public class AgendaBuilder {
         try {
             m = patterns.get(0).matcher(string);
             if (date == null && m.find()) {
-                int day = Integer.valueOf(m.group(1));
-                String month = m.group(2);
-                int year = Integer.valueOf(m.group(3));
+                final int day = Integer.parseInt(m.group(1));
+                final String month = m.group(2);
+                final int year = Integer.parseInt(m.group(3));
                 Month mo = getMonth(month);
                 if (mo != null) {
                     date = LocalDate.of(year, mo, day);
@@ -212,9 +215,9 @@ public class AgendaBuilder {
 
             m = patterns.get(1).matcher(string);
             if (date == null && m.find()) {
-                int day = Integer.valueOf(m.group(1));
-                int mo = Integer.valueOf(m.group(2));
-                int year = Integer.valueOf(m.group(3));
+                int day = Integer.parseInt(m.group(1));
+                int mo = Integer.parseInt(m.group(2));
+                int year = Integer.parseInt(m.group(3));
                 date = LocalDate.of(year, mo, day);
             }
 
@@ -224,14 +227,16 @@ public class AgendaBuilder {
                 xcal = DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
                 agenda.setMeetingDate(xcal);
                 return true;
-            } else return false;
+            } else {
+                return false;
+            }
         } catch (Exception e) {
             return false;
         }
 
     }
 
-    private Month getMonth(String month) {
+    private Month getMonth(final String month) {
         switch (month.toLowerCase()) {
             case "января":
                 return Month.JANUARY;
@@ -263,19 +268,19 @@ public class AgendaBuilder {
     }
 
     public void splitTextToItem() {
-        String text = currentItem.getText();
+        final String text = currentItem.getText();
         if (text == null) {
             return;
         }
-        List<String> pars = Arrays.asList(text.split("(\\n)|(\\r\\n)"));
+        final List<String> pars = Arrays.asList(text.split("(\\n)|(\\r\\n)"));
         String first = pars.get(0); //абзацы
 
-        Matcher m = rnPattern.matcher(first);
+        final Matcher m = rnPattern.matcher(first);
         //Если в первом абзаце найден номер
         if (m.find()) {
             String rn = m.group(1);//выделим номер
-            String addon = first.substring(0, m.start()).trim(); //до номера
-            String textNew = first.substring(m.end(), first.length()); //после номера
+            final String addon = first.substring(0, m.start()).trim(); //до номера
+            final String textNew = first.substring(m.end(), first.length()); //после номера
 
             //addon = addon.replaceAll("(<sup>)|(</sup>)", "");//удалим html-теги из элементов, в которых они не разрешены
             currentItem.setAddon(addon);
@@ -284,9 +289,9 @@ public class AgendaBuilder {
         } else {
             currentItem.setText(first);
         }
-        NotesList notesList = new NotesList();
+        final NotesList notesList = new NotesList();
         for (int i = 1; i < pars.size(); i++) {
-            String par = pars.get(i);
+            final String par = pars.get(i);
             //par = par.replaceAll("(<sup>)|(</sup>)", "");//удалим html-теги из элементов, в которых они не разрешены
             notesList.getNote().add(par);
         }
@@ -299,7 +304,7 @@ public class AgendaBuilder {
         return supActive;
     }
 
-    public void setSupActive(boolean supActive) {
+    public void setSupActive(final boolean supActive) {
         this.supActive = supActive;
     }
 
@@ -307,16 +312,16 @@ public class AgendaBuilder {
         return subActive;
     }
 
-    public void setSubActive(boolean subActive) {
+    public void setSubActive(final boolean subActive) {
         this.subActive = subActive;
     }
 
-    public void appendToIgnored(String s){
+    public void appendToIgnored(final String s) {
         ignoredString += s;
     }
 
-    private String extractNumber(AgendaItem agendaItem){
-        if (agendaItem == null){
+    private String extractNumber(final AgendaItem agendaItem) {
+        if (agendaItem == null) {
             return null;
         }
         String number;

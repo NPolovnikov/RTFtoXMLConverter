@@ -6,20 +6,16 @@ import com.techinfocom.nvis.agendartftoxml.model.agenda.Group;
 import com.techinfocom.nvis.agendartftoxml.report.ConversionReport;
 import com.techinfocom.nvis.agendartftoxml.report.WarningMessage;
 import com.typesafe.config.Config;
-import com.typesafe.config.ConfigException;
-import org.slf4j.Logger;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * Created by volkov_kv on 16.06.2016.
  */
 public class AgendaValidator {
-    private static final Logger LOGGER = com.techinfocom.nvis.agendartftoxml.Logger.LOGGER;
+    private static final String IN_PUNKT = "В пункте ";
     private final Config config;
 
     public AgendaValidator() {
@@ -33,67 +29,67 @@ public class AgendaValidator {
      * @param agendaItem
      * @param conversionReport
      */
-    public void validate(AgendaItem agendaItem, ConversionReport conversionReport) {
+    public void validate(final AgendaItem agendaItem, final ConversionReport conversionReport) {
         if (agendaItem == null) {
             return;
         }
         Config itemValidationRules = config.getConfig("agendaItem");
 
         if (agendaItem.getNumber() != null) {
-            ValidateResponse<String> nvr = validate(agendaItem.getNumber(), itemValidationRules.getConfig("number"));
+            final ValidateResponse<String> nvr = validate(agendaItem.getNumber(), itemValidationRules.getConfig("number"));
             agendaItem.setNumber(nvr.getValue());
             if (nvr.getMessage() != null) {
-                String strMessage = nvr.getMessage().getMessage();
-                nvr.getMessage().setMessage("В пункте " + agendaItem.getNumber() + ", в номере пункта порядка работы " + strMessage);
+                final String strMessage = nvr.getMessage().getMessage();
+                nvr.getMessage().setMessage(IN_PUNKT + agendaItem.getNumber() + ", в номере пункта порядка работы " + strMessage);
                 conversionReport.collectMessage(nvr.getMessage());
             }
         }
         if (agendaItem.getInfo() != null) {
-            ValidateResponse<String> ivr = validate(agendaItem.getInfo(), itemValidationRules.getConfig("info"));
+            final ValidateResponse<String> ivr = validate(agendaItem.getInfo(), itemValidationRules.getConfig("info"));
             agendaItem.setInfo(ivr.getValue());
             if (ivr.getMessage() != null) {
-                String strMessage = ivr.getMessage().getMessage();
-                ivr.getMessage().setMessage("В пункте " + agendaItem.getNumber() + ", в доп информации " + strMessage);
+                final String strMessage = ivr.getMessage().getMessage();
+                ivr.getMessage().setMessage(IN_PUNKT + agendaItem.getNumber() + ", в доп информации " + strMessage);
                 conversionReport.collectMessage(ivr.getMessage());
             }
         }
         if (agendaItem.getAddon() != null) {
-            ValidateResponse<String> avr = validate(agendaItem.getAddon(), itemValidationRules.getConfig("addon"));
+            final ValidateResponse<String> avr = validate(agendaItem.getAddon(), itemValidationRules.getConfig("addon"));
             agendaItem.setAddon(avr.getValue());
             if (avr.getMessage() != null) {
-                String strMessage = avr.getMessage().getMessage();
-                avr.getMessage().setMessage("В пункте " + agendaItem.getNumber() + ", в дополнении " + strMessage);
+                final String strMessage = avr.getMessage().getMessage();
+                avr.getMessage().setMessage(IN_PUNKT + agendaItem.getNumber() + ", в дополнении " + strMessage);
                 conversionReport.collectMessage(avr.getMessage());
             }
         }
         if (agendaItem.getRn() != null) {
-            ValidateResponse<String> rvr = validate(agendaItem.getRn(), itemValidationRules.getConfig("rn"));
+            final ValidateResponse<String> rvr = validate(agendaItem.getRn(), itemValidationRules.getConfig("rn"));
             agendaItem.setRn(rvr.getValue());
             if (rvr.getMessage() != null) {
-                String strMessage = rvr.getMessage().getMessage();
-                rvr.getMessage().setMessage("В пункте " + agendaItem.getNumber() + ", в номере документа " + strMessage);
+                final String strMessage = rvr.getMessage().getMessage();
+                rvr.getMessage().setMessage(IN_PUNKT + agendaItem.getNumber() + ", в номере документа " + strMessage);
                 conversionReport.collectMessage(rvr.getMessage());
             }
         }
         if (agendaItem.getText() != null) {
-            ValidateResponse<String> tvr = validate(agendaItem.getText(), itemValidationRules.getConfig("text"));
+            final ValidateResponse<String> tvr = validate(agendaItem.getText(), itemValidationRules.getConfig("text"));
             agendaItem.setText(tvr.getValue());
             if (tvr.getMessage() != null) {
-                String strMessage = tvr.getMessage().getMessage();
-                tvr.getMessage().setMessage("В пункте " + agendaItem.getNumber() + ", в тексте пункта порядка работы " + strMessage);
+                final String strMessage = tvr.getMessage().getMessage();
+                tvr.getMessage().setMessage(IN_PUNKT + agendaItem.getNumber() + ", в тексте пункта порядка работы " + strMessage);
                 conversionReport.collectMessage(tvr.getMessage());
             }
         }
         if (agendaItem.getNotes() != null && !agendaItem.getNotes().getNote().isEmpty()) {
-            List<String> noteList = agendaItem.getNotes().getNote();
-            Config validationConfig = itemValidationRules.getConfig("notes.note");
+            final List<String> noteList = agendaItem.getNotes().getNote();
+            final Config validationConfig = itemValidationRules.getConfig("notes.note");
             for (int i = 0; i < noteList.size(); i++) {
-                String s = noteList.get(i);
-                ValidateResponse<String> nvr = validate(s, validationConfig);
+                final String s = noteList.get(i);
+                final ValidateResponse<String> nvr = validate(s, validationConfig);
                 noteList.set(i, nvr.getValue());
                 if (nvr.getMessage() != null) {
-                    String strMessage = nvr.getMessage().getMessage();
-                    nvr.getMessage().setMessage("В пункте " + agendaItem.getNumber() + ", в примечании " + strMessage);
+                    final String strMessage = nvr.getMessage().getMessage();
+                    nvr.getMessage().setMessage(IN_PUNKT + agendaItem.getNumber() + ", в примечании " + strMessage);
                     conversionReport.collectMessage(nvr.getMessage());
                 }
             }
@@ -101,24 +97,24 @@ public class AgendaValidator {
 
         //кол-во докладчиков
         if (agendaItem.getSpeakerGroups() != null && !agendaItem.getSpeakerGroups().getGroup().isEmpty()) {
-            int maxSpeakerCount = itemValidationRules.getInt("speakerGroups.maxTotalSpeakerCount");
+            final int maxSpeakerCount = itemValidationRules.getInt("speakerGroups.maxTotalSpeakerCount");
             int speakerCount = 0; //считаем кол-во докладчиков во всех группах, поэтому инициализация вне первого цикла.
 
             for (Iterator<Group> i = agendaItem.getSpeakerGroups().getGroup().iterator(); i.hasNext(); ) {
-                Group group = i.next();
+                final Group group = i.next();
                 if (group.getSpeakers() != null && !group.getSpeakers().getSpeaker().isEmpty()) {
 
                     for (Iterator<Group.Speakers.Speaker> ii = group.getSpeakers().getSpeaker().iterator(); ii.hasNext(); ) {
-                        Group.Speakers.Speaker speaker = ii.next();
+                        final Group.Speakers.Speaker speaker = ii.next();
                         speakerCount++;
                         if (speakerCount > maxSpeakerCount) {
                             String number;
-                            if (agendaItem.getNumber() == null && agendaItem.getNumber().isEmpty()) {
+                            if (agendaItem.getNumber() == null || agendaItem.getNumber().isEmpty()) {
                                 number = "(не указан)";
                             } else {
                                 number = agendaItem.getNumber();
                             }
-                            WarningMessage warningMessage = new WarningMessage("В пункте " +
+                            final WarningMessage warningMessage = new WarningMessage(IN_PUNKT +
                                     number + "кол-во докладчиков превосходит максимально разрешенное - " +
                                     maxSpeakerCount + ". Докладчики проигнорированы.", speaker.getPost());
                             conversionReport.collectMessage(warningMessage);
@@ -135,19 +131,19 @@ public class AgendaValidator {
 
         //кол-во note
         if (agendaItem.getNotes() != null && !agendaItem.getNotes().getNote().isEmpty()) {
-            int maxNoteCount = itemValidationRules.getInt("notes.maxNoteCount");
+            final int maxNoteCount = itemValidationRules.getInt("notes.maxNoteCount");
             int noteCount = 0;
             for (Iterator<String> i = agendaItem.getNotes().getNote().iterator(); i.hasNext(); ) {
                 String note = i.next();
                 noteCount++;
                 if (noteCount > maxNoteCount) {
                     String number;
-                    if (agendaItem.getNumber() == null && agendaItem.getNumber().isEmpty()) {
+                    if (agendaItem.getNumber() == null || agendaItem.getNumber().isEmpty()) {
                         number = "(не указан)";
                     } else {
                         number = agendaItem.getNumber();
                     }
-                    WarningMessage warningMessage = new WarningMessage("В пункте " +
+                    final WarningMessage warningMessage = new WarningMessage(IN_PUNKT +
                             number + "кол-во примечаний превосходит максимально разрешенное - " +
                             maxNoteCount + ". примечание проигнорировано.", note);
                     conversionReport.collectMessage(warningMessage);
@@ -158,14 +154,14 @@ public class AgendaValidator {
 
     }
 
-    public void validate(Group group, ConversionReport conversionReport) {
+    public void validate(final Group group, final ConversionReport conversionReport) {
         if (group == null) {
             return;
         }
         Config groupValidationRules = config.getConfig("agendaItem.speakerGroups.group");
 
         if (group.getGroupName() != null) {
-            ValidateResponse<String> gvr = validate(group.getGroupName(), groupValidationRules.getConfig("groupName"));
+            final ValidateResponse<String> gvr = validate(group.getGroupName(), groupValidationRules.getConfig("groupName"));
             group.setGroupName(gvr.getValue());
             if (gvr.getMessage() != null) {
                 conversionReport.collectMessage(gvr.getMessage());
@@ -174,21 +170,21 @@ public class AgendaValidator {
 
     }
 
-    public void validate(Group.Speakers.Speaker speaker, ConversionReport conversionReport) {
+    public void validate(final Group.Speakers.Speaker speaker, final ConversionReport conversionReport) {
         if (speaker == null) {
             return;
         }
-        Config speakerValidationRule = this.config.getConfig("agendaItem.speakerGroups.group.speakers.speaker");
+        final Config speakerValidationRule = this.config.getConfig("agendaItem.speakerGroups.group.speakers.speaker");
 
         if (speaker.getPost() != null) {
-            ValidateResponse<String> pvr = validate(speaker.getPost(), speakerValidationRule.getConfig("post"));
+            final ValidateResponse<String> pvr = validate(speaker.getPost(), speakerValidationRule.getConfig("post"));
             speaker.setPost(pvr.getValue());
             if (pvr.getMessage() != null) {
                 conversionReport.collectMessage(pvr.getMessage());
             }
         }
         if (speaker.getName() != null) {
-            ValidateResponse<String> nvr = validate(speaker.getName(), speakerValidationRule.getConfig("name"));
+            final ValidateResponse<String> nvr = validate(speaker.getName(), speakerValidationRule.getConfig("name"));
             speaker.setName(nvr.getValue());
             if (nvr.getMessage() != null) {
                 conversionReport.collectMessage(nvr.getMessage());
@@ -203,17 +199,17 @@ public class AgendaValidator {
      * @param config
      * @return
      */
-    public ValidateResponse<String> validate(String s, Config config) {
-        ValidateResponse<String> validateResponse = new ValidateResponse<>();
+    public ValidateResponse<String> validate(final String s, final Config config) {
+        final ValidateResponse<String> validateResponse = new ValidateResponse<>();
         if (config == null || config.isEmpty() || !config.hasPath("maxLength") || s == null) {
             //нечего валидировать, отдадим обратно, мало ли там что-то есть.
             validateResponse.setValue(s);
             return validateResponse;
         }
         try {
-            int maxLen = config.getInt("maxLength");
+            final int maxLen = config.getInt("maxLength");
             if (s.length() > maxLen) {
-                WarningMessage warningMessage = new WarningMessage("длина строки превышает максимальную - " + String.valueOf(maxLen), s);
+                final WarningMessage warningMessage = new WarningMessage("длина строки превышает максимальную - " + maxLen, s);
                 validateResponse.setMessage(warningMessage);
                 validateResponse.setValue(s.substring(0, maxLen));
             } else {
@@ -225,7 +221,7 @@ public class AgendaValidator {
         return validateResponse;
     }
 
-    public ValidateResponse<Instant> validate(Instant dt, Config config) {
+    public ValidateResponse<Instant> validate(final Instant dt, final Config config) {
         return null;
     }
 

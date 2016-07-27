@@ -11,19 +11,13 @@ import org.slf4j.Logger;
  */
 public class ParsingDoneState<AI extends TableParser> extends StateBase<AI> implements TableParser {
     private static final Logger LOGGER = com.techinfocom.nvis.agendartftoxml.Logger.LOGGER;
-    private static final String STATE_NAME = ParsingDoneState.class.getSimpleName().toUpperCase();
-
-    private final AgendaBuilder agendaBuilder;
-    private int tableCount = 0;
-
-    public ParsingDoneState(AI automation, EventSink eventSink, AgendaBuilder agendaBuilder) {
+    public ParsingDoneState(AI automation, EventSink eventSink) {
         super(automation, eventSink);
-        this.agendaBuilder = agendaBuilder;
     }
 
 
     @Override
-    public void processWord(RtfWord rtfWord) {
+    public void processWord(AbstractRtfWord rtfWord) {
         switch (rtfWord.getRtfWordType()) {
             case COMMAND:
                 break;

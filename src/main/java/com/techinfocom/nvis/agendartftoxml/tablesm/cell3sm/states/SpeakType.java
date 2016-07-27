@@ -24,7 +24,7 @@ public class SpeakType<AI extends Cell3Parser> extends StateBase<AI> implements 
     }
 
     @Override
-    public void processChar(FormatedChar fc) {
+    public void processChar(final FormatedChar fc) {
         if (fc.getC() == '\n') {
             LOGGER.error("state={}. НЕОЖИДАННО Обнаружен \\n.", STATE_NAME);
             //castEvent(ERROR); //todo не можем встретить перевод строки в этом состоянии. Тип доклада- однострочный.
@@ -34,7 +34,7 @@ public class SpeakType<AI extends Cell3Parser> extends StateBase<AI> implements 
             if (currentGroupName == null) {
                 currentGroupName = "";
             }
-            agendaBuilder.getGroup().setGroupName(currentGroupName + String.valueOf(fc.getC()));
+            agendaBuilder.getGroup().setGroupName(currentGroupName + fc.getC());
         }
     }
 
@@ -44,7 +44,7 @@ public class SpeakType<AI extends Cell3Parser> extends StateBase<AI> implements 
 //    }
 
     @Override
-    public void analyseFormat(FormatedChar fc) {
+    public void analyseFormat(final FormatedChar fc) {
         //текст без форматирования- началась должность.
         if (fc.getTextFormat().getFontFormat().isEmpty() &&
                 fc.getC() != '\n' && fc.getC() != ' ') {

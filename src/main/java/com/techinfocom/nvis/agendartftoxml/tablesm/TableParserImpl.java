@@ -1,23 +1,22 @@
 package com.techinfocom.nvis.agendartftoxml.tablesm;
 
 import com.techinfocom.nvis.agendartftoxml.model.*;
-import com.techinfocom.nvis.agendartftoxml.statemachine.AutomationBase;
+import com.techinfocom.nvis.agendartftoxml.statemachine.AbstractAutomationBase;
 import com.techinfocom.nvis.agendartftoxml.tablesm.states.*;
 
 /**
  * Created by volkov_kv on 07.06.2016.
  */
-public class TableParserImpl extends AutomationBase<TableParser> implements TableParser {
+public class TableParserImpl extends AbstractAutomationBase<TableParser> implements TableParser {
 
     public TableParserImpl(AgendaBuilder agendaBuilder) {
 
         //создание объектов-состояний
-        TableParser waitingForTable = new WatingForTableState<>(this, this, agendaBuilder);
         TableParser cell1 = new Cell1State<>(this, this, agendaBuilder);
         TableParser cell2 = new Cell2State<>(this, this, agendaBuilder);
         TableParser cell3 = new Cell3State<>(this, this, agendaBuilder);
         TableParser waitForRowEnd = new WaitForRowEndState<>(this, this, agendaBuilder);
-        TableParser parsingDone = new ParsingDoneState<>(this, this, agendaBuilder);
+        TableParser parsingDone = new ParsingDoneState<>(this, this);
 
 
 
@@ -44,7 +43,7 @@ public class TableParserImpl extends AutomationBase<TableParser> implements Tabl
     // Делегирование методов интерфейса
 
     @Override
-    public void processWord(RtfWord rtfWord) {
+    public void processWord(AbstractRtfWord rtfWord) {
         state.processWord(rtfWord);
     }
 

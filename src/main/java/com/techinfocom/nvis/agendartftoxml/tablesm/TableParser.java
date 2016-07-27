@@ -1,7 +1,7 @@
 package com.techinfocom.nvis.agendartftoxml.tablesm;
 
 import com.techinfocom.nvis.agendartftoxml.model.RtfCommand;
-import com.techinfocom.nvis.agendartftoxml.model.RtfWord;
+import com.techinfocom.nvis.agendartftoxml.model.AbstractRtfWord;
 import com.techinfocom.nvis.agendartftoxml.model.TextFormat;
 import com.techinfocom.nvis.agendartftoxml.model.FormatedChar;
 
@@ -10,7 +10,7 @@ import com.techinfocom.nvis.agendartftoxml.model.FormatedChar;
  */
 public interface TableParser {
 
-    void processWord(RtfWord rtfWord);
+    void processWord(AbstractRtfWord rtfWord);
 
     void exit();
 

@@ -26,41 +26,41 @@ public interface IRtfListener
    /**
     * Event raised when the parser starts to read the document.
     */
-   public void processDocumentStart();
+   void processDocumentStart();
 
    /**
     * Event raised when the parser reaches the end of the document.
     */
-   public void processDocumentEnd();
+   void processDocumentEnd();
 
    /**
     * Event raised when the stat of a group is encountered.
     */
-   public void processGroupStart();
+   void processGroupStart();
 
    /**
     * Event raised when the end of a group is encountered.
     */
-   public void processGroupEnd();
+   void processGroupEnd();
 
    /**
     * Event raised by the raw RTF parser to pass bytes representing characters.
     * Note that these bytes will be "as read" from the RTF file, and have not been
     * processed to account for the current encoding.
     */
-   public void processCharacterBytes(byte[] data);
+   void processCharacterBytes(byte[] data);
 
    /**
-    * Event raised by an RTF parser to pass binary bytes. 
+    * Event raised by an RTF parser to pass binary bytes.
     */
-   public void processBinaryBytes(byte[] data);
+   void processBinaryBytes(byte[] data);
 
    /**
     * Event raised by the RTF parser to pass string data. Note that the string
     * has been created with the appropriate encoding and no further processing will
     * be required.
     */
-   public void processString(String string);
+   void processString(String string);
 
    /**
     * Event raised by the RTF parser detailing a command read from the file.
@@ -69,5 +69,5 @@ public interface IRtfListener
     * If the optional flag is set, this is a command which RTF readers can choose not
     * to implement.
     */
-   public void processCommand(Command command, int parameter, boolean hasParameter, boolean optional);
+   void processCommand(Command command, int parameter, boolean hasParameter, boolean optional);
 }

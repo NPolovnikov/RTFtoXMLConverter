@@ -3,11 +3,11 @@ package com.techinfocom.nvis.agendartftoxml.report;
 /**
  * Created by volkov_kv on 16.06.2016.
  */
-public abstract class ReportMessage {
+public abstract class AbstractReportMessage {
     protected final ReportMessageType reportMessageType;
     protected String message;
 
-    public ReportMessage(ReportMessageType reportMessageType, String message) {
+    public AbstractReportMessage(final ReportMessageType reportMessageType, final String message) {
         this.reportMessageType = reportMessageType;
         this.message = message;
     }
@@ -16,7 +16,7 @@ public abstract class ReportMessage {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(final String message) {
         this.message = message;
     }
 
@@ -29,9 +29,9 @@ public abstract class ReportMessage {
         WARNING("WARNING"),
         ERROR("ERROR");
 
-        private String name;
+        private final String name;
 
-        ReportMessageType(String name) {
+        ReportMessageType(final String name) {
             this.name = name;
         }
 

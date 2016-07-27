@@ -8,7 +8,7 @@ import com.techinfocom.nvis.agendartftoxml.model.FormatedChar;
 public class ParTrimmer {
     FormatedChar buffer;
 
-    public FormatedChar trim(FormatedChar fc) {
+    public FormatedChar trim(final FormatedChar fc) {
         if (buffer == null) {
             if (fc.getC() == (' ') || fc.getC() == ('\n')) { //вначале всего текста следует игнорировать только пробелы и переводы строк
                 return null;
@@ -21,8 +21,9 @@ public class ParTrimmer {
         //последовательности при которых игнорируется поступивший символ
         if ((buffer.getC() == ('\n') && fc.getC() == (' ')) ||  //пробел вначале абзаца
                 (buffer.getC() == ('\n') && fc.getC() == ('\n')) ||
-                (buffer.getC() == (' ') && fc.getC() == (' ')))
+                (buffer.getC() == (' ') && fc.getC() == (' '))) {
             return null;
+        }
 
         //последовательности при которых игнорируется символ в буфере
         if (buffer.getC() == (' ') && fc.getC() == ('\n')) { //пробел в конце абзаца

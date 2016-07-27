@@ -17,7 +17,6 @@ import static com.rtfparserkit.rtf.Command.*;
  */
 public class Cell3State<AI extends TableParser> extends StateBase<AI> implements TableParser {
     private static final org.slf4j.Logger LOGGER = Logger.LOGGER;
-    private static final String STATE_NAME = Cell3State.class.getSimpleName().toUpperCase();
     public static final Event CELL_END = new Event("CELL_END");
     public static final Event ROW_END = new Event("ROW_END");
     private final AgendaBuilder agendaBuilder;
@@ -37,7 +36,7 @@ public class Cell3State<AI extends TableParser> extends StateBase<AI> implements
 
 
     @Override
-    public void processWord(RtfWord rtfWord) {
+    public void processWord(AbstractRtfWord rtfWord) {
         switch (rtfWord.getRtfWordType()) {
             case COMMAND:
                 processCommand((RtfCommand) rtfWord);
@@ -54,11 +53,11 @@ public class Cell3State<AI extends TableParser> extends StateBase<AI> implements
     }
 
 
-    public void processChar(FormatedChar fc) {
+    public void processChar(final FormatedChar fc) {
         if (!fc.getTextFormat().paragraphContain(intbl)) {
             return; //наличие обязательно
         }
-        FormatedChar trimmedChar = parTrimmer.trim(fc);
+        final FormatedChar trimmedChar = parTrimmer.trim(fc);
         if (trimmedChar != null) {
             cell3Parser.analyseFormat(trimmedChar);
             cell3Parser.processChar(trimmedChar);

@@ -3,7 +3,7 @@ package com.techinfocom.nvis.agendartftoxml.report;
 /**
  * Created by volkov_kv on 16.06.2016.
  */
-public class ErrorMessage extends ReportMessage {
+public class ErrorMessage extends AbstractReportMessage {
     public ErrorMessage(String message, String estimated) {
         super(ReportMessageType.ERROR, message);
         this.estimated = estimated;
