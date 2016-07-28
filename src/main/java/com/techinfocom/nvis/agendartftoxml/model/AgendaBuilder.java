@@ -114,7 +114,7 @@ public class AgendaBuilder {
                 currentItem.setSpeakerGroups(objectFactory.createSpeakers());
             }
             trim(currentGroup);
-            agendaValidator.validate(currentGroup, conversionReport);
+            agendaValidator.validate(currentItem, currentGroup, conversionReport);
             currentItem.getSpeakerGroups().getGroup().add(currentGroup);
             currentGroup = null;//чтобы null pointer сгенерировался, если криво начнем контекст отслеживать.
         } else {
@@ -128,7 +128,7 @@ public class AgendaBuilder {
                 currentGroup.setSpeakers(objectFactory.createGroupSpeakers());
             }
             trim(currentSpeaker);
-            agendaValidator.validate(currentSpeaker, conversionReport);
+            agendaValidator.validate(currentItem, currentSpeaker, conversionReport);
             currentGroup.getSpeakers().getSpeaker().add(currentSpeaker);
             currentSpeaker = null;//чтобы null poiter сгенерировался, если криво начнем контекст отслеживать.
         } else {

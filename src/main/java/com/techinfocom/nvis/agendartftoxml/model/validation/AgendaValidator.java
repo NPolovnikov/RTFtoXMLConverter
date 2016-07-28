@@ -40,7 +40,7 @@ public class AgendaValidator {
             agendaItem.setNumber(nvr.getValue());
             if (nvr.getMessage() != null) {
                 final String strMessage = nvr.getMessage().getMessage();
-                nvr.getMessage().setMessage(IN_PUNKT + agendaItem.getNumber() + ", в номере пункта порядка работы " + strMessage);
+                nvr.getMessage().setMessage(IN_PUNKT + extractNumber(agendaItem) + ", в номере пункта порядка работы " + strMessage);
                 conversionReport.collectMessage(nvr.getMessage());
             }
         }
@@ -49,7 +49,7 @@ public class AgendaValidator {
             agendaItem.setInfo(ivr.getValue());
             if (ivr.getMessage() != null) {
                 final String strMessage = ivr.getMessage().getMessage();
-                ivr.getMessage().setMessage(IN_PUNKT + agendaItem.getNumber() + ", в доп информации " + strMessage);
+                ivr.getMessage().setMessage(IN_PUNKT + extractNumber(agendaItem) + ", в доп информации " + strMessage);
                 conversionReport.collectMessage(ivr.getMessage());
             }
         }
@@ -58,7 +58,7 @@ public class AgendaValidator {
             agendaItem.setAddon(avr.getValue());
             if (avr.getMessage() != null) {
                 final String strMessage = avr.getMessage().getMessage();
-                avr.getMessage().setMessage(IN_PUNKT + agendaItem.getNumber() + ", в дополнении " + strMessage);
+                avr.getMessage().setMessage(IN_PUNKT + extractNumber(agendaItem) + ", в дополнении " + strMessage);
                 conversionReport.collectMessage(avr.getMessage());
             }
         }
@@ -67,7 +67,7 @@ public class AgendaValidator {
             agendaItem.setRn(rvr.getValue());
             if (rvr.getMessage() != null) {
                 final String strMessage = rvr.getMessage().getMessage();
-                rvr.getMessage().setMessage(IN_PUNKT + agendaItem.getNumber() + ", в номере документа " + strMessage);
+                rvr.getMessage().setMessage(IN_PUNKT + extractNumber(agendaItem) + ", в номере документа " + strMessage);
                 conversionReport.collectMessage(rvr.getMessage());
             }
         }
@@ -76,7 +76,7 @@ public class AgendaValidator {
             agendaItem.setText(tvr.getValue());
             if (tvr.getMessage() != null) {
                 final String strMessage = tvr.getMessage().getMessage();
-                tvr.getMessage().setMessage(IN_PUNKT + agendaItem.getNumber() + ", в тексте пункта порядка работы " + strMessage);
+                tvr.getMessage().setMessage(IN_PUNKT + extractNumber(agendaItem) + ", в тексте пункта порядка работы " + strMessage);
                 conversionReport.collectMessage(tvr.getMessage());
             }
         }
@@ -89,7 +89,7 @@ public class AgendaValidator {
                 noteList.set(i, nvr.getValue());
                 if (nvr.getMessage() != null) {
                     final String strMessage = nvr.getMessage().getMessage();
-                    nvr.getMessage().setMessage(IN_PUNKT + agendaItem.getNumber() + ", в примечании " + strMessage);
+                    nvr.getMessage().setMessage(IN_PUNKT + extractNumber(agendaItem) + ", в примечании " + strMessage);
                     conversionReport.collectMessage(nvr.getMessage());
                 }
             }
@@ -108,14 +108,8 @@ public class AgendaValidator {
                         final Group.Speakers.Speaker speaker = ii.next();
                         speakerCount++;
                         if (speakerCount > maxSpeakerCount) {
-                            String number;
-                            if (agendaItem.getNumber() == null || agendaItem.getNumber().isEmpty()) {
-                                number = "(не указан)";
-                            } else {
-                                number = agendaItem.getNumber();
-                            }
                             final WarningMessage warningMessage = new WarningMessage(IN_PUNKT +
-                                    number + "кол-во докладчиков превосходит максимально разрешенное - " +
+                                    extractNumber(agendaItem) + "кол-во докладчиков превосходит максимально разрешенное - " +
                                     maxSpeakerCount + ". Докладчики проигнорированы.", speaker.getPost());
                             conversionReport.collectMessage(warningMessage);
                             ii.remove();
@@ -137,14 +131,8 @@ public class AgendaValidator {
                 String note = i.next();
                 noteCount++;
                 if (noteCount > maxNoteCount) {
-                    String number;
-                    if (agendaItem.getNumber() == null || agendaItem.getNumber().isEmpty()) {
-                        number = "(не указан)";
-                    } else {
-                        number = agendaItem.getNumber();
-                    }
                     final WarningMessage warningMessage = new WarningMessage(IN_PUNKT +
-                            number + "кол-во примечаний превосходит максимально разрешенное - " +
+                            extractNumber(agendaItem) + "кол-во примечаний превосходит максимально разрешенное - " +
                             maxNoteCount + ". примечание проигнорировано.", note);
                     conversionReport.collectMessage(warningMessage);
                     i.remove();
@@ -154,7 +142,7 @@ public class AgendaValidator {
 
     }
 
-    public void validate(final Group group, final ConversionReport conversionReport) {
+    public void validate(final AgendaItem agendaItem, final Group group, final ConversionReport conversionReport) {
         if (group == null) {
             return;
         }
@@ -164,13 +152,15 @@ public class AgendaValidator {
             final ValidateResponse<String> gvr = validate(group.getGroupName(), groupValidationRules.getConfig("groupName"));
             group.setGroupName(gvr.getValue());
             if (gvr.getMessage() != null) {
+                String strMessage = gvr.getMessage().getMessage();
+                gvr.getMessage().setMessage("В пункте " + extractNumber(agendaItem) + ", в типе доклада " + strMessage);
                 conversionReport.collectMessage(gvr.getMessage());
             }
         }
 
     }
 
-    public void validate(final Group.Speakers.Speaker speaker, final ConversionReport conversionReport) {
+    public void validate(final AgendaItem agendaItem, final Group.Speakers.Speaker speaker, final ConversionReport conversionReport) {
         if (speaker == null) {
             return;
         }
@@ -180,6 +170,8 @@ public class AgendaValidator {
             final ValidateResponse<String> pvr = validate(speaker.getPost(), speakerValidationRule.getConfig("post"));
             speaker.setPost(pvr.getValue());
             if (pvr.getMessage() != null) {
+                String strMessage = pvr.getMessage().getMessage();
+                pvr.getMessage().setMessage("В пункте " + extractNumber(agendaItem) + ", в должности докладчика " + strMessage);
                 conversionReport.collectMessage(pvr.getMessage());
             }
         }
@@ -187,6 +179,8 @@ public class AgendaValidator {
             final ValidateResponse<String> nvr = validate(speaker.getName(), speakerValidationRule.getConfig("name"));
             speaker.setName(nvr.getValue());
             if (nvr.getMessage() != null) {
+                String strMessage = nvr.getMessage().getMessage();
+                nvr.getMessage().setMessage("В пункте " + extractNumber(agendaItem) + ", в фио докладчика " + strMessage);
                 conversionReport.collectMessage(nvr.getMessage());
             }
         }
@@ -223,6 +217,16 @@ public class AgendaValidator {
 
     public ValidateResponse<Instant> validate(final Instant dt, final Config config) {
         return null;
+    }
+
+    private String extractNumber(final AgendaItem agendaItem) {
+        final String number;
+        if (agendaItem.getNumber() == null || agendaItem.getNumber().isEmpty()) {
+            number = "(не указан)";
+        } else {
+            number = agendaItem.getNumber();
+        }
+        return number;
     }
 
 }
