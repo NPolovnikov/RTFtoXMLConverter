@@ -151,7 +151,8 @@ public class AgendaValidator {
 
         //не будем мержить пустую строку.
         if(agendaItem.getNumber() == null && agendaItem.getInfo() == null && agendaItem.getAddon() == null &&
-                agendaItem.getRn() == null && agendaItem.getText() == null && agendaItem.getNotes() == null ){
+                agendaItem.getRn() == null && agendaItem.getText() == null && agendaItem.getNotes() == null &&
+                agendaItem.getSpeakerGroups() == null){
             vr.setValue(null);
             final WarningMessage warningMessage = new WarningMessage(IN_PUNKT +
                     extractNumber(agendaItem) + " все поля пусты (возможно в результате корректировок загрузки). Пункт проигнорирован.", null);

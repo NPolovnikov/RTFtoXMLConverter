@@ -412,9 +412,29 @@ public class RtfAgendaConverterTest {
             assertTrue(report.contains("WARNING: Вероятно, нарушена структура документа. В пункте 2. проигнорирован текст: Фигня какая-то"), "Сообщение валидатора не содержит ожидаемых фрагментов сообщения");
         }
 
+        //сообщение о пустой группе и игноре пустого пункта
+        {
+            final File file = new File(getClass().getClassLoader().getResource("validators/emptySpeaker/empty_speaker.rtf").getFile());
+            final InputStream is = new FileInputStream(file);
+
+            final RtfAgendaConverter converter = new RtfAgendaConverter();
+            final AgendaConverterResponse agendaConverterResponse = converter.convert(is);
+            final String xml = new String(agendaConverterResponse.getXmlBytes());
+
+            assertTrue(agendaConverterResponse.getXmlBytes().length > 0);
+            assertFalse(agendaConverterResponse.hasMessage(ERROR), "отчет об импорте содержит ERROR");
+            assertTrue(agendaConverterResponse.hasMessage(WARNING), "отчет об импорте НЕ содержит WARNING");
+            final List<AbstractReportMessage> messageList = agendaConverterResponse.getConversionReport().getMessages();
+            assertTrue(messageList.size() == 3, "Кол-во сообщений в отчете не равно 3");
+            final String report = agendaConverterResponse.printReport(WARNING);
+            assertTrue(report.contains("WARNING: В пункте (не указан), в типе доклада длина строки превышает максимальную - 25; Примерное положение: Проекты постановлений Государственной Думы"), "Сообщение валидатора не содержит ожидаемых фрагментов сообщения");
+            assertTrue(report.contains("WARNING: В пункте (не указан) тип доклада \"Проекты постановлений Гос\" указан без должности или имени докладчика, что запрещено. Группа докладчиков проигнорирована"), "Сообщение валидатора не содержит ожидаемых фрагментов сообщения");
+            assertTrue(report.contains("WARNING: В пункте (не указан) все поля пусты (возможно в результате корректировок загрузки). Пункт проигнорирован."), "Сообщение валидатора не содержит ожидаемых фрагментов сообщения");
+        }
+
     }
 
-    @Test(enabled = true)
+    @Test(enabled = false)
     public void learnSomeDoc() throws Exception {
         {
             final File rtfFile = new File(getClass().getClassLoader().getResource("learn/18-12.rtf").getFile());
