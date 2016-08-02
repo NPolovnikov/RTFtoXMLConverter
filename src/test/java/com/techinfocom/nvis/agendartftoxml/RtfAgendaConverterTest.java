@@ -414,7 +414,7 @@ public class RtfAgendaConverterTest {
 
     }
 
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void learnSomeDoc() throws Exception {
         {
             final File rtfFile = new File(getClass().getClassLoader().getResource("learn/18-12.rtf").getFile());

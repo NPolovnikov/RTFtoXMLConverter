@@ -29,10 +29,13 @@ public class AgendaValidator {
      * @param agendaItem
      * @param conversionReport
      */
-    public void validate(final AgendaItem agendaItem, final ConversionReport conversionReport) {
+    public ValidateResponse<AgendaItem> validateAndCorrect(final AgendaItem agendaItem, final ConversionReport conversionReport) {
+        final ValidateResponse<AgendaItem> vr = new ValidateResponse<>();
         if (agendaItem == null) {
-            return;
+            return vr;
         }
+
+        vr.setValue(agendaItem);
         Config itemValidationRules = config.getConfig("agendaItem");
 
         if (agendaItem.getNumber() != null) {
@@ -123,6 +126,12 @@ public class AgendaValidator {
             }
         }
 
+        //Удалим лишнее, если оно пустое
+        if(agendaItem.getSpeakerGroups() != null && agendaItem.getSpeakerGroups().getGroup().size() == 0) {
+            agendaItem.setSpeakerGroups(null);
+        }
+
+
         //кол-во note
         if (agendaItem.getNotes() != null && !agendaItem.getNotes().getNote().isEmpty()) {
             final int maxNoteCount = itemValidationRules.getInt("notes.maxNoteCount");
@@ -140,12 +149,25 @@ public class AgendaValidator {
             }
         }
 
+        //не будем мержить пустую строку.
+        if(agendaItem.getNumber() == null && agendaItem.getInfo() == null && agendaItem.getAddon() == null &&
+                agendaItem.getRn() == null && agendaItem.getText() == null && agendaItem.getNotes() == null ){
+            vr.setValue(null);
+            final WarningMessage warningMessage = new WarningMessage(IN_PUNKT +
+                    extractNumber(agendaItem) + " все поля пусты (возможно в результате корректировок загрузки). Пункт проигнорирован.", null);
+            conversionReport.collectMessage(warningMessage);
+
+        }
+
+        return vr;
     }
 
-    public void validate(final AgendaItem agendaItem, final Group group, final ConversionReport conversionReport) {
+    public ValidateResponse<Group> validate(final AgendaItem agendaItem, final Group group, final ConversionReport conversionReport) {
+        ValidateResponse<Group> vr = new ValidateResponse<>();
         if (group == null) {
-            return;
+            return vr;
         }
+        vr.setValue(group);
         Config groupValidationRules = config.getConfig("agendaItem.speakerGroups.group");
 
         if (group.getGroupName() != null) {
@@ -158,6 +180,15 @@ public class AgendaValidator {
             }
         }
 
+        if (group.getSpeakers() == null || group.getSpeakers().getSpeaker().size() < 1) {
+            WarningMessage warningMessage = new WarningMessage("В пункте " + extractNumber(agendaItem) + " тип доклада \"" +
+                    group.getGroupName() + "\" указан без должности или имени докладчика, что запрещено. " +
+                    "Группа докладчиков проигнорирована");
+            conversionReport.collectMessage(warningMessage);
+            vr.setValue(null);
+        }
+
+        return vr;
     }
 
     public void validate(final AgendaItem agendaItem, final Group.Speakers.Speaker speaker, final ConversionReport conversionReport) {
